@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Form;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
 use RZ\Roadiz\CMS\Forms\TranslationsType;
@@ -16,17 +16,14 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class AttributeGroupTranslationType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -48,7 +45,7 @@ class AttributeGroupTranslationType extends AbstractType
             ])
         ;
 
-        $builder->get('translation')->addModelTransformer(new TranslationTransformer($this->entityManager));
+        $builder->get('translation')->addModelTransformer(new TranslationTransformer($this->managerRegistry));
     }
 
     /**

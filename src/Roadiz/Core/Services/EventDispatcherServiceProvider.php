@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\DebugBarSubscriber;
@@ -118,7 +119,7 @@ class EventDispatcherServiceProvider implements \Pimple\ServiceProviderInterface
                 $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
                 $dispatcher->addSubscriber(new NodeSourcePathSubscriber($c[NodesSourcesPathAggregator::class]));
                 $dispatcher->addSubscriber(new RoleSubscriber(
-                    $c['em']->getConfiguration()->getResultCacheImpl(),
+                    $c[ManagerRegistry::class],
                     $c['rolesBag']
                 ));
             }

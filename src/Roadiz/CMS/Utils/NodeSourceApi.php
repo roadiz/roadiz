@@ -10,15 +10,14 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
 /**
- * Class NodeSourceApi
  * @package RZ\Roadiz\CMS\Utils
  */
 class NodeSourceApi extends AbstractApi
 {
     /**
-     * @var string
+     * @var class-string
      */
-    protected $repository = NodesSources::class;
+    protected string $repository = NodesSources::class;
 
     /**
      * @param array|null $criteria
@@ -47,7 +46,7 @@ class NodeSourceApi extends AbstractApi
      */
     public function getRepository()
     {
-        return $this->container['em']->getRepository($this->repository);
+        return $this->managerRegistry->getRepository($this->repository);
     }
 
     /**
@@ -119,7 +118,7 @@ class NodeSourceApi extends AbstractApi
      * @return array
      */
     public function searchBy(
-        $textQuery,
+        string $textQuery,
         int $limit = 0,
         array $nodeTypes = [],
         bool $onlyVisible = false,

@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class TranslationSubscriber implements EventSubscriberInterface
 {
-    protected $cacheProvider = null;
+    protected CacheProvider $cacheProvider;
 
     public function __construct(CacheProvider $cacheProvider)
     {

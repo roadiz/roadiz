@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Forms\DataTransformer\ProviderDataTransformer;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -18,18 +18,15 @@ use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 final class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
 {
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected Container $container;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param Container $container
      */
-    public function __construct(EntityManagerInterface $entityManager, Container $container)
+    public function __construct(ManagerRegistry $managerRegistry, Container $container)
     {
-        parent::__construct($entityManager);
+        parent::__construct($managerRegistry);
         $this->container = $container;
     }
 

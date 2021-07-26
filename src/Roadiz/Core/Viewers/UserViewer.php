@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Bags\Settings;
@@ -17,7 +16,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserViewer
 {
-    protected EntityManagerInterface $entityManager;
     protected Settings $settingsBag;
     protected TranslatorInterface $translator;
     protected EmailManager $emailManager;
@@ -25,20 +23,17 @@ class UserViewer
     protected ?User $user = null;
 
     /**
-     * @param EntityManagerInterface $entityManager
      * @param Settings $settingsBag
      * @param TranslatorInterface $translator
      * @param EmailManager $emailManager
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         Settings $settingsBag,
         TranslatorInterface $translator,
         EmailManager $emailManager,
         ?LoggerInterface $logger = null
     ) {
-        $this->entityManager = $entityManager;
         $this->settingsBag = $settingsBag;
         $this->translator = $translator;
         $this->emailManager = $emailManager;
@@ -49,9 +44,9 @@ class UserViewer
      * Send an email to reset user password.
      *
      * @param UrlGeneratorInterface $urlGenerator
-     * @param string|NodesSources   $route
-     * @param string                $htmlTemplate
-     * @param string                $txtTemplate
+     * @param string|NodesSources $route
+     * @param string $htmlTemplate
+     * @param string $txtTemplate
      *
      * @return bool
      * @throws \Exception
@@ -59,8 +54,8 @@ class UserViewer
     public function sendPasswordResetLink(
         UrlGeneratorInterface $urlGenerator,
         $route = 'loginResetPage',
-        $htmlTemplate = 'users/reset_password_email.html.twig',
-        $txtTemplate = 'users/reset_password_email.txt.twig'
+        string $htmlTemplate = 'users/reset_password_email.html.twig',
+        string $txtTemplate = 'users/reset_password_email.txt.twig'
     ): bool {
         $emailContact = $this->getContactEmail();
         $siteName = $this->getSiteName();

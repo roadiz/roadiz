@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RZ\Roadiz\Console\RoadizApplication;
@@ -17,26 +17,26 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 final class SchemaUpdater
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private Kernel $kernel;
     private LoggerInterface $logger;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param Kernel $kernel
      * @param LoggerInterface|null $logger
      */
-    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, ?LoggerInterface $logger = null)
+    public function __construct(ManagerRegistry $managerRegistry, Kernel $kernel, ?LoggerInterface $logger = null)
     {
-        $this->entityManager = $entityManager;
         $this->kernel = $kernel;
         $this->logger = $logger ?? new NullLogger();
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function clearMetadata(): void
     {
         $clearers = [
-            new DoctrineCacheClearer($this->entityManager, $this->kernel),
+            new DoctrineCacheClearer($this->managerRegistry, $this->kernel),
             new OPCacheClearer(),
         ];
 

@@ -4,23 +4,23 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use RZ\Roadiz\Bag\LazyParameterBag;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Repositories\RoleRepository;
-use RZ\Roadiz\Bag\LazyParameterBag;
 
 class Roles extends LazyParameterBag
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private ?RoleRepository $repository = null;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry;
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct();
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -29,7 +29,7 @@ class Roles extends LazyParameterBag
     public function getRepository()
     {
         if (null === $this->repository) {
-            $this->repository = $this->entityManager->getRepository(Role::class);
+            $this->repository = $this->managerRegistry->getRepository(Role::class);
         }
         return $this->repository;
     }
@@ -65,8 +65,8 @@ class Roles extends LazyParameterBag
 
         if (null === $role) {
             $role = new Role($key);
-            $this->entityManager->persist($role);
-            $this->entityManager->flush();
+            $this->managerRegistry->getManagerForClass(Role::class)->persist($role);
+            $this->managerRegistry->getManagerForClass(Role::class)->flush();
         }
 
         return $role;

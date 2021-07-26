@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NodesSourcesUrlSubscriber implements EventSubscriberInterface
 {
-    protected $cacheProvider = null;
+    protected CacheProvider $cacheProvider;
 
     public function __construct(CacheProvider $cacheProvider)
     {

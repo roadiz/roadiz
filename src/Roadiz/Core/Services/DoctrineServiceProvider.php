@@ -173,7 +173,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         };
 
         $container[ManagerRegistry::class] = function (Container $c) {
-            return new RoadizManagerRegistry($c['em']);
+            return new RoadizManagerRegistry(new \Pimple\Psr11\Container($c));
         };
 
         $container[ResolveTargetEntityListener::class] = function () {

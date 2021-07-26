@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Themes\Rozier\Models;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\HasThumbnailInterface;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
@@ -14,25 +16,36 @@ use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
  */
 class DocumentModel implements ModelInterface
 {
-    public static $thumbnailArray;
-    public static $thumbnail80Array;
-    public static $previewArray;
-    public static $largeArray;
+    public static array $thumbnailArray = [
+        "fit" => "40x40",
+        "quality" => 50,
+        "sharpen" => 5,
+        "inline" => false,
+    ];
+    public static array $thumbnail80Array = [
+        "fit" => "80x80",
+        "quality" => 50,
+        "sharpen" => 5,
+        "inline" => false,
+    ];
+    public static array $previewArray = [
+        "width" => 1440,
+        "quality" => 80,
+        "inline" => false,
+        "embed" => true,
+    ];
+    public static array $largeArray = [
+        "noProcess" => true,
+    ];
+
+    private DocumentInterface $document;
+    private Container $container;
 
     /**
-     * @var Document
-     */
-    private $document;
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @param Document $document
+     * @param DocumentInterface $document
      * @param Container $container
      */
-    public function __construct(Document $document, Container $container)
+    public function __construct(DocumentInterface $document, Container $container)
     {
         $this->document = $document;
         $this->container = $container;
@@ -42,7 +55,8 @@ class DocumentModel implements ModelInterface
     {
         $name = (string) $this->document;
 
-        if ($this->document->getDocumentTranslations()->first() &&
+        if ($this->document instanceof Document &&
+            $this->document->getDocumentTranslations()->first() &&
             $this->document->getDocumentTranslations()->first()->getName()) {
             $name = $this->document->getDocumentTranslations()->first()->getName();
         }
@@ -67,8 +81,20 @@ class DocumentModel implements ModelInterface
         $documentUrlGenerator->setOptions(static::$previewArray);
         $previewUrl = $documentUrlGenerator->getUrl();
 
+        if ($this->document instanceof AbstractEntity) {
+            $id = $this->document->getId();
+            $editUrl = $this->container
+                ->offsetGet('urlGenerator')
+                ->generate('documentsEditPage', [
+                    'documentId' => $this->document->getId()
+                ]);
+        } else {
+            $id = null;
+            $editUrl = null;
+        }
+
         return [
-            'id' => $this->document->getId(),
+            'id' => $id,
             'filename' => (string) $this->document,
             'name' => $name,
             'hasThumbnail' => $hasThumbnail,
@@ -80,11 +106,7 @@ class DocumentModel implements ModelInterface
             'isPdf' => $this->document->isPdf(),
             'isPrivate' => $this->document->isPrivate(),
             'shortType' => $this->document->getShortType(),
-            'editUrl' => $this->container
-                ->offsetGet('urlGenerator')
-                ->generate('documentsEditPage', [
-                'documentId' => $this->document->getId()
-            ]),
+            'editUrl' => $editUrl,
             'preview' => $previewUrl,
             'preview_html' => $renderer->render($this->document, static::$previewArray),
             'embedPlatform' => $this->document->getEmbedPlatform(),
@@ -93,27 +115,3 @@ class DocumentModel implements ModelInterface
         ];
     }
 }
-DocumentModel::$thumbnailArray = [
-    "fit" => "40x40",
-    "quality" => 50,
-    "sharpen" => 5,
-    "inline" => false,
-];
-
-DocumentModel::$thumbnail80Array = [
-    "fit" => "80x80",
-    "quality" => 50,
-    "sharpen" => 5,
-    "inline" => false,
-];
-
-DocumentModel::$previewArray = [
-    "width" => 1440,
-    "quality" => 80,
-    "inline" => false,
-    "embed" => true,
-];
-
-DocumentModel::$largeArray = [
-    "noProcess" => true,
-];

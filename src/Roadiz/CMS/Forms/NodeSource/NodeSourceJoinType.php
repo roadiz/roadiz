@@ -44,7 +44,7 @@ final class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 
         $builder->addModelTransformer(new JoinDataTransformer(
             $options['nodeTypeField'],
-            $this->entityManager,
+            $this->managerRegistry,
             $configuration['classname']
         ));
     }

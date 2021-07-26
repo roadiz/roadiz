@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Log\Handler;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use RZ\Roadiz\Core\Entities\Log;
@@ -16,23 +16,23 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * A log system which store message in database.
  */
-class DoctrineHandler extends AbstractProcessingHandler
+final class DoctrineHandler extends AbstractProcessingHandler
 {
-    protected EntityManagerInterface $em;
+    protected ManagerRegistry $managerRegistry;
     protected TokenStorageInterface $tokenStorage;
     protected ?User $user = null;
     protected RequestStack $requestStack;
 
     public function __construct(
-        EntityManagerInterface $em,
+        ManagerRegistry $managerRegistry,
         TokenStorageInterface $tokenStorage,
         RequestStack $requestStack,
         $level = Logger::DEBUG,
         $bubble = true
     ) {
-        $this->em = $em;
         $this->tokenStorage = $tokenStorage;
         $this->requestStack = $requestStack;
+        $this->managerRegistry = $managerRegistry;
 
         parent::__construct($level, $bubble);
     }
@@ -97,70 +97,73 @@ class DoctrineHandler extends AbstractProcessingHandler
     public function write(array $record): void
     {
         try {
-            if ($this->em->isOpen()) {
-                $log = new Log(
-                    $record['level'],
-                    $record['message']
-                );
-
-                $log->setChannel((string) $record['channel']);
-                $data = $record['extra'];
-                if (isset($record['context']['request'])) {
-                    $data = array_merge(
-                        $data,
-                        $record['context']['request']
-                    );
-                }
-                if (isset($record['context']['username'])) {
-                    $data = array_merge(
-                        $data,
-                        ['username' => $record['context']['username']]
-                    );
-                }
-                $log->setAdditionalData($data);
-
-                /*
-                 * Use available securityAuthorizationChecker to provide a valid user
-                 */
-                if (null !== $this->getTokenStorage() &&
-                    null !== $token = $this->getTokenStorage()->getToken()) {
-                    $user = $token->getUser();
-                    if (null !== $user && $user instanceof UserInterface) {
-                        if ($user instanceof User) {
-                            $log->setUser($user);
-                        } else {
-                            $log->setUsername($user->getUsername());
-                        }
-                    } else {
-                        $log->setUsername($token->getUsername());
-                    }
-                }
-                /*
-                 * Use manually set user
-                 */
-                if (null !== $this->getUser()) {
-                    $log->setUser($this->getUser());
-                }
-
-                /*
-                 * Add client IP to log if it’s an HTTP request
-                 */
-                if (null !== $this->requestStack->getMasterRequest()) {
-                    $log->setClientIp($this->requestStack->getMasterRequest()->getClientIp());
-                }
-
-                /*
-                 * Add a related node-source entity
-                 */
-                if (isset($record['context']['source']) &&
-                    null !== $record['context']['source'] &&
-                    $record['context']['source'] instanceof NodesSources) {
-                    $log->setNodeSource($record['context']['source']);
-                }
-
-                $this->em->persist($log);
-                $this->em->flush();
+            $manager = $this->managerRegistry->getManagerForClass(Log::class);
+            if (null !== $manager && $manager->isOpen()) {
+                return;
             }
+
+            $log = new Log(
+                $record['level'],
+                $record['message']
+            );
+
+            $log->setChannel((string) $record['channel']);
+            $data = $record['extra'];
+            if (isset($record['context']['request'])) {
+                $data = array_merge(
+                    $data,
+                    $record['context']['request']
+                );
+            }
+            if (isset($record['context']['username'])) {
+                $data = array_merge(
+                    $data,
+                    ['username' => $record['context']['username']]
+                );
+            }
+            $log->setAdditionalData($data);
+
+            /*
+             * Use available securityAuthorizationChecker to provide a valid user
+             */
+            if (null !== $this->getTokenStorage() &&
+                null !== $token = $this->getTokenStorage()->getToken()) {
+                $user = $token->getUser();
+                if (null !== $user && $user instanceof UserInterface) {
+                    if ($user instanceof User) {
+                        $log->setUser($user);
+                    } else {
+                        $log->setUsername($user->getUsername());
+                    }
+                } else {
+                    $log->setUsername($token->getUsername());
+                }
+            }
+            /*
+             * Use manually set user
+             */
+            if (null !== $this->getUser()) {
+                $log->setUser($this->getUser());
+            }
+
+            /*
+             * Add client IP to log if it’s an HTTP request
+             */
+            if (null !== $this->requestStack->getMasterRequest()) {
+                $log->setClientIp($this->requestStack->getMasterRequest()->getClientIp());
+            }
+
+            /*
+             * Add a related node-source entity
+             */
+            if (isset($record['context']['source']) &&
+                null !== $record['context']['source'] &&
+                $record['context']['source'] instanceof NodesSources) {
+                $log->setNodeSource($record['context']['source']);
+            }
+
+            $manager->persist($log);
+            $manager->flush();
         } catch (\Exception $e) {
             /*
              * Need to prevent SQL errors over throwing

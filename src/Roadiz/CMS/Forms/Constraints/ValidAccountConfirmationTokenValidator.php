@@ -3,29 +3,26 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class ValidAccountConfirmationTokenValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function validate($value, Constraint $constraint)
     {
-        $user = $this->entityManager
+        $user = $this->managerRegistry
                            ->getRepository(User::class)
                            ->findOneByConfirmationToken($value);
 

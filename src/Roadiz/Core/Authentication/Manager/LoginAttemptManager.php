@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Authentication\Manager;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\LoginAttempt;
@@ -17,23 +17,23 @@ class LoginAttemptManager
     protected int $ipAttemptGraceTime = 20 * 60;
     protected int $ipAttemptCount = 20;
     protected RequestStack $requestStack;
-    protected EntityManagerInterface $entityManager;
+    protected ManagerRegistry $managerRegistry;
     protected LoggerInterface $logger;
     protected ?LoginAttemptRepository $loginAttemptRepository = null;
 
     /**
      * @param RequestStack $requestStack
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param LoggerInterface|null $logger
      */
     public function __construct(
         RequestStack $requestStack,
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         ?LoggerInterface $logger = null
     ) {
         $this->requestStack = $requestStack;
-        $this->entityManager = $entityManager;
         $this->logger = $logger ?? new NullLogger();
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -73,6 +73,10 @@ class LoginAttemptManager
      */
     public function onFailedLoginAttempt(string $username)
     {
+        $manager = $this->managerRegistry->getManagerForClass(LoginAttempt::class);
+        if (null === $manager) {
+            throw new \RuntimeException('No manager found for class ' . LoginAttempt::class);
+        }
         $loginAttempt = $this->getLoginAttemptRepository()->findOrCreateOneByIpAddressAndUsername(
             $this->requestStack->getMasterRequest()->getClientIp(),
             $username
@@ -103,7 +107,7 @@ class LoginAttemptManager
                 $blocksUntil->format('Y-m-d H:i:s')
             ));
         }
-        $this->entityManager->flush();
+        $manager->flush();
         return $this;
     }
 
@@ -113,7 +117,7 @@ class LoginAttemptManager
     public function getLoginAttemptRepository(): LoginAttemptRepository
     {
         if (null === $this->loginAttemptRepository) {
-            $this->loginAttemptRepository = $this->entityManager->getRepository(LoginAttempt::class);
+            $this->loginAttemptRepository = $this->managerRegistry->getRepository(LoginAttempt::class);
         }
         return $this->loginAttemptRepository;
     }

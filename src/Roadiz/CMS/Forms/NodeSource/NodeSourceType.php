@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
@@ -37,17 +37,14 @@ use Themes\Rozier\Forms\NodeTreeType;
 
 final class NodeSourceType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -124,7 +121,7 @@ final class NodeSourceType extends AbstractType
             $criteria = array_merge($criteria, ['universal' => false]);
         }
 
-        return $this->entityManager->getRepository(NodeTypeField::class)->findBy($criteria, $position);
+        return $this->managerRegistry->getRepository(NodeTypeField::class)->findBy($criteria, $position);
     }
 
     /**
@@ -143,10 +140,10 @@ final class NodeSourceType extends AbstractType
     private function hasDefaultTranslation(NodesSources $source): bool
     {
         /** @var Translation $defaultTranslation */
-        $defaultTranslation = $this->entityManager->getRepository(Translation::class)
+        $defaultTranslation = $this->managerRegistry->getRepository(Translation::class)
                                             ->findDefault();
 
-        $sourceCount = $this->entityManager->getRepository(NodesSources::class)
+        $sourceCount = $this->managerRegistry->getRepository(NodesSources::class)
                                      ->setDisplayingAllNodesStatuses(true)
                                      ->setDisplayingNotPublishedNodes(true)
                                      ->countBy([

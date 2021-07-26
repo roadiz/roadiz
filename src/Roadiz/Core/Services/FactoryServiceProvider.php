@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
@@ -53,9 +54,9 @@ class FactoryServiceProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
-        $container['emailManager'] = $container->factory(function (Container $c) {
+        $pimple['emailManager'] = $pimple->factory(function (Container $c) {
             return new EmailManager(
                 $c['requestStack']->getMasterRequest(),
                 $c['translator'],
@@ -66,7 +67,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
 
-        $container['contactFormManager'] = $container->factory(function (Container $c) {
+        $pimple['contactFormManager'] = $pimple->factory(function (Container $c) {
             return new ContactFormManager(
                 $c['requestStack']->getMasterRequest(),
                 $c['formFactory'],
@@ -78,17 +79,17 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
 
-        $container[NodeFactory::class] = function (Container $c) {
-            return new NodeFactory($c['em'], $c[NodeNamePolicyInterface::class]);
+        $pimple[NodeFactory::class] = function (Container $c) {
+            return new NodeFactory($c[ManagerRegistry::class], $c[NodeNamePolicyInterface::class]);
         };
-        $container[TagFactory::class] = function (Container $c) {
-            return new TagFactory($c['em']);
+        $pimple[TagFactory::class] = function (Container $c) {
+            return new TagFactory($c[ManagerRegistry::class]);
         };
-        $container['factory.handler'] = function (Container $c) {
+        $pimple['factory.handler'] = function (Container $c) {
             return new HandlerFactory($c);
         };
 
-        $container['node.handler'] = $container->factory(function (Container $c) {
+        $pimple['node.handler'] = $pimple->factory(function (Container $c) {
             return new NodeHandler(
                 $c['em'],
                 $c['workflow.registry'],
@@ -96,44 +97,50 @@ class FactoryServiceProvider implements ServiceProviderInterface
                 $c[NodeNamePolicyInterface::class]
             );
         });
-        $container['nodes_sources.handler'] = $container->factory(function (Container $c) {
+        $pimple['nodes_sources.handler'] = $pimple->factory(function (Container $c) {
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);
         });
-        $container['node_type.handler'] = $container->factory(function (Container $c) {
-            return new NodeTypeHandler($c['em'], $c['kernel'], $c[EntityGeneratorFactory::class], $c['factory.handler']);
+        $pimple['node_type.handler'] = $pimple->factory(function (Container $c) {
+            return new NodeTypeHandler(
+                $c['em'],
+                $c['kernel'],
+                $c[EntityGeneratorFactory::class],
+                $c['factory.handler'],
+                $c[ManagerRegistry::class]
+            );
         });
-        $container['node_type_field.handler'] = $container->factory(function (Container $c) {
+        $pimple['node_type_field.handler'] = $pimple->factory(function (Container $c) {
             return new NodeTypeFieldHandler($c['em'], $c);
         });
-        $container['document.handler'] = $container->factory(function (Container $c) {
+        $pimple['document.handler'] = $pimple->factory(function (Container $c) {
             return new DocumentHandler($c['em'], $c['assetPackages']);
         });
-        $container['custom_form.handler'] = $container->factory(function (Container $c) {
+        $pimple['custom_form.handler'] = $pimple->factory(function (Container $c) {
             return new CustomFormHandler($c['em']);
         });
-        $container['custom_form_field.handler'] = $container->factory(function (Container $c) {
+        $pimple['custom_form_field.handler'] = $pimple->factory(function (Container $c) {
             return new CustomFormFieldHandler($c['em'], $c['custom_form.handler']);
         });
-        $container['folder.handler'] = $container->factory(function (Container $c) {
+        $pimple['folder.handler'] = $pimple->factory(function (Container $c) {
             return new FolderHandler($c['em']);
         });
-        $container['font.handler'] = $container->factory(function (Container $c) {
+        $pimple['font.handler'] = $pimple->factory(function (Container $c) {
             return new FontHandler($c['em']);
         });
-        $container['group.handler'] = $container->factory(function (Container $c) {
+        $pimple['group.handler'] = $pimple->factory(function (Container $c) {
             return new GroupHandler($c['em']);
         });
-        $container['tag.handler'] = $container->factory(function (Container $c) {
+        $pimple['tag.handler'] = $pimple->factory(function (Container $c) {
             return new TagHandler($c['em']);
         });
-        $container['translation.handler'] = $container->factory(function (Container $c) {
+        $pimple['translation.handler'] = $pimple->factory(function (Container $c) {
             return new TranslationHandler($c['em']);
         });
 
         /*
          * Viewers
          */
-        $container['document.renderers'] = function (Container $c) {
+        $pimple['document.renderers'] = function (Container $c) {
             return [
                 new ImageRenderer(
                     $c[EmbedFinderFactory::class],
@@ -166,28 +173,27 @@ class FactoryServiceProvider implements ServiceProviderInterface
                 new EmbedRenderer($c[EmbedFinderFactory::class]),
             ];
         };
-        $container[RendererInterface::class] = function (Container $c) {
+        $pimple[RendererInterface::class] = function (Container $c) {
             $chainRenderer = new ChainRenderer($c['document.renderers']);
             $chainRenderer->addRenderer(new ThumbnailRenderer($chainRenderer));
             return $chainRenderer;
         };
 
-        $container[DocumentFinderInterface::class] = function (Container $c) {
-            return new DocumentFinder($c['em']);
+        $pimple[DocumentFinderInterface::class] = function (Container $c) {
+            return new DocumentFinder($c[ManagerRegistry::class]);
         };
 
-        $container['translation.viewer'] = $container->factory(function (Container $c) {
+        $pimple['translation.viewer'] = $pimple->factory(function (Container $c) {
             return new TranslationViewer(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c['settingsBag'],
                 $c['router'],
                 $c[PreviewResolverInterface::class]
             );
         });
 
-        $container['user.viewer'] = $container->factory(function (Container $c) {
+        $pimple['user.viewer'] = $pimple->factory(function (Container $c) {
             return new UserViewer(
-                $c['em'],
                 $c['settingsBag'],
                 $c['translator'],
                 $c['emailManager'],
@@ -198,7 +204,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
         /*
          * UrlGenerators
          */
-        $container['document.url_generator'] = $container->factory(function (Container $c) {
+        $pimple['document.url_generator'] = $pimple->factory(function (Container $c) {
             $cacheProvider = $c[CacheProvider::class];
             if ($cacheProvider instanceof ArrayCache) {
                 $cacheProvider = null;
@@ -209,16 +215,16 @@ class FactoryServiceProvider implements ServiceProviderInterface
         /*
          * DocumentFactory
          */
-        $container['document.factory'] = $container->factory(function (Container $c) {
-            return new DocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
+        $pimple['document.factory'] = $pimple->factory(function (Container $c) {
+            return new DocumentFactory($c[ManagerRegistry::class], $c['dispatcher'], $c['assetPackages'], $c['logger']);
         });
-        $container[DocumentFactory::class] = $container->factory(function (Container $c) {
+        $pimple[DocumentFactory::class] = $pimple->factory(function (Container $c) {
             return $c['document.factory'];
         });
-        $container[PrivateDocumentFactory::class] = $container->factory(function (Container $c) {
-            return new PrivateDocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
+        $pimple[PrivateDocumentFactory::class] = $pimple->factory(function (Container $c) {
+            return new PrivateDocumentFactory($c[ManagerRegistry::class], $c['dispatcher'], $c['assetPackages'], $c['logger']);
         });
 
-        return $container;
+        return $pimple;
     }
 }

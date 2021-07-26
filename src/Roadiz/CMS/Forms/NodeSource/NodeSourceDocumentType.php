@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -18,18 +18,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class NodeSourceDocumentType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodesSourcesHandler
-     */
-    protected $nodesSourcesHandler;
+    protected NodesSourcesHandler $nodesSourcesHandler;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param NodesSourcesHandler $nodesSourcesHandler
      */
-    public function __construct(EntityManagerInterface $entityManager, NodesSourcesHandler $nodesSourcesHandler)
+    public function __construct(ManagerRegistry $managerRegistry, NodesSourcesHandler $nodesSourcesHandler)
     {
-        parent::__construct($entityManager);
+        parent::__construct($managerRegistry);
         $this->nodesSourcesHandler = $nodesSourcesHandler;
     }
 
@@ -88,7 +85,7 @@ final class NodeSourceDocumentType extends AbstractNodeSourceFieldType
         /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
-        $event->setData($this->entityManager
+        $event->setData($this->managerRegistry
             ->getRepository(Document::class)
             ->findByNodeSourceAndField(
                 $nodeSource,
@@ -115,9 +112,10 @@ final class NodeSourceDocumentType extends AbstractNodeSourceFieldType
 
         if (is_array($event->getData())) {
             $position = 0;
+            $manager = $this->managerRegistry->getManagerForClass(Document::class);
             foreach ($event->getData() as $documentId) {
                 /** @var Document|null $tempDoc */
-                $tempDoc = $this->entityManager->find(Document::class, (int) $documentId);
+                $tempDoc = $manager->find(Document::class, (int) $documentId);
 
                 if ($tempDoc !== null) {
                     $this->nodesSourcesHandler->addDocumentForField($tempDoc, $nodeTypeField, false, $position);

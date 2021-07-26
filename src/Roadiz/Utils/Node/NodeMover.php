@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Node;
@@ -16,14 +17,14 @@ use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Core\Routing\NodeRouter;
 use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class NodeMover
 {
-    protected EntityManagerInterface $entityManager;
+    protected ManagerRegistry $managerRegistry;
     protected UrlGeneratorInterface $urlGenerator;
     protected HandlerFactoryInterface $handlerFactory;
     protected EventDispatcherInterface $dispatcher;
@@ -31,7 +32,7 @@ class NodeMover
     protected LoggerInterface $logger;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param UrlGeneratorInterface $urlGenerator
      * @param HandlerFactoryInterface $handlerFactory
      * @param EventDispatcherInterface $dispatcher
@@ -39,19 +40,28 @@ class NodeMover
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         UrlGeneratorInterface $urlGenerator,
         HandlerFactoryInterface $handlerFactory,
         EventDispatcherInterface $dispatcher,
         CacheProvider $cacheProvider,
         ?LoggerInterface $logger = null
     ) {
-        $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->logger = $logger ?? new NullLogger();
         $this->dispatcher = $dispatcher;
         $this->cacheProvider = $cacheProvider;
         $this->handlerFactory = $handlerFactory;
+        $this->managerRegistry = $managerRegistry;
+    }
+
+    private function getManager(): ObjectManager
+    {
+        $manager = $this->managerRegistry->getManagerForClass(Redirection::class);
+        if (null === $manager) {
+            throw new \RuntimeException('No manager was found during transtyping.');
+        }
+        return $manager;
     }
 
     /**
@@ -83,7 +93,7 @@ class NodeMover
         $node->setPosition($position);
 
         if ($cleanPosition) {
-            $this->entityManager->flush();
+            $this->getManager()->flush();
             /** @var NodeHandler $nodeHandler */
             $nodeHandler = $this->handlerFactory->getHandler($node);
             $nodeHandler->setNode($node);
@@ -168,7 +178,7 @@ class NodeMover
          */
         if ($previousPath !== $newPath) {
             /** @var EntityRepository $redirectionRepo */
-            $redirectionRepo = $this->entityManager->getRepository(Redirection::class);
+            $redirectionRepo = $this->managerRegistry->getRepository(Redirection::class);
 
             /*
              * Checks if new node path is already registered as
@@ -178,7 +188,7 @@ class NodeMover
                 'query' => $newPath,
             ]);
             if (null !== $loopingRedirection) {
-                $this->entityManager->remove($loopingRedirection);
+                $this->getManager()->remove($loopingRedirection);
             }
 
             $existingRedirection = $redirectionRepo->findOneBy([
@@ -186,7 +196,7 @@ class NodeMover
             ]);
             if (null === $existingRedirection) {
                 $existingRedirection = new Redirection();
-                $this->entityManager->persist($existingRedirection);
+                $this->getManager()->persist($existingRedirection);
                 $existingRedirection->setQuery($previousPath);
                 $this->logger->info('New redirection created', [
                     'oldPath' => $previousPath,

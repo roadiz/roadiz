@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\DefaultController;
@@ -123,7 +124,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
         $container[NodesSourcesPathResolver::class] = function (Container $c) {
             return new NodesSourcesPathResolver(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c[PreviewResolverInterface::class],
                 $c['stopwatch']
             );
@@ -170,7 +171,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return new RedirectionRouter(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
@@ -215,14 +216,12 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 /*
                  * Get App routes
                  */
-                $collection = new RoadizRouteCollection(
+                return new RoadizRouteCollection(
                     $c['themeResolver'],
                     $c['settingsBag'],
                     $c[PreviewResolverInterface::class],
                     $c['stopwatch']
                 );
-
-                return $collection;
             }
         };
 

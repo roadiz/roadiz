@@ -8,8 +8,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
- * Class NodeApi.
- *
  * @package RZ\Roadiz\CMS\Utils
  */
 class NodeApi extends AbstractApi
@@ -19,10 +17,13 @@ class NodeApi extends AbstractApi
      */
     public function getRepository()
     {
-        return $this->container['em']
+        // phpstan cannot resolve repository type.
+        /** @var NodeRepository $repository */
+        $repository = $this->managerRegistry
                     ->getRepository(Node::class)
                     ->setDisplayingNotPublishedNodes(false)
                     ->setDisplayingAllNodesStatuses(false);
+        return $repository;
     }
 
     /**
@@ -35,8 +36,8 @@ class NodeApi extends AbstractApi
     public function getBy(
         array $criteria,
         array $order = null,
-        $limit = null,
-        $offset = null
+        ?int $limit = null,
+        ?int $offset = null
     ) {
         if (!in_array('translation.available', $criteria, true)) {
             $criteria['translation.available'] = true;

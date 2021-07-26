@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\NodeNameSubscriber;
@@ -31,16 +32,16 @@ class NodeServiceProvider implements ServiceProviderInterface
              * You can override this service to change NS path aggregator strategy
              */
             // return new NodesSourcesGraphPathAggregator();
-            return new OptimizedNodesSourcesGraphPathAggregator($c['em']);
+            return new OptimizedNodesSourcesGraphPathAggregator($c[ManagerRegistry::class]);
         };
 
         $container[NodeTranstyper::class] = function (Container $c) {
-            return new NodeTranstyper($c['em'], $c['logger.doctrine']);
+            return new NodeTranstyper($c[ManagerRegistry::class], $c['logger.doctrine']);
         };
 
         $container[NodeMover::class] = function (Container $c) {
             return new NodeMover(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c['router'],
                 $c['factory.handler'],
                 $c['proxy.dispatcher'],

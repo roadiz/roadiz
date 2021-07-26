@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -19,18 +19,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class NodeSourceNodeType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodeHandler
-     */
-    protected $nodeHandler;
+
+    protected NodeHandler $nodeHandler;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param NodeHandler $nodeHandler
      */
-    public function __construct(EntityManagerInterface $entityManager, NodeHandler $nodeHandler)
+    public function __construct(ManagerRegistry $managerRegistry, NodeHandler $nodeHandler)
     {
-        parent::__construct($entityManager);
+        parent::__construct($managerRegistry);
         $this->nodeHandler = $nodeHandler;
     }
 
@@ -87,7 +85,7 @@ final class NodeSourceNodeType extends AbstractNodeSourceFieldType
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
         /** @var NodeRepository $nodeRepo */
-        $nodeRepo = $this->entityManager
+        $nodeRepo = $this->managerRegistry
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true);
         $event->setData($nodeRepo->findByNodeAndField(
@@ -112,9 +110,10 @@ final class NodeSourceNodeType extends AbstractNodeSourceFieldType
 
         if (is_array($event->getData())) {
             $position = 0;
+            $manager = $this->managerRegistry->getManagerForClass(Node::class);
             foreach ($event->getData() as $nodeId) {
                 /** @var Node|null $tempNode */
-                $tempNode = $this->entityManager->find(Node::class, (int) $nodeId);
+                $tempNode = $manager->find(Node::class, (int) $nodeId);
 
                 if ($tempNode !== null) {
                     $this->nodeHandler->addNodeForField($tempNode, $nodeTypeField, false, $position);

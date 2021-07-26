@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -13,21 +13,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    /** @var UniversalDataDuplicator */
-    private $universalDataDuplicator;
+    private EntityManagerInterface $em;
+    private UniversalDataDuplicator $universalDataDuplicator;
 
     /**
-     * NodesSourcesUniversalSubscriber constructor.
-     *
-     * @param EntityManager           $em
+     * @param EntityManagerInterface $em
      * @param UniversalDataDuplicator $universalDataDuplicator
      */
-    public function __construct(EntityManager $em, UniversalDataDuplicator $universalDataDuplicator)
+    public function __construct(EntityManagerInterface $em, UniversalDataDuplicator $universalDataDuplicator)
     {
         $this->em = $em;
         $this->universalDataDuplicator = $universalDataDuplicator;

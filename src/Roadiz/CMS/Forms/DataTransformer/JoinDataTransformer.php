@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\DataTransformer;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -13,31 +13,26 @@ class JoinDataTransformer implements DataTransformerInterface
     /**
      * @var NodeTypeField
      */
-    private $nodeTypeField;
-
+    private NodeTypeField $nodeTypeField;
+    private ManagerRegistry $managerRegistry;
     /**
-     * @var EntityManagerInterface
+     * @var class-string
      */
-    private $entityManager;
-
-    /**
-     * @var string
-     */
-    private $entityClassname;
+    private string $entityClassname;
 
     /**
      * @param NodeTypeField $nodeTypeField
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param string $entityClassname
      */
     public function __construct(
         NodeTypeField $nodeTypeField,
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         string $entityClassname
     ) {
         $this->nodeTypeField = $nodeTypeField;
-        $this->entityManager = $entityManager;
         $this->entityClassname = $entityClassname;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -76,7 +71,7 @@ class JoinDataTransformer implements DataTransformerInterface
     public function reverseTransform($formToEntities)
     {
         if ($this->nodeTypeField->isManyToMany()) {
-            $unorderedEntities = $this->entityManager->getRepository($this->entityClassname)->findBy([
+            $unorderedEntities = $this->managerRegistry->getRepository($this->entityClassname)->findBy([
                 'id' => $formToEntities,
             ]);
             /*
@@ -89,7 +84,7 @@ class JoinDataTransformer implements DataTransformerInterface
             return $unorderedEntities;
         }
         if ($this->nodeTypeField->isManyToOne()) {
-            return $this->entityManager->getRepository($this->entityClassname)->findOneBy([
+            return $this->managerRegistry->getRepository($this->entityClassname)->findOneBy([
                 'id' => $formToEntities,
             ]);
         }

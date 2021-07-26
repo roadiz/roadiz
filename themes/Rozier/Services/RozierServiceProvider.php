@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Kernel;
@@ -64,7 +65,7 @@ final class RozierServiceProvider implements ServiceProviderInterface
         };
 
         $container[TranslateNodeType::class] = function (Container $c) {
-            return new TranslateNodeType($c['em']);
+            return new TranslateNodeType($c[ManagerRegistry::class]);
         };
 
         $container[FolderCollectionType::class] = function (Container $c) {

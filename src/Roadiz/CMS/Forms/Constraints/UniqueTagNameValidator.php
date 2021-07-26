@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
@@ -11,17 +11,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueTagNameValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManager $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -71,7 +68,7 @@ class UniqueTagNameValidator extends ConstraintValidator
      */
     protected function tagNameExists($name)
     {
-        $entity = $this->entityManager->getRepository(Tag::class)->findOneByTagName($name);
+        $entity = $this->managerRegistry->getRepository(Tag::class)->findOneByTagName($name);
 
         return (null !== $entity);
     }

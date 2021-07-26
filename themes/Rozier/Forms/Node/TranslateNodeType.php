@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -18,17 +18,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TranslateNodeType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -37,7 +34,7 @@ class TranslateNodeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $translations = $this->entityManager->getRepository(Translation::class)
+        $translations = $this->managerRegistry->getRepository(Translation::class)
                            ->findUnavailableTranslationsForNode($options['node']);
         $choices = [];
 
@@ -58,7 +55,7 @@ class TranslateNodeType extends AbstractType
         ]);
 
         $builder->get('translation')
-            ->addModelTransformer(new TranslationTransformer($this->entityManager));
+            ->addModelTransformer(new TranslationTransformer($this->managerRegistry));
     }
 
     /**

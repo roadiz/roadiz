@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;

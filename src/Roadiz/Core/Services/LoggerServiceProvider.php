@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Monolog\Logger;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -71,12 +72,11 @@ class LoggerServiceProvider implements ServiceProviderInterface
              */
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
-            if (null !== $c['em'] &&
-                $log instanceof Logger &&
+            if ($log instanceof Logger &&
                 false === $kernel->isInstallMode() &&
                 $kernel->getEnvironment() == 'prod') {
                 $log->pushHandler(new DoctrineHandler(
-                    $c['em'],
+                    $c[ManagerRegistry::class],
                     $c['securityTokenStorage'],
                     $c['requestStack'],
                     Logger::INFO
@@ -106,12 +106,11 @@ class LoggerServiceProvider implements ServiceProviderInterface
              */
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
-            if (null !== $c['em'] &&
-                $log instanceof Logger &&
+            if ($log instanceof Logger &&
                 false === $kernel->isInstallMode() &&
                 $kernel->getEnvironment() == 'prod') {
                 $log->pushHandler(new DoctrineHandler(
-                    $c['em'],
+                    $c[ManagerRegistry::class],
                     $c['securityTokenStorage'],
                     $c['requestStack'],
                     Logger::INFO

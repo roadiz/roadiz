@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Monolog\Logger;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Font;
@@ -20,14 +20,14 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class FontLifeCycleSubscriber implements EventSubscriber
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
      * We need to pass whole container not to trigger asset packages
      * initialization and not to creation a dependency infinite loop.
+     *
+     * assetPackages requires SettingsBag and EntityManager which requires this
+     * class too.
      *
      * @param Container $container
      */

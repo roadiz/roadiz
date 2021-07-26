@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -16,24 +16,24 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 final class NodesSourcesPathResolver implements PathResolverInterface
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private ?Stopwatch $stopwatch;
     private static string $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
     private PreviewResolverInterface $previewResolver;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param PreviewResolverInterface $previewResolver
      * @param Stopwatch|null $stopwatch
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         PreviewResolverInterface $previewResolver,
         ?Stopwatch $stopwatch
     ) {
-        $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->previewResolver = $previewResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -136,7 +136,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
     private function parseTranslation(array &$tokens): ?TranslationInterface
     {
         /** @var TranslationRepository $repository */
-        $repository = $this->entityManager->getRepository(Translation::class);
+        $repository = $this->managerRegistry->getRepository(Translation::class);
 
         if (!empty($tokens[0])) {
             $firstToken = $tokens[0];
@@ -170,7 +170,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
             if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
                 $identifier = mb_strtolower(strip_tags($tokens[(int) (count($tokens) - 1)]));
                 if ($identifier !== null && $identifier != '') {
-                    $array = $this->entityManager
+                    $array = $this->managerRegistry
                         ->getRepository(Node::class)
                         ->findNodeTypeNameAndSourceIdByIdentifier(
                             $identifier,
@@ -179,7 +179,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
                         );
                     if (null !== $array) {
                         /** @var NodesSources|null $nodeSource */
-                        $nodeSource = $this->entityManager
+                        $nodeSource = $this->managerRegistry
                             ->getRepository($this->getNodeTypeClassname($array['name']))
                             ->findOneBy([
                                 'id' => $array['id']
@@ -196,7 +196,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
         /*
          * Resolve home page
          */
-        return $this->entityManager
+        return $this->managerRegistry
             ->getRepository(NodesSources::class)
             ->findOneBy([
                 'node.home' => true,

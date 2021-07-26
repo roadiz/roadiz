@@ -7,8 +7,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
 
 /**
- * Class NodeTypeApi.
- *
  * @package RZ\Roadiz\CMS\Utils
  */
 class NodeTypeApi extends AbstractApi
@@ -18,7 +16,7 @@ class NodeTypeApi extends AbstractApi
      */
     public function getRepository()
     {
-        return $this->container['em']->getRepository(NodeType::class);
+        return $this->managerRegistry->getRepository(NodeType::class);
     }
     /**
      * {@inheritdoc}

@@ -22,8 +22,6 @@ use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
 use RZ\Roadiz\Markdown\MarkdownInterface;
-use RZ\Roadiz\Message\GuzzleRequestMessage;
-use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
 use Solarium\Client;
 use Solarium\Core\Client\Adapter\AdapterInterface;
 use Solarium\Core\Client\Adapter\Curl;

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Utils\NodeApi;
@@ -15,24 +16,24 @@ use RZ\Roadiz\CMS\Utils\TagApi;
  */
 class EntityApiServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
-        $container['nodeApi'] = function (Container $c) {
-            return new NodeApi($c);
+        $pimple['nodeApi'] = function (Container $c) {
+            return new NodeApi($c[ManagerRegistry::class]);
         };
 
-        $container['nodeTypeApi'] = function (Container $c) {
-            return new NodeTypeApi($c);
+        $pimple['nodeTypeApi'] = function (Container $c) {
+            return new NodeTypeApi($c[ManagerRegistry::class]);
         };
 
-        $container['nodeSourceApi'] = function (Container $c) {
-            return new NodeSourceApi($c);
+        $pimple['nodeSourceApi'] = function (Container $c) {
+            return new NodeSourceApi($c[ManagerRegistry::class]);
         };
 
-        $container['tagApi'] = function (Container $c) {
-            return new TagApi($c);
+        $pimple['tagApi'] = function (Container $c) {
+            return new TagApi($c[ManagerRegistry::class]);
         };
 
-        return $container;
+        return $pimple;
     }
 }

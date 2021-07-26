@@ -4,24 +4,24 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use RZ\Roadiz\Bag\LazyParameterBag;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
-use RZ\Roadiz\Bag\LazyParameterBag;
 
 class Settings extends LazyParameterBag
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private ?SettingRepository $repository = null;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct();
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -30,7 +30,7 @@ class Settings extends LazyParameterBag
     public function getRepository()
     {
         if (null === $this->repository) {
-            $this->repository = $this->entityManager->getRepository(Setting::class);
+            $this->repository = $this->managerRegistry->getRepository(Setting::class);
         }
         return $this->repository;
     }
@@ -70,7 +70,7 @@ class Settings extends LazyParameterBag
     {
         try {
             $id = $this->getInt($key);
-            return $this->entityManager
+            return $this->managerRegistry
                         ->getRepository(Document::class)
                         ->findOneById($id);
         } catch (\Exception $e) {

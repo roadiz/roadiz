@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -20,27 +20,27 @@ use Symfony\Component\Routing\RouterInterface;
 final class TranslationViewer
 {
     private ParameterBag $settingsBag;
-    private EntityManager $entityManager;
+    private ManagerRegistry $managerRegistry;
     private RouterInterface $router;
     private PreviewResolverInterface $previewResolver;
     private ?Translation $translation = null;
 
     /**
-     * @param EntityManager $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param ParameterBag $settingsBag
      * @param RouterInterface $router
      * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
-        EntityManager $entityManager,
+        ManagerRegistry $managerRegistry,
         ParameterBag $settingsBag,
         RouterInterface $router,
         PreviewResolverInterface $previewResolver
     ) {
         $this->settingsBag = $settingsBag;
-        $this->entityManager = $entityManager;
         $this->router = $router;
         $this->previewResolver = $previewResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -48,7 +48,7 @@ final class TranslationViewer
      */
     public function getRepository(): TranslationRepository
     {
-        return $this->entityManager->getRepository(Translation::class);
+        return $this->managerRegistry->getRepository(Translation::class);
     }
 
     /**
@@ -84,12 +84,12 @@ final class TranslationViewer
      *             'translation' => string 'Spanish'
      *
      * @param Request $request
-     * @param boolean $absolute Generate absolute url or relative paths
+     * @param bool $absolute Generate absolute url or relative paths
      *
      * @return array
      * @throws ORMException
      */
-    public function getTranslationMenuAssignation(Request $request, $absolute = false): array
+    public function getTranslationMenuAssignation(Request $request, bool $absolute = false): array
     {
         $attr = $request->attributes->all();
         $query = $request->query->all();
@@ -106,7 +106,7 @@ final class TranslationViewer
 
         if (key_exists('node', $attr) && $attr['node'] instanceof Node) {
             $node = $attr["node"];
-            $this->entityManager->refresh($node);
+            $this->managerRegistry->getManagerForClass(Node::class)->refresh($node);
         } else {
             $node = null;
         }

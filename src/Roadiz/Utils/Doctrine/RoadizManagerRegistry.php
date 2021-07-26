@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Container\ContainerInterface;
 
 /**
  * Wrapper around the only Doctrine manager for Roadiz CMS.
@@ -13,14 +13,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 final class RoadizManagerRegistry implements ManagerRegistry
 {
-    private EntityManagerInterface $entityManager;
+    private ContainerInterface $container;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ContainerInterface $container
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ContainerInterface $container)
     {
-        $this->entityManager = $entityManager;
+        $this->container = $container;
     }
 
     /**
@@ -28,7 +28,7 @@ final class RoadizManagerRegistry implements ManagerRegistry
      */
     public function getDefaultConnectionName()
     {
-        return get_class($this->entityManager->getConnection());
+        return get_class($this->container->get('em')->getConnection());
     }
 
     /**
@@ -36,7 +36,7 @@ final class RoadizManagerRegistry implements ManagerRegistry
      */
     public function getConnection($name = null)
     {
-        return $this->entityManager->getConnection();
+        return $this->container->get('em')->getConnection();
     }
 
     /**
@@ -45,7 +45,7 @@ final class RoadizManagerRegistry implements ManagerRegistry
     public function getConnections()
     {
         return [
-            $this->getConnection(),
+            $this->container->get('em'),
         ];
     }
 
@@ -64,7 +64,7 @@ final class RoadizManagerRegistry implements ManagerRegistry
      */
     public function getDefaultManagerName()
     {
-        return get_class($this->entityManager);
+        return get_class($this->container->get('em'));
     }
 
     /**
@@ -72,7 +72,7 @@ final class RoadizManagerRegistry implements ManagerRegistry
      */
     public function getManager($name = null)
     {
-        return $this->entityManager;
+        return $this->container->get('em');
     }
 
     /**

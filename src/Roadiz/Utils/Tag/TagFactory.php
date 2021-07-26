@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Tag;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -12,14 +12,14 @@ use RZ\Roadiz\Utils\StringHandler;
 
 final class TagFactory
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -42,14 +42,14 @@ final class TagFactory
         }
 
         /** @var TagRepository $repository */
-        $repository = $this->entityManager->getRepository(Tag::class);
+        $repository = $this->managerRegistry->getRepository(Tag::class);
 
         if (null !== $tag = $repository->findOneByTagName($tagName)) {
             return $tag;
         }
 
         if ($translation === null) {
-            $translation = $this->entityManager->getRepository(Translation::class)->findDefault();
+            $translation = $this->managerRegistry->getRepository(Translation::class)->findDefault();
         }
 
         if ($latestPosition <= 0) {
@@ -60,16 +60,18 @@ final class TagFactory
             $latestPosition = $repository->findLatestPositionInParent($parent);
         }
 
+        $manager = $this->managerRegistry->getManagerForClass(Tag::class);
+
         $tag = new Tag();
         $tag->setTagName($name);
         $tag->setParent($parent);
         $tag->setPosition(++$latestPosition);
         $tag->setVisible(true);
-        $this->entityManager->persist($tag);
+        $manager->persist($tag);
 
         $translatedTag = new TagTranslation($tag, $translation);
         $translatedTag->setName($name);
-        $this->entityManager->persist($translatedTag);
+        $manager->persist($translatedTag);
 
         return $tag;
     }

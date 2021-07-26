@@ -5,7 +5,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Kernel;
@@ -22,7 +22,7 @@ final class AssetsController
 {
     private Kernel $kernel;
     private InterventionRequest $interventionRequest;
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private Environment $templating;
     private Settings $settingsBag;
     private Packages $packages;
@@ -30,7 +30,7 @@ final class AssetsController
     /**
      * @param Kernel $kernel
      * @param InterventionRequest $interventionRequest
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param Environment $templating
      * @param Settings $settingsBag
      * @param Packages $packages
@@ -38,14 +38,14 @@ final class AssetsController
     public function __construct(
         Kernel $kernel,
         InterventionRequest $interventionRequest,
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         Environment $templating,
         Settings $settingsBag,
         Packages $packages
     ) {
         $this->kernel = $kernel;
         $this->interventionRequest = $interventionRequest;
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
         $this->templating = $templating;
         $this->settingsBag = $settingsBag;
         $this->packages = $packages;
@@ -102,7 +102,7 @@ final class AssetsController
     public function fontFileAction(Request $request, string $filename, int $variant, string $extension)
     {
         /** @var FontRepository $repository */
-        $repository = $this->entityManager->getRepository(Font::class);
+        $repository = $this->managerRegistry->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
         /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
@@ -183,7 +183,7 @@ final class AssetsController
     public function fontFacesAction(Request $request)
     {
         /** @var FontRepository $repository */
-        $repository = $this->entityManager->getRepository(Font::class);
+        $repository = $this->managerRegistry->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(

@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
 use AM\InterventionRequest\InterventionRequest;
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Log\LoggerInterface;
@@ -29,7 +30,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
             return new AssetsController(
                 $c['kernel'],
                 $c['interventionRequest'],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c['twig.environment'],
                 $c['settingsBag'],
                 $c['assetPackages']

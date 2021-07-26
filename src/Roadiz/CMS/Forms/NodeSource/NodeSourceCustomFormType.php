@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -18,18 +18,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var NodeHandler
-     */
-    protected $nodeHandler;
+    protected NodeHandler $nodeHandler;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param NodeHandler $nodeHandler
      */
-    public function __construct(EntityManagerInterface $entityManager, NodeHandler $nodeHandler)
+    public function __construct(ManagerRegistry $managerRegistry, NodeHandler $nodeHandler)
     {
-        parent::__construct($entityManager);
+        parent::__construct($managerRegistry);
         $this->nodeHandler = $nodeHandler;
     }
 
@@ -85,7 +82,7 @@ final class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
         /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
-        $event->setData($this->entityManager
+        $event->setData($this->managerRegistry
             ->getRepository(CustomForm::class)
             ->findByNodeAndField($nodeSource->getNode(), $nodeTypeField));
     }
@@ -107,8 +104,9 @@ final class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
         if (is_array($event->getData())) {
             $position = 0;
             foreach ($event->getData() as $customFormId) {
+                $manager = $this->managerRegistry->getManagerForClass(CustomForm::class);
                 /** @var CustomForm|null $tempCForm */
-                $tempCForm = $this->entityManager->find(CustomForm::class, (int) $customFormId);
+                $tempCForm = $manager->find(CustomForm::class, (int) $customFormId);
 
                 if ($tempCForm !== null) {
                     $this->nodeHandler->addCustomFormForField($tempCForm, $nodeTypeField, false, $position);

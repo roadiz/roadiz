@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
 use RZ\Roadiz\Core\Entities\UrlAlias;
@@ -16,17 +16,14 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class UrlAliasType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -50,7 +47,9 @@ class UrlAliasType extends AbstractType
                 'label' => false,
                 'mapped' => false,
             ]);
-            $builder->get('translation')->addModelTransformer(new TranslationTransformer($this->entityManager));
+            $builder->get('translation')->addModelTransformer(new TranslationTransformer(
+                $this->managerRegistry
+            ));
         }
     }
 

@@ -208,8 +208,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             ));
             $extensions->add(new UrlExtension(
                 $c['document.url_generator'],
-                $c['nodesSourcesUrlCacheProvider'],
-                (boolean) $c['settingsBag']->get('force_locale')
+                $c['nodesSourcesUrlCacheProvider']
             ));
             /*
              * These extension need a valid Database connection

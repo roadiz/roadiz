@@ -4,12 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\ConnectionException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
-use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
@@ -28,10 +27,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class CacheCommand extends Command
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     private $nsCacheHelper;
 
     protected function configure()
@@ -98,10 +93,11 @@ class CacheCommand extends Command
             $kernel = $this->getHelper('kernel')->getKernel();
             /** @var EventDispatcher $dispatcher */
             $dispatcher = $kernel->get('dispatcher');
-            $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+            /** @var ManagerRegistry $managerRegistry */
+            $managerRegistry = $kernel->get(ManagerRegistry::class);
             $this->nsCacheHelper = $this->getHelper('ns-cache');
 
-            $doctrineClearer = new DoctrineCacheClearer($this->entityManager, $kernel);
+            $doctrineClearer = new DoctrineCacheClearer($managerRegistry, $kernel);
             $routingClearer = new RoutingCacheClearer($kernel->getCacheDir());
             $templatesClearer = new TemplatesCacheClearer($kernel->getCacheDir());
             $translationsClearer = new TranslationsCacheClearer($kernel->getCacheDir());

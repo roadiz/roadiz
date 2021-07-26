@@ -15,14 +15,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NodeRedirectionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NodeMover
-     */
-    protected $nodeMover;
-    /**
-     * @var Kernel
-     */
-    protected $kernel;
+    protected NodeMover $nodeMover;
+    protected Kernel $kernel;
 
     /**
      * @param NodeMover $nodeMover

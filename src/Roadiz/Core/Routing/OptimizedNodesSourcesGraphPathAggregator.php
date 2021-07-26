@@ -4,23 +4,23 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 
 final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPathAggregator
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private ArrayCache $cache;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
         $this->cache = new ArrayCache();
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -82,7 +82,7 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
                  *
                  * Do a partial query to optimize SQL time
                  */
-                $qb = $this->entityManager
+                $qb = $this->managerRegistry
                     ->getRepository(NodesSources::class)
                     ->createQueryBuilder('ns');
                 $parents = $qb->select('n.id as id, n.nodeName as nodeName, ua.alias as alias')

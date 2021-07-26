@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\ArrayProvider;
@@ -80,23 +81,23 @@ class FormServiceProvider implements ServiceProviderInterface
         };
 
         $container[UniqueEntityValidator::class] = function (Container $c) {
-            return new UniqueEntityValidator($c['em']);
+            return new UniqueEntityValidator($c[ManagerRegistry::class]);
         };
 
         $container[UniqueNodeNameValidator::class] = function (Container $c) {
-            return new UniqueNodeNameValidator($c['em']);
+            return new UniqueNodeNameValidator($c[ManagerRegistry::class]);
         };
 
         $container[UniqueTagNameValidator::class] = function (Container $c) {
-            return new UniqueTagNameValidator($c['em']);
+            return new UniqueTagNameValidator($c[ManagerRegistry::class]);
         };
 
         $container[ValidAccountConfirmationTokenValidator::class] = function (Container $c) {
-            return new ValidAccountConfirmationTokenValidator($c['em']);
+            return new ValidAccountConfirmationTokenValidator($c[ManagerRegistry::class]);
         };
 
         $container[ValidAccountEmailValidator::class] = function (Container $c) {
-            return new ValidAccountEmailValidator($c['em']);
+            return new ValidAccountEmailValidator($c[ManagerRegistry::class]);
         };
 
         $container[UniqueFilenameValidator::class] = function (Container $c) {
@@ -104,71 +105,71 @@ class FormServiceProvider implements ServiceProviderInterface
         };
 
         $container[DocumentCollectionType::class] = function (Container $c) {
-            return new DocumentCollectionType($c['em']);
+            return new DocumentCollectionType($c[ManagerRegistry::class]);
         };
 
         $container[TranslationsType::class] = function (Container $c) {
-            return new TranslationsType($c['em']);
+            return new TranslationsType($c[ManagerRegistry::class]);
         };
 
         $container[RolesType::class] = function (Container $c) {
-            return new RolesType($c['em'], $c['securityAuthorizationChecker']);
+            return new RolesType($c[ManagerRegistry::class], $c['securityAuthorizationChecker']);
         };
 
         $container[GroupsType::class] = function (Container $c) {
-            return new GroupsType($c['securityAuthorizationChecker'], $c['em']);
+            return new GroupsType($c[ManagerRegistry::class], $c['securityAuthorizationChecker']);
         };
 
         $container[NodesType::class] = function (Container $c) {
-            return new NodesType($c['em']);
+            return new NodesType($c[ManagerRegistry::class]);
         };
 
         $container[NodeTypesType::class] = function (Container $c) {
-            return new NodeTypesType($c['em']);
+            return new NodeTypesType($c[ManagerRegistry::class]);
         };
 
         $container[SettingDocumentType::class] = function (Container $c) {
-            return new SettingDocumentType($c['em'], $c[DocumentFactory::class], $c['assetPackages']);
+            return new SettingDocumentType($c[ManagerRegistry::class], $c[DocumentFactory::class], $c['assetPackages']);
         };
 
         $container[SettingGroupType::class] = function (Container $c) {
-            return new SettingGroupType($c['em']);
+            return new SettingGroupType($c[ManagerRegistry::class]);
         };
 
         $container[TagTranslationDocumentType::class] = function (Container $c) {
-            return new TagTranslationDocumentType($c['em']);
+            return new TagTranslationDocumentType($c[ManagerRegistry::class]);
         };
 
         $container[UsersType::class] = function (Container $c) {
-            return new UsersType($c['em']);
+            return new UsersType($c[ManagerRegistry::class]);
         };
 
         $container[UrlAliasType::class] = function (Container $c) {
-            return new UrlAliasType($c['em']);
+            return new UrlAliasType($c[ManagerRegistry::class]);
         };
 
         $container[NodeSourceCustomFormType::class] = function (Container $c) {
-            return new NodeSourceCustomFormType($c['em'], $c['node.handler']);
+            return new NodeSourceCustomFormType($c[ManagerRegistry::class], $c['node.handler']);
         };
 
         $container[NodeSourceNodeType::class] = function (Container $c) {
-            return new NodeSourceNodeType($c['em'], $c['node.handler']);
+            return new NodeSourceNodeType($c[ManagerRegistry::class], $c['node.handler']);
         };
 
         $container[NodeSourceDocumentType::class] = function (Container $c) {
-            return new NodeSourceDocumentType($c['em'], $c['nodes_sources.handler']);
+            return new NodeSourceDocumentType($c[ManagerRegistry::class], $c['nodes_sources.handler']);
         };
 
         $container[NodeSourceJoinType::class] = function (Container $c) {
-            return new NodeSourceJoinType($c['em']);
+            return new NodeSourceJoinType($c[ManagerRegistry::class]);
         };
 
         $container[NodeSourceProviderType::class] = function (Container $c) {
-            return new NodeSourceProviderType($c['em'], $c);
+            return new NodeSourceProviderType($c[ManagerRegistry::class], $c);
         };
 
         $container[NodeSourceType::class] = function (Container $c) {
-            return new NodeSourceType($c['em']);
+            return new NodeSourceType($c[ManagerRegistry::class]);
         };
 
         $container['formValidator'] = function (Container $c) {

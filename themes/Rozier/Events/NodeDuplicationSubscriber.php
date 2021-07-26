@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -14,20 +14,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NodeDuplicationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var HandlerFactory
-     */
-    protected $handlerFactory;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    protected HandlerFactoryInterface $handlerFactory;
+    private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManager  $entityManager
-     * @param HandlerFactory $handlerFactory
+     * @param EntityManagerInterface  $entityManager
+     * @param HandlerFactoryInterface $handlerFactory
      */
-    public function __construct(EntityManager $entityManager, HandlerFactory $handlerFactory)
+    public function __construct(EntityManagerInterface $entityManager, HandlerFactoryInterface $handlerFactory)
     {
         $this->entityManager = $entityManager;
         $this->handlerFactory = $handlerFactory;
