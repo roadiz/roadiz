@@ -24,6 +24,7 @@ use Themes\Rozier\Forms\NodeTreeType;
 use Themes\Rozier\Forms\NodeType;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\Serialization\DocumentThumbnailSerializeSubscriber;
+use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 final class RozierServiceProvider implements ServiceProviderInterface
 {
@@ -38,11 +39,16 @@ final class RozierServiceProvider implements ServiceProviderInterface
         $container['rozier.form_type.add_node'] = AddNodeType::class;
         $container['rozier.form_type.node'] = NodeType::class;
 
+        $container[TreeWidgetFactory::class] = function (Container $c) {
+            return new TreeWidgetFactory($c['request_stack'], $c[ManagerRegistry::class]);
+        };
+
         $container[NodeTreeType::class] = function (Container $c) {
             return new NodeTreeType(
                 $c['securityAuthorizationChecker'],
                 $c['request_stack'],
-                $c['em'],
+                $c[ManagerRegistry::class],
+                $c[TreeWidgetFactory::class]
             );
         };
 
@@ -54,7 +60,7 @@ final class RozierServiceProvider implements ServiceProviderInterface
         };
 
         $container[AddNodeType::class] = function (Container $c) {
-            return new AddNodeType($c['em']);
+            return new AddNodeType($c[ManagerRegistry::class]);
         };
 
         $container[TranslateNodeType::class] = function (Container $c) {
@@ -62,15 +68,15 @@ final class RozierServiceProvider implements ServiceProviderInterface
         };
 
         $container[FolderCollectionType::class] = function (Container $c) {
-            return new FolderCollectionType($c['em']);
+            return new FolderCollectionType($c[ManagerRegistry::class]);
         };
 
         $container[NodeTagsType::class] = function (Container $c) {
-            return new NodeTagsType($c['em']);
+            return new NodeTagsType($c[ManagerRegistry::class]);
         };
 
         $container[TranstypeType::class] = function (Container $c) {
-            return new TranstypeType($c['em']);
+            return new TranstypeType($c[ManagerRegistry::class]);
         };
 
         $container->extend('serializer.subscribers', function (array $subscribers, $c) {

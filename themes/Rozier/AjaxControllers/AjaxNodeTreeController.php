@@ -10,6 +10,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\NodeTreeWidget;
+use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
  * @package Themes\Rozier\AjaxControllers
@@ -59,12 +60,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $node = null;
                 }
 
-                $nodeTree = new NodeTreeWidget(
-                    $this->getRequest(),
-                    $this->get('em'),
-                    $node,
-                    $translation
-                );
+                $nodeTree = $this->get(TreeWidgetFactory::class)->createNodeTree($node, $translation);
 
                 if ($request->get('tagId') &&
                     $request->get('tagId') > 0) {
@@ -106,12 +102,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $parent = $this->get(NodeChrootResolver::class)->getChroot($this->getUser());
                 }
 
-                $nodeTree = new NodeTreeWidget(
-                    $this->getRequest(),
-                    $this->get('em'),
-                    $parent,
-                    $translation
-                );
+                $nodeTree = $this->get(TreeWidgetFactory::class)->createNodeTree($parent, $translation);
                 $this->assignation['mainNodeTree'] = true;
                 break;
         }

@@ -31,6 +31,7 @@ use Themes\Rozier\Forms\TagType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\VersionedControllerTrait;
 use Themes\Rozier\Widgets\TagTreeWidget;
+use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
  * @package Themes\Rozier\Controllers\Tags
@@ -417,7 +418,7 @@ class TagsController extends RozierApp
         }
 
         if (null !== $tag) {
-            $widget = new TagTreeWidget($request, $this->get('em'), $tag);
+            $widget = $this->get(TreeWidgetFactory::class)->createTagTree($tag);
             $this->assignation['tag'] = $tag;
             $this->assignation['translation'] = $translation;
             $this->assignation['specificTagTree'] = $widget;

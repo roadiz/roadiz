@@ -13,10 +13,7 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
  */
 class NodePaginator extends Paginator
 {
-    /**
-     * @var TranslationInterface|null
-     */
-    protected $translation = null;
+    protected ?TranslationInterface $translation = null;
 
     /**
      * @return TranslationInterface|null

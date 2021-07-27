@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Console;
 
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
@@ -35,6 +38,8 @@ class InstallCommand extends Command implements ContainerAwareInterface
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
+        /** @var ManagerRegistry $managerRegistry */
+        $managerRegistry = $this->getHelper('doctrine')->getManagerRegistry();
 
         $io->note('Before installing Roadiz, did you create database schema? ' . PHP_EOL .
             'If not execute: bin/roadiz orm:schema-tool:create');
@@ -70,7 +75,8 @@ class InstallCommand extends Command implements ContainerAwareInterface
                     $io->success('Theme files “' . $installRoot . "/" . $filename . '” has been imported.');
                 }
             }
-
+            /** @var ObjectManager $manager */
+            $manager = $managerRegistry->getManagerForClass(Translation::class);
             /*
              * Create default translation
              */
@@ -81,19 +87,21 @@ class InstallCommand extends Command implements ContainerAwareInterface
                     ->setLocale("en")
                     ->setName("Default translation");
 
-                $this->get('em')->persist($defaultTrans);
+                $manager->persist($defaultTrans);
 
                 $io->success('Default translation installed.');
             } else {
                 $io->warning('A default translation is already installed.');
             }
-            $this->get('em')->flush();
+            $manager->flush();
 
-            // Clear result cache
-            /** @var CacheProvider $cacheDriver */
-            $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
-            if ($cacheDriver !== null) {
-                $cacheDriver->deleteAll();
+            if ($manager instanceof EntityManagerInterface) {
+                // Clear result cache
+                /** @var CacheProvider $cacheDriver */
+                $cacheDriver = $manager->getConfiguration()->getResultCacheImpl();
+                if ($cacheDriver !== null) {
+                    $cacheDriver->deleteAll();
+                }
             }
         }
         return 0;
@@ -106,8 +114,10 @@ class InstallCommand extends Command implements ContainerAwareInterface
      */
     public function hasDefaultTranslation()
     {
-        $default = $this->get('em')->getRepository(Translation::class)->findOneBy([]);
+        /** @var ManagerRegistry $managerRegistry */
+        $managerRegistry = $this->getHelper('doctrine')->getManagerRegistry();
+        $default = $managerRegistry->getRepository(Translation::class)->findOneBy([]);
 
-        return $default !== null ? true : false;
+        return $default !== null;
     }
 }

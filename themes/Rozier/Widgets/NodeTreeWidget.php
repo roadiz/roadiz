@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
@@ -33,18 +33,18 @@ final class NodeTreeWidget extends AbstractWidget
     protected array $additionalCriteria = [];
 
     /**
-     * @param Request $request Current kernel request
-     * @param EntityManagerInterface $entityManager
+     * @param RequestStack $requestStack
+     * @param ManagerRegistry $managerRegistry
      * @param Node|null $parent Entry point of NodeTreeWidget, set null if it's root
      * @param Translation|null $translation NodeTree translation
      */
     public function __construct(
-        Request $request,
-        EntityManagerInterface $entityManager,
+        RequestStack $requestStack,
+        ManagerRegistry $managerRegistry,
         ?Node $parent = null,
         ?Translation $translation = null
     ) {
-        parent::__construct($request, $entityManager);
+        parent::__construct($requestStack, $managerRegistry);
 
         $this->parentNode = $parent;
         $this->translation = $translation;
@@ -173,7 +173,7 @@ final class NodeTreeWidget extends AbstractWidget
          */
         $listManager = new EntityListManager(
             $this->getRequest(),
-            $this->getEntityManager(),
+            $this->getManagerRegistry()->getManagerForClass(Node::class),
             Node::class,
             $criteria,
             $ordering
@@ -257,7 +257,7 @@ final class NodeTreeWidget extends AbstractWidget
      */
     public function getAvailableTranslations(): array
     {
-        return $this->getEntityManager()
+        return $this->getManagerRegistry()
             ->getRepository(Translation::class)
             ->findBy([], [
                 'defaultTranslation' => 'DESC',

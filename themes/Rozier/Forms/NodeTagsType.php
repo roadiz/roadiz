@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\TagsType;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,17 +17,14 @@ use Themes\Rozier\Forms\DataTransformer\TagTransformer;
  */
 class NodeTagsType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -40,17 +37,17 @@ class NodeTagsType extends AbstractType
     {
         $builder->add('tags', TagsType::class);
         $builder->get('tags')
-            ->addModelTransformer(new TagTransformer($this->entityManager));
+            ->addModelTransformer(new TagTransformer($this->managerRegistry->getManagerForClass(Tag::class)));
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param OptionsResolver $optionsResolver
+     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $optionsResolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $optionsResolver->setDefault('data_class', Node::class);
+        $resolver->setDefault('data_class', Node::class);
     }
 
     /**

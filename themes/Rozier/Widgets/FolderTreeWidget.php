@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Folder;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Prepare a Folder tree according to Folder hierarchy and given options.
@@ -20,16 +20,16 @@ final class FolderTreeWidget extends AbstractWidget
     protected $folders = null;
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param RequestStack $requestStack
+     * @param ManagerRegistry $managerRegistry
      * @param Folder|null $parent
      */
     public function __construct(
-        Request $request,
-        EntityManagerInterface $entityManager,
+        RequestStack $requestStack,
+        ManagerRegistry $managerRegistry,
         ?Folder $parent = null
     ) {
-        parent::__construct($request, $entityManager);
+        parent::__construct($requestStack, $managerRegistry);
         $this->parentFolder = $parent;
     }
 
@@ -39,7 +39,7 @@ final class FolderTreeWidget extends AbstractWidget
      */
     public function getChildrenFolders(Folder $parent): array
     {
-        return $this->folders = $this->getEntityManager()
+        return $this->folders = $this->getManagerRegistry()
                     ->getRepository(Folder::class)
                     ->findByParentAndTranslation($parent, $this->getTranslation());
     }
@@ -57,7 +57,7 @@ final class FolderTreeWidget extends AbstractWidget
     public function getFolders()
     {
         if (null === $this->folders) {
-            $this->folders = $this->getEntityManager()
+            $this->folders = $this->getManagerRegistry()
                 ->getRepository(Folder::class)
                 ->findByParentAndTranslation($this->getRootFolder(), $this->getTranslation());
         }

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,17 +18,14 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class TranstypeType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -85,7 +82,7 @@ class TranstypeType extends AbstractType
      */
     protected function getAvailableTypes(NodeType $currentType)
     {
-        $qb = $this->entityManager->createQueryBuilder();
+        $qb = $this->managerRegistry->getManagerForClass(NodeType::class)->createQueryBuilder();
         $qb->select('n')
            ->from(NodeType::class, 'n')
            ->where($qb->expr()->neq('n.id', $currentType->getId()))

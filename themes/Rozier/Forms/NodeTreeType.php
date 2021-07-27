@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Forms;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Themes\Rozier\Widgets\NodeTreeWidget;
+use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
  * Node tree embedded type in a node source form.
@@ -27,21 +29,25 @@ class NodeTreeType extends AbstractType
 {
     protected AuthorizationCheckerInterface $authorizationChecker;
     protected RequestStack $requestStack;
-    protected EntityManagerInterface $entityManager;
+    protected ManagerRegistry $managerRegistry;
+    protected TreeWidgetFactory $treeWidgetFactory;
 
     /**
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param RequestStack $requestStack
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
+     * @param TreeWidgetFactory $treeWidgetFactory
      */
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
         RequestStack $requestStack,
-        EntityManagerInterface $entityManager
+        ManagerRegistry $managerRegistry,
+        TreeWidgetFactory $treeWidgetFactory
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->requestStack = $requestStack;
-        $this->entityManager = $entityManager;
+        $this->treeWidgetFactory = $treeWidgetFactory;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -73,7 +79,7 @@ class NodeTreeType extends AbstractType
             $defaultValues[$key] = trim($value);
         }
 
-        $nodeTypes = $this->entityManager->getRepository(NodeType::class)
+        $nodeTypes = $this->managerRegistry->getRepository(NodeType::class)
             ->findBy(
                 ['name' => $defaultValues],
                 ['displayName' => 'ASC']
@@ -81,9 +87,7 @@ class NodeTreeType extends AbstractType
 
         $view->vars['linkedTypes'] = $nodeTypes;
 
-        $nodeTree = new NodeTreeWidget(
-            $this->requestStack->getCurrentRequest(),
-            $this->entityManager,
+        $nodeTree = $this->treeWidgetFactory->createNodeTree(
             $options['nodeSource']->getNode(),
             $options['nodeSource']->getTranslation()
         );

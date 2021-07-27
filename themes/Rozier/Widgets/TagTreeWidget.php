@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Repositories\TagRepository;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Prepare a Tag tree according to Tag hierarchy and given options.
@@ -23,18 +23,18 @@ final class TagTreeWidget extends AbstractWidget
     protected bool $forceTranslation = false;
 
     /**
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
+     * @param RequestStack $requestStack
+     * @param ManagerRegistry $managerRegistry
      * @param Tag|null $parent
      * @param bool $forceTranslation
      */
     public function __construct(
-        Request $request,
-        EntityManagerInterface $entityManager,
+        RequestStack $requestStack,
+        ManagerRegistry $managerRegistry,
         Tag $parent = null,
         bool $forceTranslation = false
     ) {
-        parent::__construct($request, $entityManager);
+        parent::__construct($requestStack, $managerRegistry);
 
         $this->parentTag = $parent;
         $this->forceTranslation = $forceTranslation;
@@ -121,7 +121,7 @@ final class TagTreeWidget extends AbstractWidget
      */
     protected function getTagRepository()
     {
-        return $this->getEntityManager()->getRepository(Tag::class);
+        return $this->getManagerRegistry()->getRepository(Tag::class);
     }
 
     /**

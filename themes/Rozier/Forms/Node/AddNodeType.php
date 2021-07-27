@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\DataTransformer\NodeTypeTransformer;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,17 +23,14 @@ use Symfony\Component\Validator\Constraints\NotNull;
  */
 class AddNodeType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -61,7 +59,9 @@ class AddNodeType extends AbstractType
                     new NotBlank(),
                 ],
             ]);
-            $builder->get('nodeType')->addModelTransformer(new NodeTypeTransformer($this->entityManager));
+            $builder->get('nodeType')->addModelTransformer(new NodeTypeTransformer(
+                $this->managerRegistry->getManagerForClass(NodeType::class)
+            ));
         }
 
         $builder->add('dynamicNodeName', CheckboxType::class, [

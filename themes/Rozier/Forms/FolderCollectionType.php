@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\DataTransformer\FolderCollectionTransformer;
 use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\Form\AbstractType as AbstractType;
@@ -16,17 +16,14 @@ use Themes\Rozier\Explorer\FoldersProvider;
 
 final class FolderCollectionType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -62,7 +59,10 @@ final class FolderCollectionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer(new FolderCollectionTransformer($this->entityManager, true));
+        $builder->addModelTransformer(new FolderCollectionTransformer(
+            $this->managerRegistry->getManagerForClass(Folder::class),
+            true
+        ));
     }
 
     /**

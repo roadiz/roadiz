@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Workflow\Workflow;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Widgets\NodeTreeWidget;
+use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
  * @package Themes\Rozier\Controllers\Nodes
@@ -65,7 +66,7 @@ class NodesTreesController extends RozierApp
             $translation = $this->get('defaultTranslation');
         }
 
-        $widget = new NodeTreeWidget($request, $this->get('em'), $node, $translation);
+        $widget = $this->get(TreeWidgetFactory::class)->createNodeTree($node, $translation);
 
         if ($request->get('tagId') &&
             $request->get('tagId') > 0) {

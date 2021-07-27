@@ -25,9 +25,10 @@
  */
 declare(strict_types=1);
 
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Kernel;
 
 require dirname(dirname(__FILE__)) . "/vendor/autoload.php";
 $kernel = new Kernel('dev', true);
 $kernel->boot();
-return $kernel->get('em');
+return $kernel->get(ManagerRegistry::class)->getManager();

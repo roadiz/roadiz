@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class EntityListManager extends AbstractEntityListManager
 {
-    protected ?EntityManagerInterface $entityManager = null;
+    protected ?ObjectManager $entityManager = null;
     /**
      * @var class-string|string
      */
@@ -33,14 +33,14 @@ class EntityListManager extends AbstractEntityListManager
 
     /**
      * @param Request|null  $request
-     * @param EntityManagerInterface $entityManager
+     * @param ObjectManager $entityManager
      * @param string        $entityName
      * @param array         $preFilters
      * @param array         $preOrdering
      */
     public function __construct(
         ?Request $request,
-        EntityManagerInterface $entityManager,
+        ObjectManager $entityManager,
         string $entityName,
         array $preFilters = [],
         array $preOrdering = []

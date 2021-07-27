@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,15 +15,15 @@ class TagListManager extends EntityListManager
 {
     /**
      * @param Request|null  $request
-     * @param EntityManagerInterface $entityManager
+     * @param ObjectManager $entityManager
      * @param array         $preFilters
      * @param array         $preOrdering
      */
     public function __construct(
         ?Request $request,
-        EntityManagerInterface $entityManager,
-        $preFilters = [],
-        $preOrdering = []
+        ObjectManager $entityManager,
+        array $preFilters = [],
+        array $preOrdering = []
     ) {
         parent::__construct($request, $entityManager, Tag::class, $preFilters, $preOrdering);
     }

@@ -7,6 +7,7 @@ use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\TagTreeWidget;
+use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
  * @package Themes\Rozier\AjaxControllers
@@ -43,11 +44,7 @@ class AjaxTagTreeController extends AbstractAjaxController
                     $tag = null;
                 }
 
-                $tagTree = new TagTreeWidget(
-                    $this->getRequest(),
-                    $this->get('em'),
-                    $tag
-                );
+                $tagTree = $this->get(TreeWidgetFactory::class)->createTagTree($tag);
 
                 $this->assignation['mainTagTree'] = false;
 
@@ -57,11 +54,7 @@ class AjaxTagTreeController extends AbstractAjaxController
              */
             case 'requestMainTagTree':
                 $parent = null;
-                $tagTree = new TagTreeWidget(
-                    $this->getRequest(),
-                    $this->get('em'),
-                    $parent
-                );
+                $tagTree = $this->get(TreeWidgetFactory::class)->createTagTree($parent);
                 $this->assignation['mainTagTree'] = true;
                 break;
         }

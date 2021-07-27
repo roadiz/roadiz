@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Attribute\Importer\AttributeImporter;
 use RZ\Roadiz\CMS\Importers\EntityImporterInterface;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
@@ -198,7 +199,10 @@ class ThemeInstallCommand extends Command implements ContainerAwareInterface
         if (!$this->dryRun) {
             try {
                 $importer->import(file_get_contents($file->getPathname()));
-                $this->get('em')->flush();
+
+                /** @var ManagerRegistry $managerRegistry */
+                $managerRegistry = $this->getHelper('doctrine')->getManagerRegistry();
+                $managerRegistry->getManager()->flush();
                 $this->io->writeln(
                     '* <info>' . $file->getPathname() . '</info> file has been imported.'
                 );

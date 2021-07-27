@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
+use Themes\Rozier\Widgets\TreeWidgetFactory;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -72,17 +73,15 @@ class RozierApp extends BackendController
         $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
 
         $this->themeContainer['nodeTree'] = function () {
-            return new NodeTreeWidget(
-                $this->getRequest(),
-                $this->get('em'),
+            return $this->get(TreeWidgetFactory::class)->createNodeTree(
                 $this->get(NodeChrootResolver::class)->getChroot($this->getUser())
             );
         };
         $this->themeContainer['tagTree'] = function () {
-            return new TagTreeWidget($this->getRequest(), $this->get('em'));
+            return $this->get(TreeWidgetFactory::class)->createTagTree();
         };
         $this->themeContainer['folderTree'] = function () {
-            return new FolderTreeWidget($this->getRequest(), $this->get('em'));
+            return $this->get(TreeWidgetFactory::class)->createFolderTree();
         };
         $this->themeContainer['maxFilesize'] = function () {
             $requirements = new Requirements($this->get('kernel'));
