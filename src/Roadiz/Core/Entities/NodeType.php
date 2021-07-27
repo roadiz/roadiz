@@ -452,7 +452,8 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
     }
 
     /**
-     * @return string
+     * @template T of NodesSources
+     * @return class-string<T>
      */
     public function getSourceEntityFullQualifiedClassName(): string
     {
