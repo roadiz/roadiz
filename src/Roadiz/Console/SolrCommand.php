@@ -27,7 +27,7 @@ class SolrCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
         $this->io = new SymfonyStyle($input, $output);
 

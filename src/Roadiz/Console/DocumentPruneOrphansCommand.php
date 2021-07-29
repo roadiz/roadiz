@@ -33,14 +33,14 @@ final class DocumentPruneOrphansCommand extends Command
     protected function getDocumentQueryBuilder(): QueryBuilder
     {
         /** @var EntityManager $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        $em = $this->getHelper('doctrine')->getEntityManager();
         return $em->getRepository(Document::class)->createQueryBuilder('d');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var EntityManager $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        $em = $this->getHelper('doctrine')->getEntityManager();
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();
         $filesystem = new Filesystem();

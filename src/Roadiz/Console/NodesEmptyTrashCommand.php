@@ -28,7 +28,7 @@ class NodesEmptyTrashCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         /** @var EntityManager $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        $em = $this->getHelper('doctrine')->getEntityManager();
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
 

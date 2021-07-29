@@ -33,7 +33,7 @@ class DocumentSizeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var EntityManager $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        $em = $this->getHelper('doctrine')->getEntityManager();
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();
         $this->io = new SymfonyStyle($input, $output);

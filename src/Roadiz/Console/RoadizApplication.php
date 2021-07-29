@@ -182,6 +182,7 @@ class RoadizApplication extends Application
         $managerRegistryHelper = new ManagerRegistryHelper($this->kernel->get(ManagerRegistry::class));
         // We need to set «em» alias as Doctrine misnamed its Helper :-(
         $helperSet->set($managerRegistryHelper, 'em');
+        $helperSet->set($managerRegistryHelper, 'entityManager');
         $helperSet->set($managerRegistryHelper, 'doctrine');
         $helperSet->set(new SolrHelper($this->kernel->get('solr')));
         $helperSet->set(new HandlerFactoryHelper($this->kernel->get('factory.handler')));

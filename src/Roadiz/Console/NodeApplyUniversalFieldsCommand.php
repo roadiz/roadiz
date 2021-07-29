@@ -28,7 +28,7 @@ class NodeApplyUniversalFieldsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
 
         $translation = $this->entityManager->getRepository(Translation::class)
                             ->findDefault();

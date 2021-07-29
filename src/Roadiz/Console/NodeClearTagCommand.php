@@ -40,7 +40,7 @@ class NodeClearTagCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var EntityManager $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        $em = $this->getHelper('doctrine')->getEntityManager();
         $this->io = new SymfonyStyle($input, $output);
 
         $tagId = (int) $input->getArgument('tagId');

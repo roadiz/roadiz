@@ -32,7 +32,7 @@ class NodesDetailsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
 
         $translation = $this->entityManager->getRepository(Translation::class)
                                            ->findOneBy(['locale' => $input->getArgument('locale')]);

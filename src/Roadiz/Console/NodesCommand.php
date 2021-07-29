@@ -32,7 +32,7 @@ class NodesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
         $io = new SymfonyStyle($input, $output);
         $nodes = [];
         $tableContent = [];

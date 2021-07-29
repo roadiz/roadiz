@@ -27,7 +27,7 @@ class CleanLoginAttemptCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $entityManager = $this->getHelper('doctrine')->getEntityManager();
 
         $entityManager->getRepository(LoginAttempt::class)
             ->cleanLoginAttempts();

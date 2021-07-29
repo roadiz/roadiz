@@ -61,7 +61,7 @@ EOT
     {
         $io = new SymfonyStyle($input, $output);
         /** @var EntityManagerInterface $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        $em = $this->getHelper('doctrine')->getEntityManager();
         $dateTime = new \DateTime($input->getOption('before'));
 
         if ($dateTime >= new \DateTime()) {
@@ -101,7 +101,7 @@ EOT
         $io = new SymfonyStyle($input, $output);
         $count = (int) $input->getOption('count');
         /** @var EntityManagerInterface $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        $em = $this->getHelper('doctrine')->getEntityManager();
 
         $question = new ConfirmationQuestion(sprintf(
             'Do you want to purge all entities versions and to keep only the <info>latest %s</info>?',
