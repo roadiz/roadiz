@@ -11,12 +11,7 @@ type|lower,
 'nodetree-element'
 ] %}
 
-{% if nodeTree.canReorder %}
-    {% set classes = classes|merge(['uk-nestable-item']) %}
-{% else %}
-    {% set classes = classes|merge(['non-nestable-list-item']) %}
-{% endif %}
-
+{% set classes = classes|merge(['uk-nestable-item']) %}
 {% if not node.isHidingChildren and
     not node.nodeType.isHidingNodes and
     not node.nodeType.isHidingNonReachableNodes %}
@@ -54,14 +49,14 @@ type|lower,
 {% endif %}
 
 
-<li data-node-id="{{ node.getId }}" class="{{ classes|join(' ') }}">
+<li data-node-id="{{ node.id }}" class="{{ classes|join(' ') }}">
     {% if not mainNodeTree and not nodeTree.isStackTree %}
         <span class="nodetree-list-item-color"></span>
     {% endif %}
     <div class="{{ innerClasses|join(' ') }}">
-
         {% block nodetree_handle %}
-            <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}"
+            {# Disable nestable handling if node-tree prevents reordering on root level only #}
+            <div class="{% if canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}"
                 {%- if not mainNodeTree and not nodeTree.isStackTree -%}
                 title="{{ node.nodeType.displayName }}"
                 data-uk-tooltip="{animation:true}"{%- endif -%}>
@@ -87,7 +82,9 @@ type|lower,
                     <i class="uk-icon-rz-building"></i>
                 {% endif %}
                 {% if nodeTree.isStackTree and node.nodeType.isPublishable and source.publishedAt %}
-                    <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|format_date('short', locale=app.request.locale) }}</div>
+                    <div class="nodetree-published-at uk-badge">
+                        <i class="uk-icon-clock-o"></i> {{ source.publishedAt|format_date('short', locale=app.request.locale) }}
+                    </div>
                 {% endif %}
             </div>
         {% endblock %}
@@ -129,7 +126,7 @@ type|lower,
         {% block nodetree_selection %}
             {% if nodeTree.isStackTree %}
                 <div class="nodetree-bulk-selection">
-                    <input class="node-checkbox" type="checkbox" name="bulk-selection[]" value="{{ node.getId }}" />
+                    <input class="node-checkbox" type="checkbox" name="bulk-selection[]" value="{{ node.id }}" />
                 </div>
             {% endif %}
         {% endblock %}
@@ -157,19 +154,21 @@ type|lower,
     {% endif %}
     {% apply spaceless %}
         {% if children %}
-        <ul class="{{ subListClasses|join(' ') }}" data-parent-node-id="{{ node.getId }}">
+        <ul class="{{ subListClasses|join(' ') }}" data-parent-node-id="{{ node.id }}">
             {#
              # For drag&drop ease, we don't create nested lists
              # We will have to check after OR inside drag status
              #}
                 {% for subNode in children %}
                     {% include 'widgets/nodeTree/singleNode.html.twig' with {
-                    "node":subNode,
-                    "parent":node,
-                    "request":request,
-                    "nodeTree":nodeTree,
-                    "mainNodeTree":mainNodeTree,
-                    "nodeStatuses":nodeStatuses
+                        "node":subNode,
+                        "parent":node,
+                        "request":request,
+                        "nodeTree":nodeTree,
+                        "mainNodeTree":mainNodeTree,
+                        "nodeStatuses":nodeStatuses,
+                        "level": level + 1,
+                        'canReorder': (node.childrenOrder == 'position'),
                     } only %}
                 {% endfor %}
         </ul>

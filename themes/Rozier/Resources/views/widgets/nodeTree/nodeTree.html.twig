@@ -56,7 +56,7 @@
                 {% endif %}
 
                 <ul class="{{ rootTreeClasses|join(' ') }}"
-                    {% if nodeTree.canReorder %}data-uk-nestable="{'group':'nodeTree', handleClass:'uk-nestable-handle'}"{% endif %}
+                    data-uk-nestable="{'group':'nodeTree', handleClass:'uk-nestable-handle'}"
                     data-parent-node-id="{{ nodeTree.rootNode.id }}"
                     data-translation-id="{{ nodeTree.translation.id }}"
                     {% if linkedTypes %}data-linked-types="{{ linkedTypes|map(t => t.name)|json_encode }}"{% endif %}
@@ -70,7 +70,9 @@
                             "nodeTree":nodeTree,
                             "request":request,
                             "mainNodeTree":mainNodeTree,
-                            "nodeStatuses":nodeStatuses
+                            "nodeStatuses":nodeStatuses,
+                            "level": 0,
+                            'canReorder': nodeTree.canReorder,
                         } only %}
                     {% endfor %}
                 </ul>
