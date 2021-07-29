@@ -6,10 +6,18 @@ namespace Themes\Rozier\Services;
 use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Node\NodeMover;
+use RZ\Roadiz\Utils\Security\FirewallEntry;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Security\Http\AccessMap;
+use Symfony\Component\Security\Http\FirewallMap;
 use Themes\Rozier\Events\NodeDuplicationSubscriber;
 use Themes\Rozier\Events\NodeRedirectionSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
@@ -25,6 +33,7 @@ use Themes\Rozier\Forms\NodeType;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\Serialization\DocumentThumbnailSerializeSubscriber;
 use Themes\Rozier\Widgets\TreeWidgetFactory;
+use Twig\Loader\FilesystemLoader;
 
 final class RozierServiceProvider implements ServiceProviderInterface
 {
@@ -319,6 +328,71 @@ final class RozierServiceProvider implements ServiceProviderInterface
             ];
 
             return $entries;
+        });
+
+        $container->extend('twig.loaderFileSystem', function (FilesystemLoader $loader) {
+            $loader->prependPath(dirname(__DIR__) . '/Resources/views', 'Rozier');
+            $loader->prependPath(dirname(__DIR__) . '/Resources/views');
+            return $loader;
+        });
+
+        $container->extend('assetPackages', function (Packages $packages, Container $c) {
+            $packages->addPackage('Rozier', new PathPackage(
+                'themes/Rozier/static',
+                $c['versionStrategy'],
+                new RequestStackContext($c['requestStack'])
+            ));
+            return $packages;
+        });
+
+        /*
+         * Force login pages (connection, logout and reset) to be public
+         * before rz-admin base pattern to be restricted
+         */
+        $container->extend('accessMap', function (AccessMap $accessMap, Container $c) {
+            $accessMap->add(
+                new RequestMatcher('^/rz-admin/login'),
+                ['IS_AUTHENTICATED_ANONYMOUSLY']
+            );
+            $accessMap->add(
+                new RequestMatcher('^/rz-admin/logout'),
+                ['IS_AUTHENTICATED_ANONYMOUSLY']
+            );
+            return $accessMap;
+        });
+
+        $container->extend('firewallMap', function (FirewallMap $firewallMap, Container $c) {
+            /*
+            * Add default backend firewall entry.
+            */
+            $firewallBasePattern = '^/rz-admin';
+            $firewallBasePath = '/rz-admin';
+            $firewallLogin = $firewallBasePath . '/login';
+            $firewallLogout = $firewallBasePath . '/logout';
+            $firewallLoginCheck = $firewallBasePath . '/login_check';
+            $firewallBaseRole = Role::ROLE_BACKEND_USER;
+
+            $firewallEntry = new FirewallEntry(
+                $c,
+                $firewallBasePattern,
+                $firewallBasePath,
+                $firewallLogin,
+                $firewallLogout,
+                $firewallLoginCheck,
+                $firewallBaseRole
+            );
+            $firewallEntry->withSwitchUserListener()
+                ->withAnonymousAuthenticationListener()
+                ->withOAuth2AuthenticationListener()
+                ->withReferer();
+
+            $firewallMap->add(
+                $firewallEntry->getRequestMatcher(),
+                $firewallEntry->getListeners(),
+                $firewallEntry->getExceptionListener(true)
+            );
+
+            return $firewallMap;
         });
     }
 }

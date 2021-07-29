@@ -24,8 +24,6 @@ use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
-use Symfony\Component\Asset\Context\RequestStackContext;
-use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
@@ -281,13 +279,7 @@ abstract class AppController extends Controller
      */
     public static function setupDependencyInjection(Container $container)
     {
-        static::addThemeTemplatesPath($container);
-
-        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
-            'themes/' . static::getThemeDir() . '/static',
-            $container['versionStrategy'],
-            new RequestStackContext($container['requestStack'])
-        ));
+        // Do nothing
     }
 
     /**

@@ -11,6 +11,8 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -71,6 +73,14 @@ abstract class FrontendController extends AppController
     public static function setupDependencyInjection(Container $container)
     {
         parent::setupDependencyInjection($container);
+
+        static::addThemeTemplatesPath($container);
+
+        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
+            'themes/' . static::getThemeDir() . '/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
 
         /**
          * You can override default frontend firewall
