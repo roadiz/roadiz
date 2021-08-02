@@ -41,7 +41,7 @@ final class ThrottledWebhookDispatcher implements WebhookDispatcher
         $doNotTriggerBefore = $webhook->doNotTriggerBefore();
         if (null !== $doNotTriggerBefore &&
             $doNotTriggerBefore > new \DateTime()) {
-            throw new TooManyWebhookTriggeredException();
+            throw new TooManyWebhookTriggeredException(\DateTimeImmutable::createFromMutable($doNotTriggerBefore));
         }
         $rateLimiterFactory = new RateLimiterFactory([
             'id' => 'webhook_' . $webhook,
@@ -54,7 +54,7 @@ final class ThrottledWebhookDispatcher implements WebhookDispatcher
         // the argument of consume() is the number of tokens to consume
         // and returns an object of type Limit
         if (!$limit->isAccepted()) {
-            throw new TooManyWebhookTriggeredException();
+            throw new TooManyWebhookTriggeredException($limit->getRetryAfter());
         }
         $message = $this->messageFactory->createMessage($webhook);
         $this->messageBus->dispatch(new Envelope($message));
