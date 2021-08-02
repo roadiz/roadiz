@@ -19,6 +19,7 @@
                 <table class="items content-table uk-table webhooks">
                     <thead>
                     <tr>
+                        <th>{% trans %}webhooks.description{% endtrans %}</th>
                         <th>
                             {% trans %}webhooks.messageType{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
@@ -26,7 +27,6 @@
                                 'filters': filters,
                             } only %}
                         </th>
-                        <th>{% trans %}webhooks.uri{% endtrans %}</th>
                         <th>{% trans %}webhooks.automatic{% endtrans %}</th>
                         <th>
                             {% trans %}webhooks.lastTriggeredAt{% endtrans %}
@@ -41,12 +41,12 @@
                     <tbody>
                     {% for item in items %}
                         <tr>
-                            <td>{{- item.messageType -}}</td>
                             <td class="name">
                                 <a href="{{ path('webhooksEditPage', { id: item.id }) }}">
-                                    {{- item.uri|u.truncate(50) -}}
+                                    {{- item.description|u.truncate(50) -}}
                                 </a>
                             </td>
+                            <td>{{- item.messageType -}}</td>
                             <td>
                                 {% if item.Automatic %}
                                     <span data-uk-tooltip="{animation:true}"

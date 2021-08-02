@@ -12,8 +12,10 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -37,6 +39,16 @@ final class WebhookType extends AbstractType
             'required' => true,
             'label' => 'webhooks.messageType',
             'choices' => $this->types
+        ])->add('description', TextType::class, [
+            'required' => true,
+            'label' => 'webhooks.description',
+            'constraints' => [
+                new NotNull(),
+                new Length([
+                    'min' => 1,
+                    'max' => 250
+                ])
+            ]
         ])->add('uri', TextareaType::class, [
             'required' => true,
             'label' => 'webhooks.uri',

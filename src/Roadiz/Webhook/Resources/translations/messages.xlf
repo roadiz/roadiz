@@ -102,6 +102,10 @@
                 <source>webhook.too_many_triggered_in_period</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.description">
+                <source>webhooks.description</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -35,6 +35,13 @@ class Webhook extends AbstractDateTimed
 
     /**
      * @var string|null
+     * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Type("string")
+     */
+    protected ?string $description = null;
+
+    /**
+     * @var string|null
      * @ORM\Column(type="string", length=255, nullable=true, name="message_type")
      * @Serializer\Type("string")
      */
@@ -81,6 +88,24 @@ class Webhook extends AbstractDateTimed
      * @ORM\JoinColumn(name="root_node", onDelete="SET NULL")
      */
     protected ?Node $rootNode = null;
+
+    /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string|null $description
+     * @return Webhook
+     */
+    public function setDescription(?string $description): Webhook
+    {
+        $this->description = $description;
+        return $this;
+    }
 
     /**
      * @return string|null
@@ -232,6 +257,6 @@ class Webhook extends AbstractDateTimed
 
     public function __toString()
     {
-        return $this->getId() ?? substr($this->getUri() ?? '', 0, 30);
+        return $this->getDescription() ?? $this->getId() ?? substr($this->getUri() ?? '', 0, 30);
     }
 }

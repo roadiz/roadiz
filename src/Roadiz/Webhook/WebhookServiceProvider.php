@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Webhook;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
 use RZ\Roadiz\Message\HttpRequestMessage;
 use RZ\Roadiz\Webhook\EventSubscriber\AutomaticWebhookSubscriber;
+use RZ\Roadiz\Webhook\Form\WebhooksChoiceType;
 use RZ\Roadiz\Webhook\Form\WebhookType;
 use RZ\Roadiz\Webhook\Message\GenericJsonPostMessage;
 use RZ\Roadiz\Webhook\Message\GitlabPipelineTriggerMessage;
@@ -42,6 +44,10 @@ class WebhookServiceProvider implements ServiceProviderInterface
 
         $pimple[WebhookType::class] = function (Container $c) {
             return new WebhookType($c['webhook.types']);
+        };
+
+        $pimple[WebhooksChoiceType::class] = function (Container $c) {
+            return new WebhooksChoiceType($c[ManagerRegistry::class]);
         };
 
         $pimple[WebhookMessageFactoryInterface::class] = function () {
