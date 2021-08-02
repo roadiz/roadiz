@@ -98,7 +98,7 @@ final class DoctrineHandler extends AbstractProcessingHandler
     {
         try {
             $manager = $this->managerRegistry->getManagerForClass(Log::class);
-            if (null !== $manager && $manager->isOpen()) {
+            if (null === $manager || !$manager->isOpen()) {
                 return;
             }
 
