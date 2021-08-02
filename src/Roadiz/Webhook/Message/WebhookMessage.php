@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Webhook\Message;
 
-use RZ\Roadiz\Webhook\Entity\Webhook;
+use RZ\Roadiz\Webhook\Entity\WebhookInterface;
 
 interface WebhookMessage
 {
     /**
-     * @param Webhook $webhook
+     * @param WebhookInterface $webhook
      * @return static
      */
-    public static function fromWebhook(Webhook $webhook);
+    public static function fromWebhook(WebhookInterface $webhook);
 }

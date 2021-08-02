@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Webhook;
 
-use RZ\Roadiz\Webhook\Entity\Webhook;
+use RZ\Roadiz\Webhook\Entity\WebhookInterface;
 use RZ\Roadiz\Webhook\Exception\TooManyWebhookTriggeredException;
 use RZ\Roadiz\Webhook\Message\WebhookMessageFactoryInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -33,10 +33,10 @@ final class ThrottledWebhookDispatcher implements WebhookDispatcher
     }
 
     /**
-     * @param Webhook $webhook
+     * @param WebhookInterface $webhook
      * @throws \Exception
      */
-    public function dispatch(Webhook $webhook): void
+    public function dispatch(WebhookInterface $webhook): void
     {
         $doNotTriggerBefore = $webhook->doNotTriggerBefore();
         if (null !== $doNotTriggerBefore &&

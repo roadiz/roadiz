@@ -8,6 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use RZ\Roadiz\Message\AsyncMessage;
 use RZ\Roadiz\Message\HttpRequestMessage;
 use RZ\Roadiz\Webhook\Entity\Webhook;
+use RZ\Roadiz\Webhook\Entity\WebhookInterface;
 
 final class GitlabPipelineTriggerMessage implements AsyncMessage, HttpRequestMessage, WebhookMessage
 {
@@ -63,10 +64,10 @@ final class GitlabPipelineTriggerMessage implements AsyncMessage, HttpRequestMes
     }
 
     /**
-     * @param Webhook $webhook
+     * @param WebhookInterface $webhook
      * @return static
      */
-    public static function fromWebhook(Webhook $webhook)
+    public static function fromWebhook(WebhookInterface $webhook)
     {
         $payload = $webhook->getPayload();
         return new self(

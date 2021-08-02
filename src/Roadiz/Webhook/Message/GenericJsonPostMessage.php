@@ -8,6 +8,7 @@ use Psr\Http\Message\RequestInterface;
 use RZ\Roadiz\Message\AsyncMessage;
 use RZ\Roadiz\Message\HttpRequestMessage;
 use RZ\Roadiz\Webhook\Entity\Webhook;
+use RZ\Roadiz\Webhook\Entity\WebhookInterface;
 
 final class GenericJsonPostMessage implements AsyncMessage, HttpRequestMessage, WebhookMessage
 {
@@ -52,7 +53,7 @@ final class GenericJsonPostMessage implements AsyncMessage, HttpRequestMessage, 
      * @param Webhook $webhook
      * @return static
      */
-    public static function fromWebhook(Webhook $webhook)
+    public static function fromWebhook(WebhookInterface $webhook)
     {
         return new self($webhook->getUri(), $webhook->getPayload());
     }

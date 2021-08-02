@@ -21,7 +21,7 @@ use RZ\Roadiz\Core\Entities\Node;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class Webhook extends AbstractDateTimed
+class Webhook extends AbstractDateTimed implements WebhookInterface
 {
     /**
      * @var string|null

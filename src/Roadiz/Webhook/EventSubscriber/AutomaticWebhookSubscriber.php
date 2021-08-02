@@ -7,7 +7,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;
 use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeTaggedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
