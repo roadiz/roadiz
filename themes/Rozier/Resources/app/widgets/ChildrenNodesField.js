@@ -6,8 +6,6 @@ import NodeTreeContextActions from '../components/trees/NodeTreeContextActions'
  */
 export default class ChildrenNodesField {
     constructor () {
-        this.currentRequest = null
-
         // Bind methods
         this.onQuickAddClick = this.onQuickAddClick.bind(this)
 
@@ -96,23 +94,23 @@ export default class ChildrenNodesField {
      */
     refreshNodeTree ($nodeTree) {
         if ($nodeTree.length) {
-            if (this.currentRequest && this.currentRequest.readyState !== 4) {
-                this.currentRequest.abort()
-            }
-
             let linkedTypes = []
             let $rootTree = $nodeTree.find('.root-tree').eq(0)
-            let rootNodeId = parseInt($rootTree.attr('data-parent-node-id'))
+            if (!$rootTree) {
+                return
+            }
+            const rootNodeId = parseInt($rootTree.attr('data-parent-node-id'))
+            const linkedTypesRaw = $rootTree.attr('data-linked-types')
             let translationId = parseInt($rootTree.attr('data-translation-id'))
-            if ($rootTree.attr('data-linked-types')) {
-                linkedTypes = JSON.parse($rootTree.attr('data-linked-types'))
+            if (linkedTypesRaw) {
+                linkedTypes = JSON.parse(linkedTypesRaw)
             }
 
             window.Rozier.lazyload.canvasLoader.show()
             let postData = {
                 '_token': window.Rozier.ajaxToken,
                 '_action': 'requestNodeTree',
-                'parentNodeId': parseInt(rootNodeId),
+                'parentNodeId': rootNodeId,
                 'linkedTypes': linkedTypes
             }
 
@@ -121,7 +119,9 @@ export default class ChildrenNodesField {
                 url += '/' + translationId
             }
 
-            this.currentRequest = $.ajax({
+            // Do not abort request for nodes which have multiple
+            // children node widgets.
+            $.ajax({
                 url: url,
                 type: 'get',
                 dataType: 'json',
