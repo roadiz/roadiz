@@ -100,7 +100,11 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
                 <source>webhook.too_many_triggered_in_period</source>
-                <target state="translated">Veuillez patienter minimum 30 secondes avant de déclencher à nouveau ce webhook.</target>
+                <target state="translated">Veuillez patienter jusqu'à %time% avant de déclencher à nouveau ce webhook.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.description">
+                <source>webhooks.description</source>
+                <target state="translated">Description</target>
             </trans-unit>
     </body>
   </file>
