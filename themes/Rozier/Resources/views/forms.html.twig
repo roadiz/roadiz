@@ -343,7 +343,7 @@
     {% if errors|length > 0 -%}
         <ul class="errors">
             {%- for error in errors -%}
-                <li class="uk-alert uk-alert-danger"><i class="uk-icon-warning"></i> {{ error.message|trans }}</li>
+                <li class="uk-alert uk-alert-danger"><i class="uk-icon-warning"></i> {{ error.message|trans(error.messageParameters) }}</li>
             {%- endfor -%}
         </ul>
     {%- endif %}

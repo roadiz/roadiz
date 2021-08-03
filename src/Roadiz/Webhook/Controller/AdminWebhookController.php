@@ -49,7 +49,7 @@ final class AdminWebhookController extends AbstractAdminController
                 return $this->redirect($this->get('urlGenerator')->generate($this->getDefaultRouteName()));
             } catch (TooManyWebhookTriggeredException $e) {
                 $form->addError(new FormError('webhook.too_many_triggered_in_period', null, [
-                    '%time%' => $e->getDoNotTriggerBefore()->format('HH:ii:ss')
+                    '%time%' => $e->getDoNotTriggerBefore()->format('H:i:s')
                 ], null, $e));
             }
         }
