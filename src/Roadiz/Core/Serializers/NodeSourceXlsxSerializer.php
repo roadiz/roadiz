@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Serializers;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -18,7 +18,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 {
-    protected EntityManagerInterface $em;
+    protected ObjectManager $objectManager;
     protected Request $request;
     protected UrlGeneratorInterface $urlGenerator;
     protected bool $forceLocale = false;
@@ -27,17 +27,17 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 
     /**
      *
-     * @param EntityManagerInterface $em
+     * @param ObjectManager $objectManager
      * @param TranslatorInterface $translator
      * @param UrlGeneratorInterface $urlGenerator
      */
     public function __construct(
-        EntityManagerInterface $em,
+        ObjectManager $objectManager,
         TranslatorInterface $translator,
         UrlGeneratorInterface $urlGenerator
     ) {
         parent::__construct($translator);
-        $this->em = $em;
+        $this->objectManager = $objectManager;
         $this->urlGenerator = $urlGenerator;
     }
 
@@ -139,7 +139,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
             ];
         }
 
-        return $this->em->getRepository(NodeTypeField::class)
+        return $this->objectManager->getRepository(NodeTypeField::class)
             ->findBy($criteria, ['position' => 'ASC']);
     }
 
@@ -158,7 +158,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
      */
     public function setOnlyTexts(bool $onlyTexts = true)
     {
-        $this->onlyTexts = (boolean) $onlyTexts;
+        $this->onlyTexts = $onlyTexts;
     }
 
     /**
@@ -169,6 +169,6 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     {
         $this->addUrls = true;
         $this->request = $request;
-        $this->forceLocale = (boolean) $forceLocale;
+        $this->forceLocale = $forceLocale;
     }
 }

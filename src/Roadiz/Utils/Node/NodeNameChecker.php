@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\UrlAlias;
@@ -16,17 +16,17 @@ use RZ\Roadiz\Utils\StringHandler;
  */
 class NodeNameChecker implements NodeNamePolicyInterface
 {
-    protected EntityManagerInterface $entityManager;
     protected bool $useTypedSuffix;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param bool $useTypedSuffix
      */
-    public function __construct(EntityManagerInterface $entityManager, bool $useTypedSuffix = false)
+    public function __construct(ManagerRegistry $managerRegistry, bool $useTypedSuffix = false)
     {
-        $this->entityManager = $entityManager;
         $this->useTypedSuffix = $useTypedSuffix;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function getCanonicalNodeName(NodesSources $nodeSource): string
@@ -111,9 +111,9 @@ class NodeNameChecker implements NodeNamePolicyInterface
     {
         $nodeName = StringHandler::slugify($nodeName);
         /** @var UrlAliasRepository $urlAliasRepo */
-        $urlAliasRepo = $this->entityManager->getRepository(UrlAlias::class);
+        $urlAliasRepo = $this->managerRegistry->getRepository(UrlAlias::class);
         /** @var NodeRepository $nodeRepo */
-        $nodeRepo = $this->entityManager
+        $nodeRepo = $this->managerRegistry
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true);
 

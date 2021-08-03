@@ -8,9 +8,7 @@ class ChainImporter implements EntityImporterInterface
     private $importers = [];
 
     /**
-     * ChainImporter constructor.
-     *
-     * @param array $importers
+     * @param array<EntityImporterInterface> $importers
      */
     public function __construct(array $importers)
     {

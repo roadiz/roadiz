@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Message\Handler;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Psr11\Container;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -23,33 +23,35 @@ final class PurgeReverseProxyCacheMessageHandler implements MessageHandlerInterf
     private UrlGeneratorInterface $urlGenerator;
     private array $configuration;
     private LoggerInterface $logger;
-    private EntityManagerInterface $entityManager;
     private Container $busLocator;
+    private ManagerRegistry $managerRegistry;
 
     /**
      * @param Container $busLocator
      * @param UrlGeneratorInterface $urlGenerator
      * @param array $configuration
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param LoggerInterface|null $logger
      */
     public function __construct(
         Container $busLocator,
         UrlGeneratorInterface $urlGenerator,
         array $configuration,
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         LoggerInterface $logger = null
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->configuration = $configuration;
         $this->logger = $logger ?? new NullLogger();
-        $this->entityManager = $entityManager;
         $this->busLocator = $busLocator;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function __invoke(PurgeReverseProxyCacheMessage $message)
     {
-        $nodeSource = $this->entityManager->find(NodesSources::class, $message->getNodeSourceId());
+        $nodeSource = $this->managerRegistry
+            ->getRepository(NodesSources::class)
+            ->find($message->getNodeSourceId());
         if (null === $nodeSource) {
             $this->logger->error('NodesSources does not exist anymore.');
             return;

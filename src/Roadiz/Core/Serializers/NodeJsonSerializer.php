@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Serializers;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -20,14 +20,14 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
  */
 class NodeJsonSerializer extends AbstractJsonSerializer
 {
-    protected EntityManagerInterface $em;
+    private ObjectManager $manager;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param ObjectManager $manager
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ObjectManager $manager)
     {
-        $this->em = $em;
+        $this->manager = $manager;
     }
 
     /**
@@ -90,7 +90,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     protected function hasHome()
     {
         /** @var NodeRepository $repository */
-        $repository = $this->em->getRepository(Node::class);
+        $repository = $this->manager->getRepository(Node::class);
         $repository->setDisplayingNotPublishedNodes(true);
         if (null !== $repository->findHomeWithDefaultTranslation()) {
             return true;
@@ -108,7 +108,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     protected function makeNodeRec($data)
     {
         /** @var NodeType|null $nodetype */
-        $nodetype = $this->em->getRepository(NodeType::class)->findOneByName($data["node_type"]);
+        $nodetype = $this->manager->getRepository(NodeType::class)->findOneByName($data["node_type"]);
 
         /*
          * Check if node-type exists before importing nodes
@@ -149,8 +149,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
         if (key_exists('stack_types', $data) && is_array($data['stack_types'])) {
             foreach ($data['stack_types'] as $nodeTypeName) {
-                $nodeType = $this->em->getRepository(NodeType::class)
-                    ->findOneByName($nodeTypeName);
+                $nodeType = $this->manager->getRepository(NodeType::class)->findOneByName($nodeTypeName);
                 if (null !== $nodeType) {
                     $node->addStackType($nodeType);
                 }
@@ -202,7 +201,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
         if (!empty($data['tags'])) {
             foreach ($data["tags"] as $tag) {
-                $tmp = $this->em->getRepository(Tag::class)->findOneBy(["tagName" => $tag]);
+                $tmp = $this->manager->getRepository(Tag::class)->findOneBy(["tagName" => $tag]);
 
                 if (null === $tmp) {
                     throw new EntityNotFoundException('Tag "' . $tag . '" is not found on your website. Please import it before.');

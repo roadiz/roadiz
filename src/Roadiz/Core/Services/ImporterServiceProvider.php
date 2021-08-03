@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Importers\ChainImporter;
@@ -44,7 +45,7 @@ class ImporterServiceProvider implements ServiceProviderInterface
             return new RolesImporter($c);
         });
         $container[SettingsImporter::class] = $container->factory(function (Container $c) {
-            return new SettingsImporter($c);
+            return new SettingsImporter($c[ManagerRegistry::class], $c['serializer']);
         });
         $container[TagsImporter::class] = $container->factory(function (Container $c) {
             return new TagsImporter($c);

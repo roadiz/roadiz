@@ -11,7 +11,7 @@ final class FolderIndexer extends DocumentIndexer
     public function index($id): void
     {
         try {
-            $folder = $this->entityManager->find(Folder::class, $id);
+            $folder = $this->managerRegistry->getRepository(Folder::class)->find($id);
             if (null === $folder) {
                 return;
             }

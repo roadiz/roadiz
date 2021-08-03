@@ -42,7 +42,7 @@ final class WebhooksChoiceType extends ChoiceType
             if (null === $id) {
                 return null;
             }
-            return $this->managerRegistry->getRepository(Webhook::class)->findOneBy(['id' => $id]);
+            return $this->managerRegistry->getRepository(Webhook::class)->find($id);
         }));
     }
 

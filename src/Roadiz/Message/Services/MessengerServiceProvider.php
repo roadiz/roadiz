@@ -8,7 +8,6 @@ use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Message\AsyncMessage;
-use RZ\Roadiz\Message\GuzzleRequestMessage;
 use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
 use RZ\Roadiz\Message\Handler\PurgeReverseProxyCacheMessageHandler;
 use RZ\Roadiz\Message\HttpRequestMessage;
@@ -17,7 +16,6 @@ use RZ\Roadiz\Utils\Log\LoggerFactory;
 use Symfony\Bridge\Doctrine\Messenger\DoctrineClearEntityManagerWorkerSubscriber;
 use Symfony\Bridge\Doctrine\Messenger\DoctrineCloseConnectionMiddleware;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransportFactory;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransportFactory;
 use Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransportFactory;
@@ -200,7 +198,7 @@ final class MessengerServiceProvider implements ServiceProviderInterface
                     new \Pimple\Psr11\Container($c),
                     $c['router'],
                     $c['config'],
-                    $c['em'],
+                    $c[ManagerRegistry::class],
                     $c['logger.messenger']
                 ),
                 [

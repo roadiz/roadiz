@@ -11,7 +11,7 @@ class DocumentIndexer extends AbstractIndexer
 {
     public function index($id): void
     {
-        $document = $this->entityManager->find(Document::class, $id);
+        $document = $this->managerRegistry->getRepository(Document::class)->find($id);
         if (null !== $document) {
             try {
                 foreach ($document->getDocumentTranslations() as $documentTranslation) {
@@ -27,7 +27,7 @@ class DocumentIndexer extends AbstractIndexer
 
     public function delete($id): void
     {
-        $document = $this->entityManager->find(Document::class, $id);
+        $document = $this->managerRegistry->getRepository(Document::class)->find($id);
         if (null !== $document) {
             try {
                 foreach ($document->getDocumentTranslations() as $documentTranslation) {
@@ -51,12 +51,12 @@ class DocumentIndexer extends AbstractIndexer
         $buffer = $this->getSolr()->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        $countQuery = $this->entityManager
+        $countQuery = $this->managerRegistry
             ->getRepository(Document::class)
             ->createQueryBuilder('d')
             ->select('count(d)')
             ->getQuery();
-        $q = $this->entityManager->getRepository(Document::class)
+        $q = $this->managerRegistry->getRepository(Document::class)
             ->createQueryBuilder('d')
             ->getQuery();
         $iterableResult = $q->iterate();

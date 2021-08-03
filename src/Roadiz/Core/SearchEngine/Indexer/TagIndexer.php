@@ -11,7 +11,7 @@ final class TagIndexer extends NodesSourcesIndexer
     public function index($id): void
     {
         try {
-            $tag = $this->entityManager->find(Tag::class, $id);
+            $tag = $this->managerRegistry->getRepository(Tag::class)->find($id);
             if (null === $tag) {
                 return;
             }

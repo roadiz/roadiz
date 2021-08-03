@@ -11,17 +11,12 @@ use RZ\Roadiz\Core\Entities\AttributeDocuments;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
-class AttributeDocumentsTransformer implements DataTransformerInterface
+final class AttributeDocumentsTransformer implements DataTransformerInterface
 {
-    private $manager;
-    /**
-     * @var Attribute
-     */
-    private $attribute;
+    private ObjectManager $manager;
+    private Attribute $attribute;
 
     /**
-     * NodeTypeTransformer constructor.
-     *
      * @param ObjectManager $manager
      * @param Attribute $attribute
      */

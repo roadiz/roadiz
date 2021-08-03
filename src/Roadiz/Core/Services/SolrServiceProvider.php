@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
@@ -121,7 +122,7 @@ class SolrServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return null|DocumentSearchHandler
          */
-        $container['solr.search.document'] = $container->factory(function (Container $c) {
+        $container[DocumentSearchHandler::class] = $container->factory(function (Container $c) {
             if ($c['solr.ready']) {
                 return new DocumentSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
@@ -150,7 +151,7 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container[NodeIndexer::class] = $container->factory(function (Container $c) {
             return new NodeIndexer(
                 $c['solr'],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c[SolariumFactoryInterface::class]
             );
         });
@@ -158,7 +159,7 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container[NodesSourcesIndexer::class] = $container->factory(function (Container $c) {
             return new NodesSourcesIndexer(
                 $c['solr'],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c[SolariumFactoryInterface::class]
             );
         });
@@ -166,7 +167,7 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container[DocumentIndexer::class] = $container->factory(function (Container $c) {
             return new DocumentIndexer(
                 $c['solr'],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c[SolariumFactoryInterface::class]
             );
         });
@@ -174,7 +175,7 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container[TagIndexer::class] = $container->factory(function (Container $c) {
             return new TagIndexer(
                 $c['solr'],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c[SolariumFactoryInterface::class]
             );
         });
@@ -182,7 +183,7 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container[FolderIndexer::class] = $container->factory(function (Container $c) {
             return new FolderIndexer(
                 $c['solr'],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c[SolariumFactoryInterface::class]
             );
         });

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Translation;
 
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -25,15 +25,15 @@ final class TranslatorFactory implements TranslatorFactoryInterface
 {
     private KernelInterface $kernel;
     private RequestStack $requestStack;
-    private ?EntityManagerInterface $entityManager;
     private Stopwatch $stopwatch;
     private ThemeResolverInterface $themeResolver;
     private PreviewResolverInterface $previewResolver;
+    private ManagerRegistry $managerRegistry;
 
     /**
      * @param KernelInterface $kernel
      * @param RequestStack $requestStack
-     * @param EntityManagerInterface|null $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param Stopwatch $stopwatch
      * @param ThemeResolverInterface $themeResolver
      * @param PreviewResolverInterface $previewResolver
@@ -41,17 +41,17 @@ final class TranslatorFactory implements TranslatorFactoryInterface
     public function __construct(
         KernelInterface $kernel,
         RequestStack $requestStack,
-        ?EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         Stopwatch $stopwatch,
         ThemeResolverInterface $themeResolver,
         PreviewResolverInterface $previewResolver
     ) {
         $this->kernel = $kernel;
         $this->requestStack = $requestStack;
-        $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
         $this->previewResolver = $previewResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -249,26 +249,24 @@ final class TranslatorFactory implements TranslatorFactoryInterface
         // Add default translation
         $locales[] = $this->getCurrentLocale();
 
-        if (null !== $this->entityManager) {
-            try {
-                if ($this->kernel->getEnvironment() !== 'install') {
-                    /** @var TranslationRepository $translationRepository */
-                    $translationRepository = $this->entityManager->getRepository(Translation::class);
-                    if ($this->previewResolver->isPreview()) {
-                        $availableTranslations = $translationRepository->findAll();
-                    } else {
-                        $availableTranslations = $translationRepository->findAllAvailable();
-                    }
-                    /** @var Translation $availableTranslation */
-                    foreach ($availableTranslations as $availableTranslation) {
-                        $locales[] = $availableTranslation->getLocale();
-                    }
+        try {
+            if ($this->kernel->getEnvironment() !== 'install') {
+                /** @var TranslationRepository $translationRepository */
+                $translationRepository = $this->managerRegistry->getRepository(Translation::class);
+                if ($this->previewResolver->isPreview()) {
+                    $availableTranslations = $translationRepository->findAll();
+                } else {
+                    $availableTranslations = $translationRepository->findAllAvailable();
                 }
-            } catch (Exception $e) {
-            } catch (\PDOException $e) {
-                // Trying to use translator without DB
-                // in CI or CLI environments
+                /** @var Translation $availableTranslation */
+                foreach ($availableTranslations as $availableTranslation) {
+                    $locales[] = $availableTranslation->getLocale();
+                }
             }
+        } catch (Exception $e) {
+        } catch (\PDOException $e) {
+            // Trying to use translator without DB
+            // in CI or CLI environments
         }
 
         return array_unique(array_filter($locales));

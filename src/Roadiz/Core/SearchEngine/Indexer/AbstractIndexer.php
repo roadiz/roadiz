@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine\Indexer;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
@@ -14,23 +14,23 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 abstract class AbstractIndexer implements Indexer
 {
     private ?Client $solr;
-    protected EntityManagerInterface $entityManager;
     protected SolariumFactoryInterface $solariumFactory;
     protected LoggerInterface $logger;
     protected ?SymfonyStyle $io = null;
+    protected ManagerRegistry $managerRegistry;
 
     /**
      * @param ?Client $solr
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param SolariumFactoryInterface $solariumFactory
      * @param LoggerInterface|null $logger
      */
-    public function __construct(?Client $solr, EntityManagerInterface $entityManager, SolariumFactoryInterface $solariumFactory, ?LoggerInterface $logger = null)
+    public function __construct(?Client $solr, ManagerRegistry $managerRegistry, SolariumFactoryInterface $solariumFactory, ?LoggerInterface $logger = null)
     {
-        $this->entityManager = $entityManager;
         $this->solariumFactory = $solariumFactory;
         $this->solr = $solr;
         $this->logger = $logger ?? new NullLogger();
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**

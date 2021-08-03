@@ -14,7 +14,7 @@ class NodesSourcesIndexer extends AbstractIndexer
     {
         $update = $this->getSolr()->createUpdate();
         $this->indexNodeSource(
-            $this->entityManager->find(NodesSources::class, $id),
+            $this->managerRegistry->getRepository(NodesSources::class)->find($id),
             $update
         );
         $update->addCommit(true, true, false);
@@ -36,7 +36,7 @@ class NodesSourcesIndexer extends AbstractIndexer
 
     public function delete($id): void
     {
-        $this->deleteNodeSource($this->entityManager->find(NodesSources::class, $id));
+        $this->deleteNodeSource($this->managerRegistry->getRepository(NodesSources::class)->find($id));
     }
 
     protected function deleteNodeSource(?NodesSources $nodeSource): void
@@ -67,13 +67,13 @@ class NodesSourcesIndexer extends AbstractIndexer
         $buffer = $this->getSolr()->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        $countQuery = $this->entityManager
+        $countQuery = $this->managerRegistry
             ->getRepository(NodesSources::class)
             ->createQueryBuilder('ns')
             ->select('count(ns)')
             ->innerJoin('ns.node', 'n')
             ->getQuery();
-        $q = $this->entityManager
+        $q = $this->managerRegistry
             ->getRepository(NodesSources::class)
             ->createQueryBuilder('ns')
             ->addSelect('n')

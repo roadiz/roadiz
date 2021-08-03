@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Translation\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -28,14 +29,14 @@ final class TranslationServiceProvider implements ServiceProviderInterface
          * @return Translation
          */
         $container['defaultTranslation'] = function (Container $c) {
-            return $c['em']->getRepository(Translation::class)->findDefault();
+            return $c[ManagerRegistry::class]->getRepository(Translation::class)->findDefault();
         };
 
         $container[TranslatorFactoryInterface::class] = function (Container $c) {
             return new TranslatorFactory(
                 $c['kernel'],
                 $c['requestStack'],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c['stopwatch'],
                 $c['themeResolver'],
                 $c[PreviewResolverInterface::class],

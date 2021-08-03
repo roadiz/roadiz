@@ -132,7 +132,7 @@ class WebhookServiceProvider implements ServiceProviderInterface
         $pimple->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(new AutomaticWebhookSubscriber(
                 $c[WebhookDispatcher::class],
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c['factory.handler']
             ));
             return $dispatcher;

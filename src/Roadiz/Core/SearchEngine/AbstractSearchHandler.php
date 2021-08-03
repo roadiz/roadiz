@@ -37,7 +37,7 @@ abstract class AbstractSearchHandler implements SearchHandlerInterface
      * Search on Solr with pre-filled argument for highlighting
      *
      * * $q is the search criteria.
-     * * $args is a array with solr query argument.
+     * * $args is an array with solr query argument.
      * The common argument can be found [here](https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters)
      *  and for highlighting argument is [here](https://cwiki.apache.org/confluence/display/solr/Standard+Highlighter).
      *

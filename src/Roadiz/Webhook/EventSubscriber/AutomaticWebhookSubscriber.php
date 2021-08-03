@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Webhook\EventSubscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;
 use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
@@ -25,19 +26,19 @@ use Symfony\Component\Workflow\Event\Event;
 final class AutomaticWebhookSubscriber implements EventSubscriberInterface
 {
     private WebhookDispatcher $webhookDispatcher;
-    private EntityManagerInterface $entityManager;
     private HandlerFactoryInterface $handlerFactory;
+    private ManagerRegistry $managerRegistry;
 
     /**
      * @param WebhookDispatcher $webhookDispatcher
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param HandlerFactoryInterface $handlerFactory
      */
-    public function __construct(WebhookDispatcher $webhookDispatcher, EntityManagerInterface $entityManager, HandlerFactoryInterface $handlerFactory)
+    public function __construct(WebhookDispatcher $webhookDispatcher, ManagerRegistry $managerRegistry, HandlerFactoryInterface $handlerFactory)
     {
         $this->webhookDispatcher = $webhookDispatcher;
-        $this->entityManager = $entityManager;
         $this->handlerFactory = $handlerFactory;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public static function getSubscribedEvents()
@@ -77,7 +78,7 @@ final class AutomaticWebhookSubscriber implements EventSubscriberInterface
     public function onAutomaticWebhook($event): void
     {
         /** @var Webhook[] $webhooks */
-        $webhooks = $this->entityManager->getRepository(Webhook::class)->findBy([
+        $webhooks = $this->managerRegistry->getRepository(Webhook::class)->findBy([
             'automatic' => true
         ]);
         foreach ($webhooks as $webhook) {

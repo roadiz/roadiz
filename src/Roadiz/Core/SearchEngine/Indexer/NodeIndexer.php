@@ -10,7 +10,7 @@ final class NodeIndexer extends NodesSourcesIndexer
 {
     public function index($id): void
     {
-        $node = $this->entityManager->find(Node::class, $id);
+        $node = $this->managerRegistry->getRepository(Node::class)->find($id);
         if (null !== $node) {
             $update = $this->getSolr()->createUpdate();
             /** @var NodesSources $nodeSource */
@@ -24,7 +24,7 @@ final class NodeIndexer extends NodesSourcesIndexer
 
     public function delete($id): void
     {
-        $node = $this->entityManager->find(Node::class, $id);
+        $node = $this->managerRegistry->getRepository(Node::class)->find($id);
         if (null !== $node) {
             foreach ($node->getNodeSources() as $nodeSource) {
                 $this->deleteNodeSource($nodeSource);
