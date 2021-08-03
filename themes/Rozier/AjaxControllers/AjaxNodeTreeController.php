@@ -5,6 +5,7 @@ namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,12 +36,13 @@ class AjaxNodeTreeController extends AbstractAjaxController
             $translation = $this->get('em')
                                 ->find(
                                     Translation::class,
-                                    (int) $translationId
+                                    $translationId
                                 );
         }
 
         /** @var NodeTreeWidget|null $nodeTree */
         $nodeTree = null;
+        $linkedTypes = [];
 
         switch ($request->get("_action")) {
             /*
@@ -80,7 +82,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                 /*
                  * Filter view with only listed node-types
                  */
-                $linkedTypes = $request->get('linkedTypes', null);
+                $linkedTypes = $request->get('linkedTypes', []);
                 if (is_array($linkedTypes) && count($linkedTypes) > 0) {
                     $linkedTypes = array_filter(array_map(function (string $typeName) {
                         return $this->get('nodeTypesBag')->get($typeName);
@@ -117,10 +119,15 @@ class AjaxNodeTreeController extends AbstractAjaxController
         }
 
         $this->assignation['nodeTree'] = $nodeTree;
+        // Need to expose linkedTypes to add data-attributes on widget again
+        $this->assignation['linkedTypes'] = $linkedTypes;
 
         $responseArray = [
             'statusCode' => '200',
             'status' => 'success',
+            'linkedTypes' => array_map(function(NodeType $nodeType) {
+                return $nodeType->getName();
+            }, $linkedTypes),
             'nodeTree' => trim($this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation)),
         ];
 
