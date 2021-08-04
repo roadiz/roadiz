@@ -159,15 +159,15 @@ class CustomFormHelper
      * @param bool                  $forceExpanded
      * @param array                 $options Options passed to final form
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      * @throws \Exception
      */
     public function getFormFromAnswer(
         FormFactory $formFactory,
         CustomFormAnswer $answer = null,
-        $forceExpanded = false,
+        bool $forceExpanded = false,
         array $options = []
-    ) {
+    ): FormInterface {
         $data = null;
 
         if (null !== $answer) {

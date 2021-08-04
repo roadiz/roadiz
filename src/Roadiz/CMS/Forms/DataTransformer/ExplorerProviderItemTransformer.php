@@ -10,10 +10,7 @@ use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 class ExplorerProviderItemTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ExplorerProviderInterface
-     */
-    protected $explorerProvider;
+    protected ExplorerProviderInterface $explorerProvider;
 
     /**
      * @param ExplorerProviderInterface $explorerProvider
