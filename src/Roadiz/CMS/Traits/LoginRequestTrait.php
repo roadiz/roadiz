@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Traits;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Viewers\UserViewer;
@@ -23,7 +23,7 @@ trait LoginRequestTrait
 {
     /**
      * @param FormInterface         $form
-     * @param EntityManager         $entityManager
+     * @param ObjectManager         $entityManager
      * @param LoggerInterface       $logger
      * @param UrlGeneratorInterface $urlGenerator
      * @param string                $resetRoute
@@ -34,10 +34,10 @@ trait LoginRequestTrait
      */
     public function sendConfirmationEmail(
         FormInterface $form,
-        EntityManager $entityManager,
+        ObjectManager $entityManager,
         LoggerInterface $logger,
         UrlGeneratorInterface $urlGenerator,
-        $resetRoute = 'loginResetPage'
+        string $resetRoute = 'loginResetPage'
     ) {
         $email = $form->get('email')->getData();
         /** @var User $user */

@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Console\Command\Command;
@@ -32,14 +31,14 @@ final class DocumentPruneOrphansCommand extends Command
      */
     protected function getDocumentQueryBuilder(): QueryBuilder
     {
-        /** @var EntityManager $em */
+        /** @var ObjectManager $em */
         $em = $this->getHelper('doctrine')->getEntityManager();
         return $em->getRepository(Document::class)->createQueryBuilder('d');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityManager $em */
+        /** @var ObjectManager $em */
         $em = $this->getHelper('doctrine')->getEntityManager();
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();
@@ -83,7 +82,7 @@ final class DocumentPruneOrphansCommand extends Command
      * @param Document $document
      * @param Packages $packages
      * @param Filesystem $filesystem
-     * @param EntityManagerInterface $entityManager
+     * @param ObjectManager $entityManager
      * @param int $deleteCount
      * @param bool $dryRun
      */
@@ -91,7 +90,7 @@ final class DocumentPruneOrphansCommand extends Command
         Document $document,
         Packages $packages,
         Filesystem $filesystem,
-        EntityManagerInterface $entityManager,
+        ObjectManager $entityManager,
         int &$deleteCount,
         bool $dryRun = false
     ): void {

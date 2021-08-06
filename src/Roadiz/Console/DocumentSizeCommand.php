@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectManager;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
@@ -32,7 +32,7 @@ class DocumentSizeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityManager $em */
+        /** @var ObjectManager $em */
         $em = $this->getHelper('doctrine')->getEntityManager();
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();

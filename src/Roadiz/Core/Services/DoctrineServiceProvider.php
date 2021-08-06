@@ -257,6 +257,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             }
         };
 
+        $container[FontLifeCycleSubscriber::class] = function (Container $c) {
+            return new FontLifeCycleSubscriber($c['assetPackages'], $c['logger.doctrine']);
+        };
+
         /**
          * @param Container $c
          * @return EventSubscriber[] Event subscribers for Entity manager.
@@ -266,7 +270,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return [
                 new NodesSourcesInheritanceSubscriber($c),
                 new TablePrefixSubscriber($prefix),
-                new FontLifeCycleSubscriber($c),
+                $c[FontLifeCycleSubscriber::class],
                 new DocumentLifeCycleSubscriber($c['kernel']),
                 new UserLifeCycleSubscriber($c),
                 new SettingLifeCycleSubscriber($c),

@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,11 +17,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * @package RZ\Roadiz\Console
  */
-class NodesCleanNamesCommand extends Command
+final class NodesCleanNamesCommand extends Command
 {
-    /** @var  EntityManager */
-    private $entityManager;
-
     protected function configure()
     {
         $this->setName('nodes:clean-names')
@@ -45,15 +40,16 @@ class NodesCleanNamesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
+        /** @var ObjectManager $entityManager */
+        $entityManager = $this->getHelper('doctrine')->getEntityManager();
         $io = new SymfonyStyle($input, $output);
 
-        $translation = $this->entityManager
+        $translation = $entityManager
             ->getRepository(Translation::class)
             ->findDefault();
 
         if (null !== $translation) {
-            $nodes = $this->entityManager
+            $nodes = $entityManager
                 ->getRepository(Node::class)
                 ->setDisplayingNotPublishedNodes(true)
                 ->findBy([
@@ -124,7 +120,7 @@ class NodesCleanNamesCommand extends Command
                                 }
                             }
                             if (!$input->getOption('dry-run')) {
-                                $this->entityManager->flush();
+                                $entityManager->flush();
                             }
                             $renameCount++;
                         }

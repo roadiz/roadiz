@@ -6,8 +6,8 @@ namespace RZ\Roadiz\Core\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Monolog\Logger;
-use Pimple\Container;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -18,22 +18,19 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @package Roadiz\Core\Events
  */
-class FontLifeCycleSubscriber implements EventSubscriber
+final class FontLifeCycleSubscriber implements EventSubscriber
 {
-    private Container $container;
+    private Packages $assetPackages;
+    private LoggerInterface $logger;
 
     /**
-     * We need to pass whole container not to trigger asset packages
-     * initialization and not to creation a dependency infinite loop.
-     *
-     * assetPackages requires SettingsBag and EntityManager which requires this
-     * class too.
-     *
-     * @param Container $container
+     * @param Packages $assetPackages
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(Container $container)
+    public function __construct(Packages $assetPackages, ?LoggerInterface $logger = null)
     {
-        $this->container = $container;
+        $this->assetPackages = $assetPackages;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -103,50 +100,45 @@ class FontLifeCycleSubscriber implements EventSubscriber
      */
     public function preRemove(LifecycleEventArgs $args)
     {
-        /** @var Packages $packages */
-        $packages = $this->container->offsetGet('assetPackages');
-        /** @var Logger $logger */
-        $logger = $this->container->offsetGet('logger.doctrine');
-
         $entity = $args->getObject();
         // perhaps you only want to act on some "Product" entity
         if ($entity instanceof Font) {
             $fileSystem = new Filesystem();
             try {
                 if (null !== $entity->getSVGFilename()) {
-                    $svgFilePath = $packages->getFontsPath($entity->getSVGRelativeUrl());
-                    $logger->info('Font file deleted', ['file' => $svgFilePath]);
+                    $svgFilePath = $this->assetPackages->getFontsPath($entity->getSVGRelativeUrl());
+                    $this->logger->info('Font file deleted', ['file' => $svgFilePath]);
                     $fileSystem->remove($svgFilePath);
                 }
                 if (null !== $entity->getOTFFilename()) {
-                    $otfFilePath = $packages->getFontsPath($entity->getOTFRelativeUrl());
-                    $logger->info('Font file deleted', ['file' => $otfFilePath]);
+                    $otfFilePath = $this->assetPackages->getFontsPath($entity->getOTFRelativeUrl());
+                    $this->logger->info('Font file deleted', ['file' => $otfFilePath]);
                     $fileSystem->remove($otfFilePath);
                 }
                 if (null !== $entity->getEOTFilename()) {
-                    $eotFilePath = $packages->getFontsPath($entity->getEOTRelativeUrl());
-                    $logger->info('Font file deleted', ['file' => $eotFilePath]);
+                    $eotFilePath = $this->assetPackages->getFontsPath($entity->getEOTRelativeUrl());
+                    $this->logger->info('Font file deleted', ['file' => $eotFilePath]);
                     $fileSystem->remove($eotFilePath);
                 }
                 if (null !== $entity->getWOFFFilename()) {
-                    $woffFilePath = $packages->getFontsPath($entity->getWOFFRelativeUrl());
-                    $logger->info('Font file deleted', ['file' => $woffFilePath]);
+                    $woffFilePath = $this->assetPackages->getFontsPath($entity->getWOFFRelativeUrl());
+                    $this->logger->info('Font file deleted', ['file' => $woffFilePath]);
                     $fileSystem->remove($woffFilePath);
                 }
                 if (null !== $entity->getWOFF2Filename()) {
-                    $woff2FilePath = $packages->getFontsPath($entity->getWOFF2RelativeUrl());
-                    $logger->info('Font file deleted', ['file' => $woff2FilePath]);
+                    $woff2FilePath = $this->assetPackages->getFontsPath($entity->getWOFF2RelativeUrl());
+                    $this->logger->info('Font file deleted', ['file' => $woff2FilePath]);
                     $fileSystem->remove($woff2FilePath);
                 }
 
                 /*
                  * Removing font folder if empty.
                  */
-                $fontFolderPath = $packages->getFontsPath($entity->getFolder());
+                $fontFolderPath = $this->assetPackages->getFontsPath($entity->getFolder());
                 if ($fileSystem->exists($fontFolderPath)) {
                     $isDirEmpty = !(new \FilesystemIterator($fontFolderPath))->valid();
                     if ($isDirEmpty) {
-                        $logger->info('Font folder is empty, deleting…', ['folder' => $fontFolderPath]);
+                        $this->logger->info('Font folder is empty, deleting…', ['folder' => $fontFolderPath]);
                         $fileSystem->remove($fontFolderPath);
                     }
                 }
@@ -187,9 +179,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
      */
     public function upload(Font $font)
     {
-        /** @var Packages $packages */
-        $packages = $this->container->offsetGet('assetPackages');
-        $fontFolderPath = $packages->getFontsPath($font->getFolder());
+        $fontFolderPath = $this->assetPackages->getFontsPath($font->getFolder());
 
         if (null !== $font->getSvgFile()) {
             $font->getSvgFile()->move($fontFolderPath, $font->getSVGFilename());

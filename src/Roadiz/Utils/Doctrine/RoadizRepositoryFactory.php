@@ -56,7 +56,7 @@ final class RoadizRepositoryFactory implements RepositoryFactory
     private function createRepository(EntityManagerInterface $entityManager, string $entityName)
     {
         $metadata = $entityManager->getClassMetadata($entityName);
-        /** @var class-string $repositoryClassName */
+        /** @var class-string<ObjectRepository> $repositoryClassName */
         $repositoryClassName = $metadata->customRepositoryClassName
             ?: $entityManager->getConfiguration()->getDefaultRepositoryClassName();
 

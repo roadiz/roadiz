@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -14,18 +14,18 @@ use Solarium\QueryType\Select\Query\Query;
 abstract class AbstractSearchHandler implements SearchHandlerInterface
 {
     protected ?Client $client = null;
-    protected ?EntityManagerInterface $em = null;
+    protected ?ObjectManager $em = null;
     protected LoggerInterface $logger;
     protected int $highlightingFragmentSize = 150;
 
     /**
      * @param Client $client
-     * @param EntityManagerInterface $em
+     * @param ObjectManager $em
      * @param LoggerInterface|null $logger
      */
     public function __construct(
         Client $client,
-        EntityManagerInterface $em,
+        ObjectManager $em,
         ?LoggerInterface $logger = null
     ) {
         $this->client = $client;

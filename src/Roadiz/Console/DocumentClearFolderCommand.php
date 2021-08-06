@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\Console\Command\Command;
@@ -28,9 +27,8 @@ class DocumentClearFolderCommand extends Command
         ;
     }
 
-    protected function getDocumentQueryBuilder(EntityManagerInterface $entityManager, Folder $folder): QueryBuilder
+    protected function getDocumentQueryBuilder(ObjectManager $entityManager, Folder $folder): QueryBuilder
     {
-        /** @var QueryBuilder $qb */
         $qb = $entityManager->getRepository(Document::class)->createQueryBuilder('d');
         return $qb->innerJoin('d.folders', 'f')
             ->andWhere($qb->expr()->eq('f.id', ':folderId'))
@@ -39,7 +37,7 @@ class DocumentClearFolderCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityManager $em */
+        /** @var ObjectManager $em */
         $em = $this->getHelper('doctrine')->getEntityManager();
         $this->io = new SymfonyStyle($input, $output);
 

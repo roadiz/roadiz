@@ -15,7 +15,7 @@ class RoadizUserNodeChrootResolver implements NodeChrootResolver
 {
     public function supports($user): bool
     {
-        return null !== $user && $user instanceof User;
+        return $user instanceof User;
     }
 
     /**

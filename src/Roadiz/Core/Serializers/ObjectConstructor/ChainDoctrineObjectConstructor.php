@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Serializers\ObjectConstructor;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use JMS\Serializer\Construction\ObjectConstructorInterface;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Metadata\ClassMetadata;
@@ -12,7 +12,7 @@ use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 
 class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
 {
-    protected ?EntityManagerInterface $entityManager;
+    protected ?ObjectManager $entityManager;
     /**
      * @var ArrayCollection<TypedObjectConstructorInterface>
      */
@@ -20,10 +20,10 @@ class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
     protected ObjectConstructorInterface $fallbackConstructor;
 
     /**
-     * @param EntityManagerInterface|null $entityManager
+     * @param ObjectManager|null $entityManager
      * @param ObjectConstructorInterface $fallbackConstructor
      */
-    public function __construct(?EntityManagerInterface $entityManager, ObjectConstructorInterface $fallbackConstructor)
+    public function __construct(?ObjectManager $entityManager, ObjectConstructorInterface $fallbackConstructor)
     {
         $this->entityManager = $entityManager;
         $this->typedObjectConstructors = new ArrayCollection();

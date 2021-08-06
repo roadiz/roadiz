@@ -14,17 +14,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class UpdateFontSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private FontLifeCycleSubscriber $fontSubscriber;
 
     /**
-     * @param Container $container
+     * @param FontLifeCycleSubscriber $fontSubscriber
      */
-    public function __construct(Container $container)
+    public function __construct(FontLifeCycleSubscriber $fontSubscriber)
     {
-        $this->container = $container;
+        $this->fontSubscriber = $fontSubscriber;
     }
 
     /**
@@ -43,11 +40,10 @@ class UpdateFontSubscriber implements EventSubscriberInterface
         if (null !== $font) {
             /*
              * Force updating files if uploaded
-             * as doctrine wont see any changes.
+             * as doctrine won't see any changes.
              */
-            $fontSubscriber = new FontLifeCycleSubscriber($this->container);
-            $fontSubscriber->setFontFilesNames($font);
-            $fontSubscriber->upload($font);
+            $this->fontSubscriber->setFontFilesNames($font);
+            $this->fontSubscriber->upload($font);
         }
     }
 }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Webhook\EventSubscriber;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;

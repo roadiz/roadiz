@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 
 /**
@@ -17,10 +17,10 @@ interface ImporterInterface
      * Import json file.
      *
      * @param string $template
-     * @param EntityManager $em
+     * @param ObjectManager $em
      * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      * @deprecated
      */
-    public static function importJsonFile($template, EntityManager $em, HandlerFactoryInterface $handlerFactory);
+    public static function importJsonFile($template, ObjectManager $em, HandlerFactoryInterface $handlerFactory);
 }

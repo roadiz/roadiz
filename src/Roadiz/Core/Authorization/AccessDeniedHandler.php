@@ -33,8 +33,8 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         ?LoggerInterface $logger = null,
-        $redirectRoute = '',
-        $redirectParameters = []
+        string $redirectRoute = '',
+        array $redirectParameters = []
     ) {
         $this->logger = $logger ?? new NullLogger();
         $this->urlGenerator = $urlGenerator;

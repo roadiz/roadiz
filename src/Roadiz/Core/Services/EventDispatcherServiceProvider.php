@@ -8,6 +8,7 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\DebugBarSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
+use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\LoggableUsernameSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
@@ -98,7 +99,7 @@ class EventDispatcherServiceProvider implements \Pimple\ServiceProviderInterface
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
-            $dispatcher->addSubscriber(new UpdateFontSubscriber($c));
+            $dispatcher->addSubscriber(new UpdateFontSubscriber($c[FontLifeCycleSubscriber::class]));
             $dispatcher->addSubscriber(new SignatureListener(
                 $c['settingsBag'],
                 $kernel::$cmsVersion,

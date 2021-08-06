@@ -20,19 +20,19 @@ final class TranslationServiceProvider implements ServiceProviderInterface
     /**
      * Initialize translator services.
      *
-     * @param Container $container
+     * @param Container $pimple
      */
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
         /**
          * @param Container $c
          * @return Translation
          */
-        $container['defaultTranslation'] = function (Container $c) {
+        $pimple['defaultTranslation'] = function (Container $c) {
             return $c[ManagerRegistry::class]->getRepository(Translation::class)->findDefault();
         };
 
-        $container[TranslatorFactoryInterface::class] = function (Container $c) {
+        $pimple[TranslatorFactoryInterface::class] = function (Container $c) {
             return new TranslatorFactory(
                 $c['kernel'],
                 $c['requestStack'],
@@ -47,7 +47,7 @@ final class TranslationServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return TranslatorInterface
          */
-        $container['translator'] = function (Container $c) {
+        $pimple['translator'] = function (Container $c) {
             /** @var TranslatorFactory $factory */
             $factory = $c[TranslatorFactoryInterface::class];
             return $factory->create();

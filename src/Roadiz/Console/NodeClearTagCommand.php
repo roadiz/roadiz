@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Console\Command\Command;
@@ -28,9 +27,8 @@ class NodeClearTagCommand extends Command
         ;
     }
 
-    protected function getNodeQueryBuilder(EntityManagerInterface $entityManager, Tag $tag): QueryBuilder
+    protected function getNodeQueryBuilder(ObjectManager $entityManager, Tag $tag): QueryBuilder
     {
-        /** @var QueryBuilder $qb */
         $qb = $entityManager->getRepository(Node::class)->createQueryBuilder('n');
         return $qb->innerJoin('n.tags', 't')
             ->andWhere($qb->expr()->eq('t.id', ':tagId'))
@@ -39,7 +37,7 @@ class NodeClearTagCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityManager $em */
+        /** @var ObjectManager $em */
         $em = $this->getHelper('doctrine')->getEntityManager();
         $this->io = new SymfonyStyle($input, $output);
 

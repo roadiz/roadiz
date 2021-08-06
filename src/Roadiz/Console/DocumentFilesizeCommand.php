@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Console\Command\Command;
@@ -26,7 +26,7 @@ class DocumentFilesizeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityManager $em */
+        /** @var ObjectManager $em */
         $em = $this->getHelper('doctrine')->getEntityManager();
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();

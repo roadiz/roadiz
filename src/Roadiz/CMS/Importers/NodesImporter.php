@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Node;
