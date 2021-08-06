@@ -489,17 +489,6 @@
         "defaultValues": ""
     },
     {
-        "name": "static_domain_name",
-        "visible": true,
-        "encrypted": false,
-        "settingGroup": {
-            "name": "Site information",
-            "inMenu": true
-        },
-        "type": 0,
-        "defaultValues": ""
-    },
-    {
         "name": "facebook_url",
         "visible": true,
         "encrypted": false,

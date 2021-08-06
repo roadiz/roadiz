@@ -7,6 +7,7 @@ use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\KernelInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -17,15 +18,12 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class ControllerMatchedSubscriber implements EventSubscriberInterface
 {
-    private $kernel;
-    /**
-     * @var Stopwatch|null
-     */
-    private $stopwatch;
+    private KernelInterface $kernel;
+    private ?Stopwatch $stopwatch;
 
     /**
      * @param Kernel $kernel
-     * @param Stopwatch $stopwatch
+     * @param Stopwatch|null $stopwatch
      */
     public function __construct(Kernel $kernel, Stopwatch $stopwatch = null)
     {

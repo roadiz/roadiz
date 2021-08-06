@@ -181,61 +181,61 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * Register every services needed by Roadiz CMS.
      *
-     * @param Container $container
+     * @param Container $pimple
      */
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
-        $container['stopwatch'] = function () {
+        $pimple['stopwatch'] = function () {
             if ($this->isDebug()) {
                 return new Stopwatch();
             }
             return new NullStopwatch();
         };
 
-        $container['kernel'] = $this;
+        $pimple['kernel'] = $this;
         /** @var Stopwatch $stopWatch */
-        $stopWatch = $container['stopwatch'];
+        $stopWatch = $pimple['stopwatch'];
         $stopWatch->openSection();
         $stopWatch->start('kernel.registerServices');
 
-        $container->register(new EventDispatcherServiceProvider());
-        $container->register(new YamlConfigurationServiceProvider());
-        $container->register(new ConsoleServiceProvider());
-        $container->register(new AssetsServiceProvider());
-        $container->register(new BackofficeServiceProvider());
-        $container->register(new DoctrineServiceProvider());
-        $container->register(new DoctrineFiltersServiceProvider());
-        $container->register(new MessengerServiceProvider());
-        $container->register(new EmbedDocumentsServiceProvider());
-        $container->register(new EntityApiServiceProvider());
-        $container->register(new FormServiceProvider());
-        $container->register(new MailerServiceProvider());
-        $container->register(new RoutingServiceProvider());
-        $container->register(new SecurityServiceProvider());
-        $container->register(new ThemeServiceProvider());
-        $container->register(new TranslationServiceProvider());
-        $container->register(new TwigServiceProvider());
-        $container->register(new LoggerServiceProvider());
-        $container->register(new SolrServiceProvider());
-        $container->register(new BagsServiceProvider());
-        $container->register(new FactoryServiceProvider());
-        $container->register(new ImporterServiceProvider());
-        $container->register(new WorkflowServiceProvider());
-        $container->register(new SerializationServiceProvider());
-        $container->register(new UtilsServiceProvider());
-        $container->register(new AttributesServiceProvider());
-        $container->register(new CryptoServiceProvider());
-        $container->register(new NodeServiceProvider());
-        $container->register(new MarkdownServiceProvider());
-        $container->register(new OpenIdServiceProvider());
-        $container->register(new RozierServiceProvider());
-        $container->register(new PreviewServiceProvider());
-        $container->register(new EntityGeneratorServiceProvider());
-        $container->register(new DocumentationServiceProvider());
-        $container->register(new WebhookServiceProvider());
+        $pimple->register(new EventDispatcherServiceProvider());
+        $pimple->register(new YamlConfigurationServiceProvider());
+        $pimple->register(new ConsoleServiceProvider());
+        $pimple->register(new AssetsServiceProvider());
+        $pimple->register(new BackofficeServiceProvider());
+        $pimple->register(new DoctrineServiceProvider());
+        $pimple->register(new DoctrineFiltersServiceProvider());
+        $pimple->register(new MessengerServiceProvider());
+        $pimple->register(new EmbedDocumentsServiceProvider());
+        $pimple->register(new EntityApiServiceProvider());
+        $pimple->register(new FormServiceProvider());
+        $pimple->register(new MailerServiceProvider());
+        $pimple->register(new RoutingServiceProvider());
+        $pimple->register(new SecurityServiceProvider());
+        $pimple->register(new ThemeServiceProvider());
+        $pimple->register(new TranslationServiceProvider());
+        $pimple->register(new TwigServiceProvider());
+        $pimple->register(new LoggerServiceProvider());
+        $pimple->register(new SolrServiceProvider());
+        $pimple->register(new BagsServiceProvider());
+        $pimple->register(new FactoryServiceProvider());
+        $pimple->register(new ImporterServiceProvider());
+        $pimple->register(new WorkflowServiceProvider());
+        $pimple->register(new SerializationServiceProvider());
+        $pimple->register(new UtilsServiceProvider());
+        $pimple->register(new AttributesServiceProvider());
+        $pimple->register(new CryptoServiceProvider());
+        $pimple->register(new NodeServiceProvider());
+        $pimple->register(new MarkdownServiceProvider());
+        $pimple->register(new OpenIdServiceProvider());
+        $pimple->register(new RozierServiceProvider());
+        $pimple->register(new PreviewServiceProvider());
+        $pimple->register(new EntityGeneratorServiceProvider());
+        $pimple->register(new DocumentationServiceProvider());
+        $pimple->register(new WebhookServiceProvider());
 
         if ($this->isDebug()) {
-            $container->register(new DebugServiceProvider());
+            $pimple->register(new DebugServiceProvider());
         }
 
         /**
@@ -245,9 +245,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             /*
              * Load additional service providers
              */
-            if (isset($container['config']['additionalServiceProviders'])) {
-                foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
-                    $container->register(new $providerClass());
+            if (isset($pimple['config']['additionalServiceProviders'])) {
+                foreach ($pimple['config']['additionalServiceProviders'] as $providerClass) {
+                    $pimple->register(new $providerClass());
                 }
             }
         } catch (NoConfigurationFoundException $e) {

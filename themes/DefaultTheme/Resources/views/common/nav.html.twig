@@ -2,30 +2,35 @@
 <nav id="nav" data-active-node="{{ node.id }}">
     <div class="container" id="nav-container">
         {# Nav list #}
-        <ul class="nav-list nav navbar-nav" id="nav-list">
-            {% if themeServices.navigation and themeServices.navigation|length %}
-                {# Pages #}
-                {% for source in themeServices.navigation %}
-                    {% include '@DefaultTheme/common/nav-item.html.twig' with {
-                    'source' : source,
-                    'active' : node,
-                    'themeServices':themeServices
-                    } only %}
-                {% endfor %}
+        {% stopwatch "nav_list" %}
+            <ul class="nav-list nav navbar-nav" id="nav-list">
+                {% if themeServices.navigation and themeServices.navigation|length %}
+                    {# Pages #}
+                    {% for source in themeServices.navigation %}
+                        {% include '@DefaultTheme/common/nav-item.html.twig' with {
+                            'source' : source,
+                            'active' : node,
+                            'themeServices':themeServices
+                        } only %}
+                    {% endfor %}
 
-                {#
-                 # Page contact
-                 #}
-                <li class="nav-item{% if route == 'contactPageLocale' %} active{% endif %}">
-                    <a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a>
-                </li>
-            {% endif %}
-        </ul>
+                    {#
+                    # Page contact
+                    #}
+                    <li class="nav-item{% if route == 'contactPageLocale' %} active{% endif %}">
+                        <a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endstopwatch %}
+
         <form class="navbar-form navbar-left" action="{{ path('searchPageLocale', {'_locale': request.locale}) }}" method="get" role="search">
             <div class="form-group">
                 <input name="query" {% if query %}value="{{ query }}"{% endif %}  class="form-control" type="search" placeholder="{{ 'search'|trans }}"/>
             </div>
         </form>
-        {% include '@DefaultTheme/common/translations.html.twig' %}
+        {% stopwatch "translation_menu" %}
+            {% include '@DefaultTheme/common/translations.html.twig' %}
+        {% endstopwatch %}
     </div>
 </nav>

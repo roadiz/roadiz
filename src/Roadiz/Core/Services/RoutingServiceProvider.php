@@ -220,6 +220,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                     $c['themeResolver'],
                     $c['settingsBag'],
                     $c[PreviewResolverInterface::class],
+                    $c['config']['staticDomainName'],
                     $c['stopwatch']
                 );
             }

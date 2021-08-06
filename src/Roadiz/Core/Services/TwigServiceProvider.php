@@ -30,6 +30,7 @@ use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\SecurityExtension;
+use Symfony\Bridge\Twig\Extension\StopwatchExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
@@ -190,6 +191,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new StringExtension());
             $extensions->add(new CentralTruncateExtension());
             $extensions->add(new HtmlExtension());
+            $extensions->add(new StopwatchExtension($c['stopwatch']));
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
@@ -211,7 +213,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $c['nodesSourcesUrlCacheProvider']
             ));
             /*
-             * These extension need a valid Database connection
+             * These extensions need a valid Database connection
              * with EntityManager not null.
              */
             try {

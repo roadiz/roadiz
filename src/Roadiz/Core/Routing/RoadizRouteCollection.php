@@ -17,41 +17,32 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class RoadizRouteCollection extends DeferredRouteCollection
 {
-    /**
-     * @var Stopwatch
-     */
-    protected $stopwatch;
-    /**
-     * @var ThemeResolverInterface
-     */
-    protected $themeResolver;
-    /**
-     * @var ParameterBag
-     */
-    protected $settingsBag;
-    /**
-     * @var PreviewResolverInterface
-     */
-    protected $previewResolver;
-
+    protected Stopwatch $stopwatch;
+    protected ThemeResolverInterface $themeResolver;
+    protected ParameterBag $settingsBag;
+    protected PreviewResolverInterface $previewResolver;
     protected bool $locked = false;
+    private ?string $staticDomainName;
 
     /**
      * @param ThemeResolverInterface $themeResolver
      * @param ParameterBag $settingsBag
      * @param PreviewResolverInterface $previewResolver
+     * @param string|null $staticDomainName
      * @param Stopwatch|null $stopwatch
      */
     public function __construct(
         ThemeResolverInterface $themeResolver,
         ParameterBag $settingsBag,
         PreviewResolverInterface $previewResolver,
+        ?string $staticDomainName = null,
         Stopwatch $stopwatch = null
     ) {
         $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
         $this->settingsBag = $settingsBag;
         $this->previewResolver = $previewResolver;
+        $this->staticDomainName = $staticDomainName;
     }
 
     /**
@@ -101,19 +92,18 @@ class RoadizRouteCollection extends DeferredRouteCollection
         ]);
         $loader = new YamlFileLoader($locator);
         $assets = $loader->load('routes.yml');
-        $staticDomain = $this->settingsBag->get('static_domain_name');
         if (false === $this->previewResolver->isPreview() &&
-            false !== $staticDomain &&
-            '' != $staticDomain) {
+            null !== $this->staticDomainName &&
+            '' !== $this->staticDomainName) {
             /*
              * Only use CDN if no preview mode and CDN domain is well set
              * Remove protocol (https, http and protocol-less) information from domain.
              */
-            $host = parse_url($staticDomain, PHP_URL_HOST);
+            $host = parse_url($this->staticDomainName, PHP_URL_HOST);
             if (false !== $host && null !== $host) {
                 $assets->setHost($host);
             } else {
-                $assets->setHost($staticDomain);
+                $assets->setHost($this->staticDomainName);
             }
             /*
              * ~~Use same scheme as static domain.~~

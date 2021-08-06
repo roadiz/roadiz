@@ -51,7 +51,7 @@ class RozierApp extends BackendController
     {
         parent::prepareBaseAssignation();
         /*
-         * Use kernel DI container to delay API requuests
+         * Use kernel DI container to delay API requests
          */
         $this->themeContainer = $this->getContainer();
         $this->assignation['themeServices'] = $this->themeContainer;
@@ -68,6 +68,14 @@ class RozierApp extends BackendController
         $this->assignation['head']['googleClientId'] = $this->get('settingsBag')->get('google_client_id', "");
         $this->assignation['head']['themeName'] = static::$themeName;
         $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
+
+        $this->assignation['nodeStatuses'] = [
+            Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
+            Node::getStatusLabel(Node::PENDING) => Node::PENDING,
+            Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
+            Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
+            Node::getStatusLabel(Node::DELETED) => Node::DELETED,
+        ];
 
         $this->themeContainer['nodeTree'] = function () {
             return $this->get(TreeWidgetFactory::class)->createNodeTree(
@@ -102,14 +110,6 @@ class RozierApp extends BackendController
              */
             return $this->get('settingsBag')->getDocument('admin_image');
         };
-
-        $this->assignation['nodeStatuses'] = [
-            Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
-            Node::getStatusLabel(Node::PENDING) => Node::PENDING,
-            Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
-            Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
-            Node::getStatusLabel(Node::DELETED) => Node::DELETED,
-        ];
 
         return $this;
     }

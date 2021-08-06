@@ -1,6 +1,7 @@
 ---
 appNamespace: '%env(string:APP_NAMESPACE)%'
 timezone: '%env(string:APP_TIMEZONE)%'
+staticDomainName: '%env(string:APP_STATIC_DOMAIN_NAME)%'
 doctrine:
     driver: "pdo_mysql"
     host: '%env(string:MYSQL_HOST)%'

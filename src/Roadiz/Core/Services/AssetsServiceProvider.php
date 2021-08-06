@@ -86,7 +86,8 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 $c['versionStrategy'],
                 $c['requestStack'],
                 $kernel,
-                $c['settingsBag']->get('static_domain_name', '') ?? ''
+                // Do not require DB, use configuration instead
+                $c['config']['staticDomainName'] ?? ''
             );
         };
 
