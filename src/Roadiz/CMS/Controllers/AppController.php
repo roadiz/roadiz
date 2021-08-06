@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ConstraintViolation;
 use Twig\Error\LoaderError;
@@ -441,15 +442,16 @@ abstract class AppController extends Controller
         /** @var ThemeResolverInterface $themeResolver */
         $themeResolver = $this->get('themeResolver');
         if (null === $this->theme) {
-            $className = static::getCalledClass();
-            while (!StringHandler::endsWith($className, "App")) {
+            $className = new UnicodeString(static::getCalledClass());
+            while (!$className->endsWith('App')) {
                 $className = get_parent_class($className);
                 if ($className === false) {
-                    $className = "";
+                    $className = new UnicodeString('');
                     break;
                 }
+                $className = new UnicodeString($className);
             }
-            $this->theme = $themeResolver->findThemeByClass($className);
+            $this->theme = $themeResolver->findThemeByClass($className->toString());
         }
         $this->container['stopwatch']->stop('getTheme');
         return $this->theme;

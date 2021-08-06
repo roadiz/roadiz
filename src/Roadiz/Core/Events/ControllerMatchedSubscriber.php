@@ -70,8 +70,7 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
             if (null !== $event->getRequest()->get('theme') &&
                 $request instanceof RoadizRequest) {
                 $request->setTheme($event->getRequest()->get('theme'));
-            } elseif (true !== $this->kernel->isInstallMode() &&
-                $request instanceof RoadizRequest &&
+            } elseif ($request instanceof RoadizRequest &&
                 $matchedCtrl instanceof AppController) {
                 // No node controller matching in install mode
                 $request->setTheme($matchedCtrl->getTheme());
