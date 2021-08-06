@@ -39,6 +39,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Themes\Install\InstallApp;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ProfilerExtension;

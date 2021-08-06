@@ -4,7 +4,7 @@
 FontFile:
     path:     /fonts/files/{filename}_{variant}.{extension}
     defaults:
-        _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFileAction
+        _controller: \RZ\Roadiz\CMS\Controllers\FontFaceController::fontFileAction
     requirements:
         filename: "[a-zA-Z0-9\\-_]+"
         variant: "[0-9]+"
@@ -12,14 +12,14 @@ FontFile:
 FontFaceCSS:
     path:     /font-faces.css
     defaults:
-        _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFacesAction
+        _controller: \RZ\Roadiz\CMS\Controllers\FontFaceController::fontFacesAction
 #
 # InterventionRequest is hard coded before run app
 #
 interventionRequestProcess:
     path:     /assets/{queryString}/{filename}
     defaults:
-        _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::interventionRequestAction
+        _controller: \RZ\Roadiz\CMS\Controllers\InterventionRequestController::interventionRequestAction
     requirements:
         queryString : "[a-zA-Z:0-9\\-]+"
         filename : "[a-zA-Z0-9\\-_\\.\\/]+"

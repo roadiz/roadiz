@@ -13,14 +13,9 @@ use Twig\Extension\GlobalsInterface;
 
 class RoadizExtension extends AbstractExtension implements GlobalsInterface
 {
-    /**
-     * @var Kernel
-     */
-    protected $kernel;
+    protected Kernel $kernel;
 
     /**
-     * RoadizExtension constructor.
-     *
      * @param Kernel $kernel
      */
     public function __construct(Kernel $kernel)
@@ -56,7 +51,12 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
                 'nodeTypes' => $this->kernel->get('nodeTypesBag'),
             ],
             'app' => $appVariable,
-            'chroot_resolver' => $this->kernel->get(NodeChrootResolver::class)
+            'chroot_resolver' => $this->kernel->get(NodeChrootResolver::class),
+            'meta' => [
+                'siteName' => $settingsBag->get('site_name'),
+                'siteCopyright' => $settingsBag->get('site_copyright'),
+                'siteDescription' => $settingsBag->get('seo_description'),
+            ]
         ];
     }
 }

@@ -6,7 +6,7 @@ namespace RZ\Roadiz\Core;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
-use RZ\Roadiz\CMS\Controllers\AssetsController;
+use RZ\Roadiz\CMS\Controllers\InterventionRequestController;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
@@ -286,7 +286,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             if (0 === strpos($request->getPathInfo(), '/assets') &&
                 preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
             ) {
-                $ctrl = $this->get(AssetsController::class);
+                $ctrl = $this->get(InterventionRequestController::class);
                 $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
                 $response->headers->add(['X-ByPass-Kernel' => true]);
                 $response->prepare($request);
@@ -531,7 +531,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * @inheritDoc
      */
-    public function getPublicCachePath()
+    public function getPublicCachePath(): string
     {
         return $this->getPublicDir() . $this->getPublicCacheBasePath();
     }
@@ -539,13 +539,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * @inheritDoc
      */
-    public function getPublicCacheBasePath()
+    public function getPublicCacheBasePath(): string
     {
         return '/assets';
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getPrivateFilesPath(): string
     {
@@ -553,7 +553,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getPrivateFilesBasePath(): string
     {

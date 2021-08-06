@@ -9,7 +9,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\CMS\Controllers\AssetsController;
+use RZ\Roadiz\CMS\Controllers\FontFaceController;
+use RZ\Roadiz\CMS\Controllers\InterventionRequestController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Document\EventSubscriber\DocumentFilesizeSubscriber;
 use RZ\Roadiz\Document\EventSubscriber\DocumentSizeSubscriber;
@@ -45,14 +46,20 @@ class AssetsServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container[AssetsController::class] = function (Container $c) {
-            return new AssetsController(
+        $container[FontFaceController::class] = function (Container $c) {
+            return new FontFaceController(
                 $c['kernel'],
-                $c['interventionRequest'],
                 $c[ManagerRegistry::class],
                 $c['twig.environment'],
                 $c['settingsBag'],
                 $c['assetPackages']
+            );
+        };
+
+        $container[InterventionRequestController::class] = function (Container $c) {
+            return new InterventionRequestController(
+                $c['kernel'],
+                $c['interventionRequest']
             );
         };
 

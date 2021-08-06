@@ -224,7 +224,7 @@ abstract class Controller implements ContainerAwareInterface
      *
      * @return TranslationInterface
      */
-    protected function findTranslationForLocale($_locale = null): TranslationInterface
+    protected function findTranslationForLocale(string $_locale = null): TranslationInterface
     {
         if (null === $_locale) {
             return $this->get('defaultTranslation');

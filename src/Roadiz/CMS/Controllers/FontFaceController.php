@@ -3,89 +3,43 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Controllers;
 
-use AM\InterventionRequest\InterventionRequest;
-use AM\InterventionRequest\ShortUrlExpander;
 use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Font;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\Repositories\FontRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 
-/**
- * Special controller app file for assets management with InterventionRequest lib.
- */
-final class AssetsController
+final class FontFaceController
 {
-    private Kernel $kernel;
-    private InterventionRequest $interventionRequest;
+    private FileAwareInterface $fileAware;
     private ManagerRegistry $managerRegistry;
     private Environment $templating;
     private Settings $settingsBag;
     private Packages $packages;
 
     /**
-     * @param Kernel $kernel
-     * @param InterventionRequest $interventionRequest
+     * @param FileAwareInterface $fileAware
      * @param ManagerRegistry $managerRegistry
      * @param Environment $templating
      * @param Settings $settingsBag
      * @param Packages $packages
      */
     public function __construct(
-        Kernel $kernel,
-        InterventionRequest $interventionRequest,
+        FileAwareInterface $fileAware,
         ManagerRegistry $managerRegistry,
         Environment $templating,
         Settings $settingsBag,
         Packages $packages
     ) {
-        $this->kernel = $kernel;
-        $this->interventionRequest = $interventionRequest;
+        $this->fileAware = $fileAware;
         $this->managerRegistry = $managerRegistry;
         $this->templating = $templating;
         $this->settingsBag = $settingsBag;
         $this->packages = $packages;
-    }
-
-    /**
-     * @param Request $request
-     * @param string  $queryString
-     * @param string  $filename
-     *
-     * @return Response
-     */
-    public function interventionRequestAction(Request $request, string $queryString, string $filename)
-    {
-        try {
-            /*
-             * Handle short url with Url rewriting
-             */
-            $expander = new ShortUrlExpander($request);
-            $expander->setIgnorePath($this->kernel->getPublicCacheBasePath());
-            $expander->injectParamsToRequest($queryString, $filename);
-
-            $this->interventionRequest->handleRequest($request);
-
-            return $this->interventionRequest->getResponse($request);
-        } catch (\ReflectionException $e) {
-            $message = '[Configuration] ' . $e->getMessage();
-
-            return new Response(
-                $message,
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-                ['content-type' => 'text/plain']
-            );
-        } catch (\Exception $e) {
-            return new Response(
-                $e->getMessage(),
-                Response::HTTP_NOT_FOUND,
-                ['content-type' => 'text/plain']
-            );
-        }
     }
 
     /**
@@ -215,7 +169,7 @@ final class AssetsController
             $assignation['fonts'][] = [
                 'font' => $font,
                 'site' => $this->settingsBag->get('site_name'),
-                'fontFolder' => $this->kernel->getFontsFilesBasePath(),
+                'fontFolder' => $this->fileAware->getFontsFilesBasePath(),
                 'variantHash' => $variantHash,
             ];
         }
