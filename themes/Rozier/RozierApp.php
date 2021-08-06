@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Themes\Rozier;
 
+use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\Widgets\TreeWidgetFactory;
@@ -21,17 +23,17 @@ use Twig\Error\SyntaxError;
  */
 class RozierApp extends BackendController
 {
-    protected static $themeName = 'Rozier Backstage theme';
-    protected static $themeAuthor = 'Ambroise Maupate, Julien Blanchet';
-    protected static $themeCopyright = 'REZO ZERO';
-    protected static $themeDir = 'Rozier';
+    protected static string $themeName = 'Rozier Backstage theme';
+    protected static string $themeAuthor = 'Ambroise Maupate, Julien Blanchet';
+    protected static string $themeCopyright = 'REZO ZERO';
+    protected static string $themeDir = 'Rozier';
 
-    protected $formFactory = null;
-    protected $themeContainer = null;
+    protected ?FormFactoryInterface $formFactory = null;
+    protected ?Container $themeContainer = null;
 
     const DEFAULT_ITEM_PER_PAGE = 50;
 
-    public static $backendLanguages = [
+    public static array $backendLanguages = [
         'Arabic' => 'ar',
         'English' => 'en',
         'Español' => 'es',

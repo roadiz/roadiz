@@ -55,32 +55,32 @@ abstract class AppController extends Controller
     /**
      * @var int Theme priority to load templates and translation in the right order.
      */
-    public static $priority = 0;
+    public static int $priority = 0;
     /**
      * Theme name.
      *
      * @var string
      */
-    protected static $themeName = '';
+    protected static string $themeName = '';
     /**
      * Theme author description.
      *
      * @var string
      */
-    protected static $themeAuthor = '';
+    protected static string $themeAuthor = '';
     /**
      * Theme copyright licence.
      *
      * @var string
      */
-    protected static $themeCopyright = '';
+    protected static string $themeCopyright = '';
     /**
      * Theme base directory name.
      *
      * Example: "MyTheme" will be located in "themes/MyTheme"
      * @var string
      */
-    protected static $themeDir = '';
+    protected static string $themeDir = '';
     /**
      * Theme requires a minimal CMS version.
      *
@@ -95,7 +95,7 @@ abstract class AppController extends Controller
      *
      * @var bool
      */
-    protected static $backendTheme = false;
+    protected static bool $backendTheme = false;
     protected ?Theme $theme = null;
     /**
      * Assignation for twig template engine.
@@ -103,14 +103,13 @@ abstract class AppController extends Controller
     protected array $assignation = [];
     /**
      * @var Node|null
-     * @deprecated
      */
     private ?Node $homeNode = null;
 
     /**
      * @return string
      */
-    public static function getThemeName()
+    public static function getThemeName(): string
     {
         return static::$themeName;
     }
@@ -118,7 +117,7 @@ abstract class AppController extends Controller
     /**
      * @return string
      */
-    public static function getThemeAuthor()
+    public static function getThemeAuthor(): string
     {
         return static::$themeAuthor;
     }
@@ -126,7 +125,7 @@ abstract class AppController extends Controller
     /**
      * @return string
      */
-    public static function getThemeCopyright()
+    public static function getThemeCopyright(): string
     {
         return static::$themeCopyright;
     }
@@ -134,7 +133,7 @@ abstract class AppController extends Controller
     /**
      * @return int
      */
-    public static function getPriority()
+    public static function getPriority(): int
     {
         return static::$priority;
     }
@@ -142,7 +141,7 @@ abstract class AppController extends Controller
     /**
      * @return string
      */
-    public static function getThemeRequire()
+    public static function getThemeRequire(): string
     {
         return static::$themeRequire;
     }
@@ -150,7 +149,7 @@ abstract class AppController extends Controller
     /**
      * @return boolean
      */
-    public static function isBackendTheme()
+    public static function isBackendTheme(): bool
     {
         return static::$backendTheme;
     }
@@ -159,7 +158,7 @@ abstract class AppController extends Controller
      * @return RouteCollection
      * @throws ReflectionException
      */
-    public static function getRoutes()
+    public static function getRoutes(): RouteCollection
     {
         $locator = static::getFileLocator();
         $loader = new YamlFileLoader($locator);
@@ -173,7 +172,7 @@ abstract class AppController extends Controller
      * @return FileLocator
      * @throws ReflectionException
      */
-    public static function getFileLocator()
+    public static function getFileLocator(): FileLocator
     {
         $resourcesFolder = static::getResourcesFolder();
         return new FileLocator([
@@ -193,7 +192,7 @@ abstract class AppController extends Controller
      * @return string
      * @throws ReflectionException
      */
-    public static function getResourcesFolder()
+    public static function getResourcesFolder(): string
     {
         return static::getThemeFolder() . '/Resources';
     }
@@ -204,7 +203,7 @@ abstract class AppController extends Controller
      * @return string
      * @throws ReflectionException
      */
-    public static function getThemeFolder()
+    public static function getThemeFolder(): string
     {
         $class_info = new ReflectionClass(static::getThemeMainClass());
         return dirname($class_info->getFileName());
@@ -213,7 +212,7 @@ abstract class AppController extends Controller
     /**
      * @return class-string Main theme class (FQN class with namespace)
      */
-    public static function getThemeMainClass()
+    public static function getThemeMainClass(): string
     {
         return '\\Themes\\' . static::getThemeDir() . '\\' . static::getThemeMainClassName();
     }
@@ -221,7 +220,7 @@ abstract class AppController extends Controller
     /**
      * @return string
      */
-    public static function getThemeDir()
+    public static function getThemeDir(): string
     {
         return static::$themeDir;
     }
@@ -229,7 +228,7 @@ abstract class AppController extends Controller
     /**
      * @return string Main theme class name
      */
-    public static function getThemeMainClassName()
+    public static function getThemeMainClassName(): string
     {
         return static::getThemeDir() . 'App';
     }
@@ -240,7 +239,7 @@ abstract class AppController extends Controller
      * @return RouteCollection|null
      * @throws ReflectionException
      */
-    public static function getBackendRoutes()
+    public static function getBackendRoutes(): ?RouteCollection
     {
         $locator = static::getFileLocator();
 
@@ -256,7 +255,7 @@ abstract class AppController extends Controller
      * @return string
      * @throws ReflectionException
      */
-    public static function getTranslationsFolder()
+    public static function getTranslationsFolder(): string
     {
         return static::getResourcesFolder() . '/translations';
     }
@@ -265,7 +264,7 @@ abstract class AppController extends Controller
      * @return string
      * @throws ReflectionException
      */
-    public static function getPublicFolder()
+    public static function getPublicFolder(): string
     {
         return static::getThemeFolder() . '/static';
     }
@@ -306,7 +305,7 @@ abstract class AppController extends Controller
      * @return string
      * @throws ReflectionException
      */
-    public static function getViewsFolder()
+    public static function getViewsFolder(): string
     {
         return static::getResourcesFolder() . '/views';
     }
@@ -388,16 +387,18 @@ abstract class AppController extends Controller
 
     /**
      * @return string
+     * @deprecated Use asset() twig function
      */
-    public function getStaticResourcesUrl()
+    public function getStaticResourcesUrl(): string
     {
         return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/');
     }
 
     /**
      * @return string
+     * @deprecated Use absolute_url(asset()) twig function
      */
-    public function getAbsoluteStaticResourceUrl()
+    public function getAbsoluteStaticResourceUrl(): string
     {
         return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/', Packages::ABSOLUTE);
     }
@@ -444,7 +445,7 @@ abstract class AppController extends Controller
         if (null === $this->theme) {
             $className = new UnicodeString(static::getCalledClass());
             while (!$className->endsWith('App')) {
-                $className = get_parent_class($className);
+                $className = get_parent_class($className->toString());
                 if ($className === false) {
                     $className = new UnicodeString('');
                     break;
@@ -675,7 +676,6 @@ abstract class AppController extends Controller
     /**
      * @param TranslationInterface|null $translation
      * @return null|Node
-     * @deprecated
      */
     protected function getHome(?TranslationInterface $translation = null): ?Node
     {

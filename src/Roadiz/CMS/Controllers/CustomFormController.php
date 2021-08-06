@@ -28,7 +28,7 @@ class CustomFormController extends CmsController
     /**
      * @return string
      */
-    public function getStaticResourcesUrl()
+    public function getStaticResourcesUrl(): string
     {
         return $this->get('assetPackages')->getUrl('themes/Rozier/static/');
     }

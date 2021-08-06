@@ -10,12 +10,8 @@ namespace RZ\Roadiz\CMS\Controllers;
  */
 abstract class BackendController extends AppController
 {
-    protected static $backendTheme = true;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static $priority = -10;
+    protected static bool $backendTheme = true;
+    public static int $priority = -10;
 
     /**
      * @inheritDoc

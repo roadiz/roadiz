@@ -33,11 +33,11 @@ use Themes\Rozier\RozierApp;
  */
 class InstallApp extends AppController
 {
-    protected static $themeName = 'Install theme';
-    protected static $themeAuthor = 'Ambroise Maupate';
-    protected static $themeCopyright = 'REZO ZERO';
-    protected static $themeDir = 'Install';
-    protected static $backendTheme = false;
+    protected static string $themeName = 'Install theme';
+    protected static string $themeAuthor = 'Ambroise Maupate';
+    protected static string $themeCopyright = 'REZO ZERO';
+    protected static string $themeDir = 'Install';
+    protected static bool $backendTheme = false;
 
     /**
      * @return $this
