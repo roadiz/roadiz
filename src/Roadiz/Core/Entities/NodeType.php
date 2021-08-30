@@ -89,7 +89,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
     /**
      * @var string|null
      * @ORM\Column(type="text", nullable=true)
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("string")
      */
     private $description;
@@ -115,7 +115,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("boolean")
      */
     private $visible = true;
@@ -141,7 +141,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("boolean")
      */
     private $publishable = false;
@@ -172,7 +172,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
      *
      * @var bool
      * @ORM\Column(name="reachable", type="boolean", nullable=false, options={"default" = true})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("boolean")
      */
     private $reachable = true;
@@ -206,7 +206,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
     /**
      * @var bool
      * @ORM\Column(name="hiding_nodes",type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("boolean")
      */
     private $hidingNodes = false;
@@ -231,7 +231,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
     /**
      * @var bool
      * @ORM\Column(name="hiding_non_reachable_nodes",type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("boolean")
      */
     private $hidingNonReachableNodes = false;
@@ -291,7 +291,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
      * @var ArrayCollection<NodeTypeField>
      * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\NodeTypeField>")
      * @Serializer\Accessor(getter="getFields", setter="setFields")
      */
@@ -323,7 +323,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
     /**
      * @var int
      * @ORM\Column(type="integer", name="default_ttl", nullable=false, options={"default" = 0})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("int")
      */
     private $defaultTtl = 0;
