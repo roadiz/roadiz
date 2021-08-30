@@ -353,7 +353,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
      *
      * @var bool
      * @ORM\Column(name="searchable", type="boolean", nullable=false, options={"default" = true})
-     * @Serializer\Groups("node_type")
+     * @Serializer\Groups({"node_type"})
      * @Serializer\Type("boolean")
      */
     private $searchable = true;

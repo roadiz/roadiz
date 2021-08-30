@@ -28,7 +28,7 @@ class Webhook extends AbstractDateTimed implements WebhookInterface
      * @ORM\Id
      * @ORM\Column(type="string", length=36)
      * @ORM\GeneratedValue(strategy="UUID")
-     * @Serializer\Groups("id")
+     * @Serializer\Groups({"id"})
      * @Serializer\Type("string")
      */
     protected $id;
