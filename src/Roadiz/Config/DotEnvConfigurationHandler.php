@@ -37,7 +37,7 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
                 $envName = trim($matches['env']);
                 $this->containsDotEnv = true;
                 if (!key_exists($envName, $_ENV) || (is_string($_ENV[$envName]) && $_ENV[$envName] === '')) {
-                    if (empty($matches['fallback']) || $matches['fallback'] === '') {
+                    if (empty($matches['fallback'])) {
                         $item = null;
                     } else {
                         $item = $matches['fallback'];
