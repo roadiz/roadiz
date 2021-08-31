@@ -101,9 +101,9 @@ class LoggerFactory
                             break;
                         case 'gelf':
                             if (empty($config['url'])) {
-                                throw new InvalidConfigurationException(
-                                    'A monolog GELFHandler must define a log "url".'
-                                );
+                                // Allow empty URL to disable handler from DotEnv without
+                                // removing configuration lines.
+                                break;
                             }
                             if (class_exists('\Gelf\Publisher') &&
                                 class_exists('\Gelf\Transport\HttpTransport')) {
@@ -120,9 +120,9 @@ class LoggerFactory
                             break;
                         case 'sentry':
                             if (empty($config['url'])) {
-                                throw new InvalidConfigurationException(
-                                    'A Sentry handler must declare a DSN "url".'
-                                );
+                                // Allow empty URL to disable handler from DotEnv without
+                                // removing configuration lines.
+                                break;
                             }
                             if (function_exists('\Sentry\init') &&
                                 class_exists('\Sentry\Monolog\Handler')) {
