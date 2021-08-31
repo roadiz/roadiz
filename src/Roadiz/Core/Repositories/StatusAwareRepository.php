@@ -13,7 +13,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
- * @package RZ\Roadiz\Core\Repositories
  * @template TEntityClass of object
  * @extends \RZ\Roadiz\Core\Repositories\EntityRepository<TEntityClass>
  */

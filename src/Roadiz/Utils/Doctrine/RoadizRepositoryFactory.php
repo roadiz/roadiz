@@ -52,6 +52,7 @@ final class RoadizRepositoryFactory implements RepositoryFactory
      * @param class-string $entityName The name of the entity.
      *
      * @return ObjectRepository
+     * @throws \ReflectionException
      */
     private function createRepository(EntityManagerInterface $entityManager, string $entityName)
     {
@@ -60,8 +61,9 @@ final class RoadizRepositoryFactory implements RepositoryFactory
         $repositoryClassName = $metadata->customRepositoryClassName
             ?: $entityManager->getConfiguration()->getDefaultRepositoryClassName();
 
-        if (is_subclass_of($repositoryClassName, EntityRepository::class) ||
-            $repositoryClassName == EntityRepository::class) {
+        $reflexionRepository = new \ReflectionClass($repositoryClassName);
+        if ($reflexionRepository->isSubclassOf(EntityRepository::class) ||
+            $repositoryClassName === EntityRepository::class) {
             return new $repositoryClassName($entityManager, $metadata, $this->container, $this->previewResolver);
         }
 
