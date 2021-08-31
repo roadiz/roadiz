@@ -26,7 +26,7 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * @template T
+ * @template T of object
  * @extends \Doctrine\ORM\EntityRepository<T>
  */
 class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface

@@ -80,6 +80,7 @@ class EntityCollectionTransformer implements DataTransformerInterface
 
         $entities = [];
         foreach ($ids as $entityId) {
+            /** @var AbstractEntity|null $entity */
             $entity = $this->manager
                 ->getRepository($this->classname)
                 ->find($entityId)
