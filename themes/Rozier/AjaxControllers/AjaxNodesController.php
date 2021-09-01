@@ -9,7 +9,6 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
-use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;

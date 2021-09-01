@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Explorer;
 
-use Themes\Rozier\Models\ModelInterface;
-
-interface ExplorerItemInterface extends ModelInterface
+interface ExplorerItemInterface
 {
     /**
      * @return string|integer
@@ -28,4 +26,11 @@ interface ExplorerItemInterface extends ModelInterface
      * @return mixed
      */
     public function getOriginal();
+
+    /**
+     * Return a structured array of data.
+     *
+     * @return array
+     */
+    public function toArray();
 }

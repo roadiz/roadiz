@@ -8,24 +8,14 @@ use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
- * Class TagModel.
- *
  * @package Themes\Rozier\Models
  */
-class TagModel implements ModelInterface
+final class TagModel implements ModelInterface
 {
-    public static $thumbnailArray;
-    /**
-     * @var Tag
-     */
-    private $tag;
-    /**
-     * @var Container
-     */
-    private $container;
+    private Tag $tag;
+    private Container $container;
 
     /**
-     * NodeModel constructor.
      * @param Tag $tag
      * @param Container $container
      */
@@ -66,7 +56,7 @@ class TagModel implements ModelInterface
      * @param bool $slash
      * @return string
      */
-    private function getTagParents($tag, $slash = false)
+    private function getTagParents(Tag $tag, bool $slash = false): string
     {
         $result = '';
         $parent = $tag->getParent();

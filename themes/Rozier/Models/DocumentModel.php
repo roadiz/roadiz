@@ -14,7 +14,7 @@ use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 /**
  * @package Themes\Rozier\Models
  */
-class DocumentModel implements ModelInterface
+final class DocumentModel implements ModelInterface
 {
     public static array $thumbnailArray = [
         "fit" => "40x40",

@@ -5,15 +5,11 @@ namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\User;
 
-class UserExplorerItem extends AbstractExplorerItem
+final class UserExplorerItem extends AbstractExplorerItem
 {
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
     /**
-     * UserExplorerItem constructor.
      * @param User $user
      */
     public function __construct(User $user)

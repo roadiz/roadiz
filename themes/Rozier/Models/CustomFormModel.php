@@ -9,21 +9,12 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Translation\Translator;
 
 /**
- * Class CustomFormModel.
- *
  * @package Themes\Rozier\Models
  */
-class CustomFormModel implements ModelInterface
+final class CustomFormModel implements ModelInterface
 {
-    public static $thumbnailArray;
-    /**
-     * @var CustomForm
-     */
-    private $customForm;
-    /**
-     * @var Container
-     */
-    private $container;
+    private CustomForm $customForm;
+    private Container $container;
 
     /**
      * CustomFormModel constructor.

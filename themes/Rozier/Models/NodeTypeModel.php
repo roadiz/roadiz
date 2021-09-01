@@ -7,42 +7,27 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
- * Class NodeTypeModel.
- *
  * @package Themes\Rozier\Models
  */
-class NodeTypeModel implements ModelInterface
+final class NodeTypeModel implements ModelInterface
 {
-    public static $thumbnailArray;
-    /**
-     * @var NodeType
-     */
-    private $nodeType;
-    /**
-     * @var Container
-     */
-    private $container;
+    private NodeType $nodeType;
 
     /**
-     * NodeModel constructor.
      * @param NodeType $nodeType
-     * @param Container $container
      */
-    public function __construct(NodeType $nodeType, Container $container)
+    public function __construct(NodeType $nodeType)
     {
         $this->nodeType = $nodeType;
-        $this->container = $container;
     }
 
     public function toArray()
     {
-        $result = [
+        return [
             'id' => $this->nodeType->getId(),
             'nodeName' => $this->nodeType->getName(),
             'name' => $this->nodeType->getDisplayName(),
             'color' => $this->nodeType->getColor(),
         ];
-
-        return $result;
     }
 }

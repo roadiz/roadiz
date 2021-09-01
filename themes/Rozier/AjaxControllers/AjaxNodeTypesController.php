@@ -102,7 +102,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
 
         /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
-            $nodeModel = new NodeTypeModel($nodeType, $this->getContainer());
+            $nodeModel = new NodeTypeModel($nodeType);
             $nodeTypesArray[] = $nodeModel->toArray();
         }
 

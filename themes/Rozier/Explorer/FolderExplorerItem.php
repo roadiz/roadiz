@@ -5,12 +5,9 @@ namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\Folder;
 
-class FolderExplorerItem extends AbstractExplorerItem
+final class FolderExplorerItem extends AbstractExplorerItem
 {
-    /**
-     * @var Folder
-     */
-    private $folder;
+    private Folder $folder;
 
     /**
      * @param Folder $folder

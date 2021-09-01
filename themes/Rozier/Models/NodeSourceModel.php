@@ -10,25 +10,15 @@ use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
- * Class NodeModel.
- *
  * @package Themes\Rozier\Models
  * @Serializer\ExclusionPolicy("all")
  */
-class NodeSourceModel implements ModelInterface
+final class NodeSourceModel implements ModelInterface
 {
-    public static $thumbnailArray;
-    /**
-     * @var NodesSources
-     */
-    private $nodeSource;
-    /**
-     * @var Container
-     */
-    private $container;
+    private NodesSources $nodeSource;
+    private Container $container;
 
     /**
-     * NodeModel constructor.
      * @param NodesSources $nodeSource
      * @param Container $container
      */

@@ -5,15 +5,11 @@ namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\Setting;
 
-class SettingExplorerItem extends AbstractExplorerItem
+final class SettingExplorerItem extends AbstractExplorerItem
 {
-    /**
-     * @var Setting
-     */
-    private $setting;
+    private Setting $setting;
 
     /**
-     * SettingExplorerItem constructor.
      * @param Setting $setting
      */
     public function __construct(Setting $setting)
