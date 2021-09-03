@@ -128,8 +128,6 @@ class UniqueNodeGenerator
                 ->find((int) $request->get('nodeTypeId'));
 
             if (null !== $nodeType) {
-                $translation = null;
-
                 if ($request->get('translationId') > 0) {
                     /** @var Translation $translation */
                     $translation = $this->managerRegistry

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Translation\Twig;
 
 use Doctrine\ORM\ORMException;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
@@ -33,13 +33,13 @@ final class TranslationMenuExtension extends AbstractExtension
     }
 
     /**
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @param bool $absolute
      *
      * @return array
      * @throws ORMException
      */
-    public function getMenuAssignation(Translation $translation = null, bool $absolute = false)
+    public function getMenuAssignation(TranslationInterface $translation = null, bool $absolute = false)
     {
         if (null !== $translation) {
             $this->translationViewer->setTranslation($translation);

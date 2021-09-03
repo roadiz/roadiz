@@ -8,6 +8,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
@@ -165,7 +166,7 @@ final class NodeTranstyper
                 $setter = $oldField->getSetterName();
                 $getter = $oldField->getGetterName();
                 $source->$setter($existingSource->$getter());
-            } elseif ($oldField->getType() === NodeTypeField::DOCUMENTS_T) {
+            } elseif ($oldField->getType() === AbstractField::DOCUMENTS_T) {
                 /*
                  * Copy documents.
                  */

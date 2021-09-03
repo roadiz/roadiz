@@ -17,20 +17,20 @@ use RZ\Roadiz\Core\Entities\NodesToNodes;
 final class NodeDuplicator
 {
     private Node $originalNode;
-    private ObjectManager $em;
+    private ObjectManager $objectManager;
     private NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
      * @param Node $originalNode
-     * @param ObjectManager $em
+     * @param ObjectManager $objectManager
      * @param NodeNamePolicyInterface $nodeNamePolicy
      */
     public function __construct(
         Node $originalNode,
-        ObjectManager $em,
+        ObjectManager $objectManager,
         NodeNamePolicyInterface $nodeNamePolicy
     ) {
-        $this->em = $em;
+        $this->objectManager = $objectManager;
         $this->originalNode = $originalNode;
         $this->nodeNamePolicy = $nodeNamePolicy;
     }
@@ -42,7 +42,7 @@ final class NodeDuplicator
      */
     public function duplicate(): Node
     {
-        $this->em->refresh($this->originalNode);
+        $this->objectManager->refresh($this->originalNode);
 
         if ($this->originalNode->isLocked()) {
             throw new \RuntimeException('Locked node cannot be duplicated.');
@@ -51,21 +51,21 @@ final class NodeDuplicator
         $parent = $this->originalNode->getParent();
         $node = clone $this->originalNode;
 
-        if ($this->em->contains($node)) {
-            $this->em->clear($node);
+        if ($this->objectManager->contains($node)) {
+            $this->objectManager->clear($node);
         }
 
         if ($parent !== null) {
             /** @var Node $parent */
-            $parent = $this->em->find(Node::class, $parent->getId());
+            $parent = $this->objectManager->find(Node::class, $parent->getId());
             $node->setParent($parent);
         }
         // Demote cloned node to draft
         $node->setStatus(Node::DRAFT);
 
         $node = $this->doDuplicate($node);
-        $this->em->flush();
-        $this->em->refresh($node);
+        $this->objectManager->flush();
+        $this->objectManager->refresh($node);
 
         return $node;
     }
@@ -90,7 +90,7 @@ final class NodeDuplicator
 
         /** @var NodesSources $nodeSource */
         foreach ($node->getNodeSources() as $nodeSource) {
-            $this->em->persist($nodeSource);
+            $this->objectManager->persist($nodeSource);
 
             /** @var NodesSourcesDocuments $nsDoc */
             foreach ($nodeSource->getDocumentsByFields() as $nsDoc) {
@@ -99,7 +99,7 @@ final class NodeDuplicator
                 $nsDoc->setDocument($doc);
                 $f = $nsDoc->getField();
                 $nsDoc->setField($f);
-                $this->em->persist($nsDoc);
+                $this->objectManager->persist($nsDoc);
             }
         }
 
@@ -112,16 +112,16 @@ final class NodeDuplicator
          */
         /** @var AttributeValue $attributeValue */
         foreach ($node->getAttributeValues() as $attributeValue) {
-            $this->em->persist($attributeValue);
+            $this->objectManager->persist($attributeValue);
             foreach ($attributeValue->getAttributeValueTranslations() as $attributeValueTranslation) {
-                $this->em->persist($attributeValueTranslation);
+                $this->objectManager->persist($attributeValueTranslation);
             }
         }
 
         /*
          * Persist duplicated node
          */
-        $this->em->persist($node);
+        $this->objectManager->persist($node);
 
         return $node;
     }
@@ -140,7 +140,7 @@ final class NodeDuplicator
         foreach ($nodeRelations as $position => $nodeRelation) {
             $ntn = new NodesToNodes($node, $nodeRelation->getNodeB(), $nodeRelation->getField());
             $ntn->setPosition($position);
-            $this->em->persist($ntn);
+            $this->objectManager->persist($ntn);
         }
 
         return $node;
