@@ -58,7 +58,7 @@
         "roadiz/dts-generator":                    "~1.7.0 || dev-main",
         "roadiz/entity-generator":                 "~1.7.0 || dev-main",
         "roadiz/jwt":                              "~1.6.0 || ~1.7.0",
-        "roadiz/markdown":                         "~1.6.0 || ~1.7.0",
+        "roadiz/markdown":                         "~1.7.0 || dev-develop",
         "roadiz/models":                           "~1.7.0 || dev-develop",
         "roadiz/nodetype-contracts":               "dev-main",
         "roadiz/openid":                           "~1.7.0 || dev-main",
