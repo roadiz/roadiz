@@ -7,7 +7,6 @@ use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 use RZ\Roadiz\Message\AsyncMessage;
 use RZ\Roadiz\Message\HttpRequestMessage;
-use RZ\Roadiz\Webhook\Entity\Webhook;
 use RZ\Roadiz\Webhook\Entity\WebhookInterface;
 
 final class NetlifyBuildHookMessage implements AsyncMessage, HttpRequestMessage, WebhookMessage

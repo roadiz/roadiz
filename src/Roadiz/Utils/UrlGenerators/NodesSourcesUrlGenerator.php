@@ -15,32 +15,16 @@ use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
  */
 final class NodesSourcesUrlGenerator
 {
-    /**
-     * @var Request|null
-     */
-    protected $request;
-    /**
-     * @var NodesSources|null
-     */
-    protected $nodeSource;
-    /**
-     * @var bool
-     */
-    protected $forceLocale;
-    /**
-     * @var bool
-     */
-    protected $forceLocaleWithUrlAlias;
-    /**
-     * @var NodesSourcesPathAggregator
-     */
-    protected $pathAggregator;
+    protected ?Request $request;
+    protected ?NodesSources $nodeSource;
+    protected bool $forceLocale;
+    protected bool $forceLocaleWithUrlAlias;
+    protected NodesSourcesPathAggregator $pathAggregator;
 
     /**
-     *
      * @param NodesSourcesPathAggregator $pathAggregator
-     * @param Request                    $request
-     * @param NodesSources               $nodeSource
+     * @param Request|null               $request
+     * @param NodesSources|null          $nodeSource
      * @param bool                       $forceLocale
      * @param bool                       $forceLocaleWithUrlAlias
      */
@@ -56,39 +40,6 @@ final class NodesSourcesUrlGenerator
         $this->nodeSource = $nodeSource;
         $this->forceLocale = $forceLocale;
         $this->forceLocaleWithUrlAlias = $forceLocaleWithUrlAlias;
-    }
-
-
-    /**
-     * Get a resource Url.
-     *
-     * @param boolean $absolute Use Url with domain name [default: false]
-     * @param string $canonicalSchemeAuthority Override protocol, host and port to generate Url. Need absolute to true
-     * @return string
-     * @deprecated Do not use this method directly to generate NodesSources URI but ChainRouter::generate method.
-     */
-    public function getUrl(bool $absolute = false, string $canonicalSchemeAuthority = ''): string
-    {
-        @trigger_error('NodesSourcesUrlGenerator::getUrl method is deprecated. Use ChainRouter::generate method instead.', E_USER_DEPRECATED);
-
-        if (null !== $this->request) {
-            $schemeAuthority = '';
-
-            if ($absolute === true) {
-                if (!empty($canonicalSchemeAuthority)) {
-                    $schemeAuthority = trim($canonicalSchemeAuthority);
-                } else {
-                    $schemeAuthority = $this->request->getSchemeAndHttpHost();
-                }
-            }
-
-            return $schemeAuthority .
-            $this->request->getBaseUrl() .
-            '/' .
-            $this->getNonContextualUrl($this->request->getTheme());
-        } else {
-            return '/' . $this->getNonContextualUrl();
-        }
     }
 
     /**
@@ -110,12 +61,12 @@ final class NodesSourcesUrlGenerator
      *
      * It returns a relative url to Roadiz, not relative to your server root.
      *
-     * @param Theme $theme
+     * @param Theme|null $theme
      * @param array $parameters
      *
      * @return string
      */
-    public function getNonContextualUrl(Theme $theme = null, $parameters = []): string
+    public function getNonContextualUrl(?Theme $theme = null, array $parameters = []): string
     {
         if (null !== $this->nodeSource) {
             if ($this->isNodeSourceHome($this->nodeSource)) {

@@ -12,10 +12,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 final class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private UrlGeneratorInterface $urlGenerator;
 
     /**
      * @param Packages              $packages
