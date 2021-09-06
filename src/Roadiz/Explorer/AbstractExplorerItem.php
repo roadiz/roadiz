@@ -1,18 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace Themes\Rozier\Explorer;
+namespace RZ\Roadiz\Explorer;
 
 abstract class AbstractExplorerItem implements ExplorerItemInterface
 {
     /**
      * @inheritDoc
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->getId(),
-            'classname' => $this->getAlternativeDisplayable(),
+            'classname' => $this->getAlternativeDisplayable() ?? '',
             'displayable' => $this->getDisplayable(),
             'editItem' => null,
             'thumbnail' => null

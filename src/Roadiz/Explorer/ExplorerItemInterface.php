@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Themes\Rozier\Explorer;
+namespace RZ\Roadiz\Explorer;
 
 interface ExplorerItemInterface
 {
@@ -13,12 +13,12 @@ interface ExplorerItemInterface
     /**
      * @return string
      */
-    public function getAlternativeDisplayable();
+    public function getAlternativeDisplayable(): ?string;
 
     /**
      * @return string
      */
-    public function getDisplayable();
+    public function getDisplayable(): string;
 
     /**
      * Get original item.
@@ -32,5 +32,5 @@ interface ExplorerItemInterface
      *
      * @return array
      */
-    public function toArray();
+    public function toArray(): array;
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Themes\Rozier\Explorer;
+namespace RZ\Roadiz\Explorer;
 
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -10,10 +10,7 @@ abstract class AbstractExplorerProvider implements ExplorerProviderInterface
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var array
-     */
-    protected $options;
+    protected array $options;
 
     /**
      * @param OptionsResolver $resolver

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Explorer\AbstractExplorerItem;
 
 final class UserExplorerItem extends AbstractExplorerItem
 {
@@ -28,7 +29,7 @@ final class UserExplorerItem extends AbstractExplorerItem
     /**
      * @inheritDoc
      */
-    public function getAlternativeDisplayable()
+    public function getAlternativeDisplayable(): ?string
     {
         return null !== ($this->user) ? ($this->user->getEmail() ?: '') : ('');
     }
@@ -36,7 +37,7 @@ final class UserExplorerItem extends AbstractExplorerItem
     /**
      * @inheritDoc
      */
-    public function getDisplayable()
+    public function getDisplayable(): string
     {
         $fullName = trim((string) $this->user->getFirstName() . ' ' . (string) $this->user->getLastName());
         if ($fullName !== '') {

@@ -8,13 +8,13 @@ use RZ\Roadiz\Config\JoinNodeTypeFieldConfiguration;
 use RZ\Roadiz\Config\ProviderFieldConfiguration;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodeTypeField as NodeTypeFieldEntity;
+use RZ\Roadiz\Explorer\AbstractExplorerProvider;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
-use Themes\Rozier\Explorer\AbstractExplorerProvider;
 
 class NodeTypeFieldValidator extends ConstraintValidator
 {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Explorer\AbstractExplorerItem;
 
 final class SettingExplorerItem extends AbstractExplorerItem
 {
@@ -28,7 +29,7 @@ final class SettingExplorerItem extends AbstractExplorerItem
     /**
      * @inheritDoc
      */
-    public function getAlternativeDisplayable()
+    public function getAlternativeDisplayable(): ?string
     {
         if (null !== $this->setting->getSettingGroup()) {
             return $this->setting->getSettingGroup()->getName();
@@ -39,7 +40,7 @@ final class SettingExplorerItem extends AbstractExplorerItem
     /**
      * @inheritDoc
      */
-    public function getDisplayable()
+    public function getDisplayable(): string
     {
         return $this->setting->getName();
     }

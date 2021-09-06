@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Explorer\ExplorerItemInterface;
+use RZ\Roadiz\Explorer\ExplorerProviderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Themes\Rozier\Explorer\ExplorerItemInterface;
-use Themes\Rozier\Explorer\ExplorerProviderInterface;
-
 /**
  * @package Themes\Rozier\AjaxControllers
  */

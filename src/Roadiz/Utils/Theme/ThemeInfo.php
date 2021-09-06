@@ -9,9 +9,6 @@ use RuntimeException;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Filesystem\Filesystem;
-use Themes\DefaultTheme\DefaultThemeApp;
-use Themes\Install\InstallApp;
-use Themes\Rozier\RozierApp;
 
 final class ThemeInfo
 {
@@ -53,24 +50,27 @@ final class ThemeInfo
     /**
      * @param string $themeName
      *
-     * @return string
+     * @return class-string
      */
     protected function guessClassnameFromThemeName(string $themeName): string
     {
-        if ($themeName === 'Rozier') {
-            return RozierApp::class;
+        switch ($themeName) {
+            case 'RozierApp':
+            case 'RozierTheme':
+            case 'Rozier':
+                return '\\Themes\\Rozier\\RozierApp';
+            case 'Install':
+            case 'InstallTheme':
+            case 'InstallApp':
+                return '\\Themes\\Install\InstallApp';
+            case 'Debug':
+                throw new \InvalidArgumentException('Debug is not a real theme.');
+            case 'Default':
+            case 'DefaultTheme':
+                return '\\Themes\\DefaultTheme\\DefaultThemeApp';
+            default:
+                return '\\Themes\\'.$themeName.'\\'.$themeName. 'App';
         }
-        if ($themeName === 'Install') {
-            return InstallApp::class;
-        }
-        if ($themeName === 'DefaultTheme') {
-            return DefaultThemeApp::class;
-        }
-        if ($themeName === 'Debug') {
-            throw new \InvalidArgumentException('Debug is not a real theme.');
-        }
-
-        return '\\Themes\\'.$themeName.'\\'.$themeName. 'App';
     }
 
     /**
@@ -191,7 +191,7 @@ final class ThemeInfo
      */
     protected function getThemeNameFromName(): string
     {
-        if (in_array($this->name, static::$protectedThemeNames)) {
+        if (in_array($this->name, self::$protectedThemeNames)) {
             return $this->name;
         }
 

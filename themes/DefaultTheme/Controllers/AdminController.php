@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Themes\DefaultTheme\Controllers;
 
 use RZ\Roadiz\CMS\Forms\ExplorerProviderItemType;

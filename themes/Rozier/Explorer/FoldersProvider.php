@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Explorer\AbstractDoctrineExplorerProvider;
+use RZ\Roadiz\Explorer\ExplorerItemInterface;
 
 final class FoldersProvider extends AbstractDoctrineExplorerProvider
 {
@@ -25,7 +27,7 @@ final class FoldersProvider extends AbstractDoctrineExplorerProvider
     /**
      * @inheritDoc
      */
-    public function supports($item)
+    public function supports($item): bool
     {
         if ($item instanceof Folder) {
             return true;
@@ -37,7 +39,7 @@ final class FoldersProvider extends AbstractDoctrineExplorerProvider
     /**
      * @inheritDoc
      */
-    public function toExplorerItem($item)
+    public function toExplorerItem($item): ?ExplorerItemInterface
     {
         if ($item instanceof Folder) {
             return new FolderExplorerItem($item);

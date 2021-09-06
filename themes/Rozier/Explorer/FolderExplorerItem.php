@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Explorer\AbstractExplorerItem;
 
 final class FolderExplorerItem extends AbstractExplorerItem
 {
@@ -28,7 +29,7 @@ final class FolderExplorerItem extends AbstractExplorerItem
     /**
      * @inheritDoc
      */
-    public function getAlternativeDisplayable()
+    public function getAlternativeDisplayable(): ?string
     {
         /** @var Folder|null $parent */
         $parent = $this->folder->getParent();
@@ -41,7 +42,7 @@ final class FolderExplorerItem extends AbstractExplorerItem
     /**
      * @inheritDoc
      */
-    public function getDisplayable()
+    public function getDisplayable(): string
     {
         return $this->folder->getTranslatedFolders()->first()->getName();
     }

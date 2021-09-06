@@ -10,7 +10,7 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
-use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 
 class DocumentUriSubscriber implements EventSubscriberInterface, ContainerAwareInterface
@@ -33,7 +33,7 @@ class DocumentUriSubscriber implements EventSubscriberInterface, ContainerAwareI
         return [[
             'event' => 'serializer.post_serialize',
             'method' => 'onPostSerialize',
-            'class' => Document::class,
+            'class' => DocumentInterface::class,
         ]];
     }
 
@@ -48,7 +48,7 @@ class DocumentUriSubscriber implements EventSubscriberInterface, ContainerAwareI
             /** @var DocumentUrlGeneratorInterface $urlGenerator */
             $urlGenerator = $this->get('document.url_generator')->setDocument($document);
 
-            if ($document instanceof Document) {
+            if ($document instanceof DocumentInterface) {
                 if ($visitor instanceof SerializationVisitorInterface) {
                     $visitor->visitProperty(new StaticPropertyMetadata('array', 'urls', []), [
                         'original' => $urlGenerator->setOptions(['noProcess' => true])->getUrl(true),

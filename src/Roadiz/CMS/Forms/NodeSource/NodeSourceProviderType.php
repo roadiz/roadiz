@@ -7,14 +7,14 @@ use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Forms\DataTransformer\ProviderDataTransformer;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Explorer\AbstractExplorerItem;
+use RZ\Roadiz\Explorer\AbstractExplorerProvider;
+use RZ\Roadiz\Explorer\ExplorerProviderInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Themes\Rozier\Explorer\AbstractExplorerItem;
-use Themes\Rozier\Explorer\AbstractExplorerProvider;
-use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 final class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
 {

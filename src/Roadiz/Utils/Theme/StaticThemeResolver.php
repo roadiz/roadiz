@@ -5,7 +5,6 @@ namespace RZ\Roadiz\Utils\Theme;
 
 use RZ\Roadiz\Core\Entities\Theme;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Themes\Rozier\RozierApp;
 
 class StaticThemeResolver implements ThemeResolverInterface
 {
@@ -19,7 +18,7 @@ class StaticThemeResolver implements ThemeResolverInterface
      * @param Stopwatch $stopwatch
      * @param bool      $installMode
      */
-    public function __construct(array $configuration, Stopwatch $stopwatch, $installMode = false)
+    public function __construct(array $configuration, Stopwatch $stopwatch, bool $installMode = false)
     {
         $this->stopwatch = $stopwatch;
         $this->installMode = $installMode;
@@ -52,7 +51,7 @@ class StaticThemeResolver implements ThemeResolverInterface
      */
     public function getBackendClassName(): string
     {
-        return RozierApp::class;
+        return '\\Themes\\Rozier\\RozierApp';
     }
 
     /**
@@ -125,7 +124,7 @@ class StaticThemeResolver implements ThemeResolverInterface
      * @param int $id
      * @return Theme
      */
-    private function getThemeFromConfig(array $themeConfig, $id = 0): Theme
+    private function getThemeFromConfig(array $themeConfig, int $id = 0): Theme
     {
         $theme = new Theme();
         $theme->setId($id);

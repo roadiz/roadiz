@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\CMS\Forms\DataTransformer\ExplorerProviderItemTransformer;
+use RZ\Roadiz\Explorer\ExplorerProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 /**
  * @package RZ\Roadiz\CMS\Forms

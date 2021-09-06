@@ -18,8 +18,6 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Themes\Install\InstallApp;
-use Themes\Rozier\RozierApp;
 
 final class TranslatorFactory implements TranslatorFactoryInterface
 {
@@ -136,33 +134,44 @@ final class TranslatorFactory implements TranslatorFactoryInterface
         );
 
         /*
-         * Add install theme translations
+         * TODO: remove reverse-dependency on Install theme
          */
-        $this->addTranslatorResource(
-            $translator,
-            InstallApp::getTranslationsFolder(),
-            'xlf',
-            $locale
-        );
+        if (class_exists('\\Themes\\Install\\InstallApp')) {
+            /*
+             * Add install theme translations
+             */
+            $this->addTranslatorResource(
+                $translator,
+                \Themes\Install\InstallApp::getTranslationsFolder(),
+                'xlf',
+                $locale
+            );
+        }
+
         /*
-         * Add backoffice theme additional translations
+         * TODO: remove reverse-dependency on Rozier theme
          */
-        $this->addTranslatorResource(
-            $translator,
-            RozierApp::getTranslationsFolder(),
-            'xlf',
-            $locale,
-            null,
-            'helps'
-        );
-        $this->addTranslatorResource(
-            $translator,
-            RozierApp::getTranslationsFolder(),
-            'xlf',
-            $locale,
-            null,
-            'settings'
-        );
+        if (class_exists('\\Themes\\Rozier\\RozierApp')) {
+            /*
+             * Add backoffice theme additional translations
+             */
+            $this->addTranslatorResource(
+                $translator,
+                \Themes\Rozier\RozierApp::getTranslationsFolder(),
+                'xlf',
+                $locale,
+                null,
+                'helps'
+            );
+            $this->addTranslatorResource(
+                $translator,
+                \Themes\Rozier\RozierApp::getTranslationsFolder(),
+                'xlf',
+                $locale,
+                null,
+                'settings'
+            );
+        }
 
         foreach ($classes as $theme) {
             if (null !== $theme) {
@@ -244,8 +253,14 @@ final class TranslatorFactory implements TranslatorFactoryInterface
      */
     protected function getAvailableLocales(): array
     {
-        // Add Rozier backend languages
-        $locales = array_values(RozierApp::$backendLanguages);
+        /*
+         * TODO: remove reverse-dependency on Rozier theme
+         */
+        if (class_exists('\\Themes\\Rozier\\RozierApp')) {
+            // Add Rozier backend languages
+            $locales = array_values(\Themes\Rozier\RozierApp::$backendLanguages);
+        }
+
         // Add default translation
         $locales[] = $this->getCurrentLocale();
 

@@ -1,12 +1,6 @@
 <?php
-/**
- * Copyright (c) 2016. Rezo Zero
- *
- * DefaultTheme
- *
- * @file NodeServiceProvider.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
+declare(strict_types=1);
+
 namespace Themes\DefaultTheme\Services;
 
 use Pimple\Container;

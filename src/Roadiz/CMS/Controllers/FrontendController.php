@@ -73,7 +73,6 @@ abstract class FrontendController extends AppController
     public static function setupDependencyInjection(Container $container)
     {
         parent::setupDependencyInjection($container);
-
         static::addThemeTemplatesPath($container);
 
         $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(

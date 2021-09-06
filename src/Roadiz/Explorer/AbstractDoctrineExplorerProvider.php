@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Themes\Rozier\Explorer;
+namespace RZ\Roadiz\Explorer;
 
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
@@ -55,7 +55,7 @@ abstract class AbstractDoctrineExplorerProvider extends AbstractExplorerProvider
     /**
      * @inheritDoc
      */
-    public function getItems($options = [])
+    public function getItems($options = []): array
     {
         $listManager = $this->doFetchItems($options);
 
@@ -70,7 +70,7 @@ abstract class AbstractDoctrineExplorerProvider extends AbstractExplorerProvider
     /**
      * @inheritDoc
      */
-    public function getFilters($options = [])
+    public function getFilters($options = []): array
     {
         $listManager = $this->doFetchItems($options);
 
@@ -80,7 +80,7 @@ abstract class AbstractDoctrineExplorerProvider extends AbstractExplorerProvider
     /**
      * @inheritDoc
      */
-    public function getItemsById($ids = [])
+    public function getItemsById($ids = []): array
     {
         if (is_array($ids) && count($ids) > 0) {
             $entities = $this->get('em')->getRepository($this->getProvidedClassname())->findBy([
