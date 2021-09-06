@@ -150,10 +150,10 @@ class AjaxTagsController extends AbstractAjaxController
     }
 
     /**
-     * @param null $tags
+     * @param Tag[]|null $tags
      * @return array
      */
-    protected function normalizeTags($tags = null)
+    protected function normalizeTags(array $tags = null)
     {
         $tagsArray = [];
         if ($tags !== null) {
@@ -173,11 +173,10 @@ class AjaxTagsController extends AbstractAjaxController
      *
      * @return array
      */
-    protected function recurseTags($tags = null, $onlyParents = false)
+    protected function recurseTags(array $tags = null, bool $onlyParents = false)
     {
         $tagsArray = [];
         if ($tags !== null) {
-            /** @var Tag $tag */
             foreach ($tags as $tag) {
                 if ($onlyParents) {
                     $children = $this->getRepository()->findByParentWithChildrenAndDefaultTranslation($tag);

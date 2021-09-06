@@ -30,7 +30,7 @@ class TranstypeController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
         $this->get('em')->refresh($node);
 

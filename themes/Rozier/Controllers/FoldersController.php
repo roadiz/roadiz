@@ -116,7 +116,7 @@ class FoldersController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        /** @var Folder $folder */
+        /** @var Folder|null $folder */
         $folder = $this->get('em')->find(Folder::class, $folderId);
 
         if (null !== $folder) {
@@ -167,7 +167,7 @@ class FoldersController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        /** @var Folder $folder */
+        /** @var Folder|null $folder */
         $folder = $this->get('em')->find(Folder::class, $folderId);
 
         /** @var Translation $translation */
@@ -224,13 +224,13 @@ class FoldersController extends RozierApp
         /** @var TranslationRepository $translationRepository */
         $translationRepository = $this->get('em')->getRepository(Translation::class);
 
-        /** @var Folder $folder */
+        /** @var Folder|null $folder */
         $folder = $this->get('em')->find(Folder::class, $folderId);
 
-        /** @var Translation $translation */
+        /** @var Translation|null $translation */
         $translation = $this->get('em')->find(Translation::class, $translationId);
 
-        /** @var FolderTranslation $folderTranslation */
+        /** @var FolderTranslation|null $folderTranslation */
         $folderTranslation = $this->get('em')
             ->getRepository(FolderTranslation::class)
             ->findOneBy([
@@ -295,7 +295,7 @@ class FoldersController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        /** @var Folder $folder */
+        /** @var Folder|null $folder */
         $folder = $this->get('em')->find(Folder::class, $folderId);
 
         if ($folder !== null) {

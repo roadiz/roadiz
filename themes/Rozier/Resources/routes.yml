@@ -168,12 +168,6 @@ redirectionsRoutes:
     resource: "routing/redirections.yml"
     prefix: /rz-admin/redirections
 
-# THEMES
-themesRoutes:
-    resource: "routing/themes.yml"
-    prefix: /rz-admin/themes
-
-
 # ROLES
 rolesHomePage:
     path:     /rz-admin/roles
@@ -182,7 +176,6 @@ rolesHomePage:
 rolesRoutes:
     resource: "routing/roles.yml"
     prefix: /rz-admin/roles
-
 
 # GROUPS
 groupsHomePage:

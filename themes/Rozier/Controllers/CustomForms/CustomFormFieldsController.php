@@ -59,7 +59,7 @@ class CustomFormFieldsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
-        /** @var CustomFormField $field */
+        /** @var CustomFormField|null $field */
         $field = $this->get('em')->find(CustomFormField::class, $customFormFieldId);
 
         if ($field !== null) {

@@ -44,40 +44,36 @@ class AjaxExplorerProviderController extends AbstractAjaxController
         }
 
         $provider = $this->getProvider($providerClass);
-        if ($provider instanceof ExplorerProviderInterface) {
-            $provider->setContainer($this->getContainer());
-            $options = [
-                'page' => $request->query->get('page') ?: 1,
-                'itemPerPage' => $request->query->get('itemPerPage') ?: 30,
-                'search' => $request->query->get('search') ?: null,
-            ];
-            if ($request->query->has('options') &&
-                is_array($request->query->get('options'))) {
-                $options = array_merge($request->query->get('options'), $options);
-            }
-            $entities = $provider->getItems($options);
-
-            $entitiesArray = [];
-            foreach ($entities as $entity) {
-                if ($entity instanceof ExplorerItemInterface) {
-                    $entitiesArray[] = $entity->toArray();
-                }
-            }
-
-            $responseArray = [
-                'status' => 'confirm',
-                'statusCode' => 200,
-                'entities' => $entitiesArray,
-                'filters' => $provider->getFilters($options),
-            ];
-
-            return new JsonResponse(
-                $responseArray,
-                Response::HTTP_PARTIAL_CONTENT
-            );
-        } else {
-            throw new InvalidParameterException('providerClass does not implement ExplorerProviderInterface.');
+        $provider->setContainer($this->getContainer());
+        $options = [
+            'page' => $request->query->get('page') ?: 1,
+            'itemPerPage' => $request->query->get('itemPerPage') ?: 30,
+            'search' => $request->query->get('search') ?: null,
+        ];
+        if ($request->query->has('options') &&
+            is_array($request->query->get('options'))) {
+            $options = array_merge($request->query->get('options'), $options);
         }
+        $entities = $provider->getItems($options);
+
+        $entitiesArray = [];
+        foreach ($entities as $entity) {
+            if ($entity instanceof ExplorerItemInterface) {
+                $entitiesArray[] = $entity->toArray();
+            }
+        }
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'entities' => $entitiesArray,
+            'filters' => $provider->getFilters($options),
+        ];
+
+        return new JsonResponse(
+            $responseArray,
+            Response::HTTP_PARTIAL_CONTENT
+        );
     }
 
     /**
@@ -104,36 +100,32 @@ class AjaxExplorerProviderController extends AbstractAjaxController
         $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         $provider = $this->getProvider($providerClass);
-        if ($provider instanceof ExplorerProviderInterface) {
-            $provider->setContainer($this->getContainer());
-            $entitiesArray = [];
-            $cleanNodeIds = array_filter($request->query->get('ids'));
-            $cleanNodeIds = array_filter($cleanNodeIds, function ($value) {
-                $nullValues = ['null', null, 0, '0', false, 'false'];
-                return !in_array($value, $nullValues, true);
-            });
+        $provider->setContainer($this->getContainer());
+        $entitiesArray = [];
+        $cleanNodeIds = array_filter($request->query->get('ids'));
+        $cleanNodeIds = array_filter($cleanNodeIds, function ($value) {
+            $nullValues = ['null', null, 0, '0', false, 'false'];
+            return !in_array($value, $nullValues, true);
+        });
 
-            if (count($cleanNodeIds) > 0) {
-                $entities = $provider->getItemsById($cleanNodeIds);
+        if (count($cleanNodeIds) > 0) {
+            $entities = $provider->getItemsById($cleanNodeIds);
 
-                foreach ($entities as $entity) {
-                    if ($entity instanceof ExplorerItemInterface) {
-                        $entitiesArray[] = $entity->toArray();
-                    }
+            foreach ($entities as $entity) {
+                if ($entity instanceof ExplorerItemInterface) {
+                    $entitiesArray[] = $entity->toArray();
                 }
             }
-
-            $responseArray = [
-                'status' => 'confirm',
-                'statusCode' => 200,
-                'items' => $entitiesArray
-            ];
-
-            return new JsonResponse(
-                $responseArray
-            );
-        } else {
-            throw new InvalidParameterException('providerClass does not implement ExplorerProviderInterface.');
         }
+
+        $responseArray = [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'items' => $entitiesArray
+        ];
+
+        return new JsonResponse(
+            $responseArray
+        );
     }
 }

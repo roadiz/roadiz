@@ -30,7 +30,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
         $this->validateRequest($request);
 
         if ($field !== null) {
-            $responseArray = [];
+            $responseArray = null;
 
             /*
              * Get the right update method against "_action" parameter
@@ -61,12 +61,12 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
     }
 
     /**
-     * @param array         $parameters
+     * @param array $parameters
      * @param AbstractField|null $field
      *
      * @return array
      */
-    protected function updatePosition($parameters, AbstractField $field = null): array
+    protected function updatePosition(array $parameters, AbstractField $field = null): array
     {
         /*
          * First, we set the new parent

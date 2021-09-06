@@ -31,16 +31,16 @@ class NodesAttributesController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODE_ATTRIBUTES');
 
-        /** @var Translation $translation */
+        /** @var Translation|null $translation */
         $translation = $this->get('em')->find(Translation::class, $translationId);
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');
         }
 
-        /** @var NodesSources $nodeSource */
+        /** @var NodesSources|null $nodeSource */
         $nodeSource = $this->get('em')
             ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
@@ -179,21 +179,21 @@ class NodesAttributesController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
-        /** @var AttributeValue $item */
+        /** @var AttributeValue|null $item */
         $item = $this->get('em')->find(AttributeValue::class, $attributeValueId);
         if ($item === null) {
             throw $this->createNotFoundException('AttributeValue does not exist.');
         }
-        /** @var Translation $translation */
+        /** @var Translation|null $translation */
         $translation = $this->get('em')->find(Translation::class, $translationId);
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');
         }
 
-        /** @var NodesSources $nodeSource */
+        /** @var NodesSources|null $nodeSource */
         $nodeSource = $this->get('em')
             ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
@@ -249,7 +249,7 @@ class NodesAttributesController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
-        /** @var AttributeValueTranslation $item */
+        /** @var AttributeValueTranslation|null $item */
         $item = $this->get('em')
             ->getRepository(AttributeValueTranslation::class)
             ->findOneBy([
@@ -259,16 +259,16 @@ class NodesAttributesController extends RozierApp
         if ($item === null) {
             throw $this->createNotFoundException('AttributeValueTranslation does not exist.');
         }
-        /** @var Translation $translation */
+        /** @var Translation|null $translation */
         $translation = $this->get('em')->find(Translation::class, $translationId);
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');
         }
 
-        /** @var NodesSources $nodeSource */
+        /** @var NodesSources|null $nodeSource */
         $nodeSource = $this->get('em')
             ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)

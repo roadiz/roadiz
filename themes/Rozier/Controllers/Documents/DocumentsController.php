@@ -259,7 +259,7 @@ class DocumentsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        /** @var Document $document */
+        /** @var Document|null $document */
         $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
@@ -339,7 +339,7 @@ class DocumentsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        /** @var Document $document */
+        /** @var Document|null $document */
         $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
@@ -408,6 +408,7 @@ class DocumentsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS_DELETE');
 
+        /** @var Document|null $document */
         $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
@@ -465,14 +466,14 @@ class DocumentsController extends RozierApp
             throw new ResourceNotFoundException('No selected documents to delete.');
         }
 
+        /** @var array<Document> $documents */
         $documents = $this->get('em')
             ->getRepository(Document::class)
             ->findBy([
                 'id' => $documentsIds,
             ]);
 
-        if ($documents !== null &&
-            count($documents) > 0) {
+        if (count($documents) > 0) {
             $this->assignation['documents'] = $documents;
             $form = $this->buildBulkDeleteForm($documentsIds);
 
@@ -517,13 +518,14 @@ class DocumentsController extends RozierApp
             throw new ResourceNotFoundException('No selected documents to download.');
         }
 
+        /** @var array<Document> $documents */
         $documents = $this->get('em')
             ->getRepository(Document::class)
             ->findBy([
                 'id' => $documentsIds,
             ]);
 
-        if ($documents !== null && count($documents) > 0) {
+        if (count($documents) > 0) {
             $this->assignation['documents'] = $documents;
             $form = $this->buildBulkDownloadForm($documentsIds);
             $form->handleRequest($request);
@@ -672,14 +674,14 @@ class DocumentsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        /** @var Document $document */
+        /** @var Document|null $document */
         $document = $this->get('em')->find(Document::class, $documentId);
 
-        /** @var DocumentHandler $handler */
-        $handler = $this->get('document.handler');
-        $handler->setDocument($document);
-
         if ($document !== null) {
+            /** @var DocumentHandler $handler */
+            $handler = $this->get('document.handler');
+            $handler->setDocument($document);
+
             return $handler->getDownloadResponse();
         }
 
@@ -779,7 +781,7 @@ class DocumentsController extends RozierApp
     public function usageAction(Request $request, int $documentId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
-        /** @var Document $document */
+        /** @var Document|null $document */
         $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {

@@ -6,6 +6,7 @@ namespace Themes\Rozier\AjaxControllers;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Config\JoinNodeTypeFieldConfiguration;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,9 +27,8 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
      */
     protected function getFieldConfiguration(NodeTypeField $nodeTypeField)
     {
-        if (null === $nodeTypeField ||
-            ($nodeTypeField->getType() !== NodeTypeField::MANY_TO_MANY_T &&
-                $nodeTypeField->getType() !== NodeTypeField::MANY_TO_ONE_T)) {
+        if ($nodeTypeField->getType() !== AbstractField::MANY_TO_MANY_T &&
+                $nodeTypeField->getType() !== AbstractField::MANY_TO_ONE_T) {
             throw new InvalidParameterException('nodeTypeField is not a valid entity join.');
         }
 

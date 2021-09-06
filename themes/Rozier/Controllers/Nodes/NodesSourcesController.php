@@ -54,7 +54,7 @@ class NodesSourcesController extends RozierApp
          * if not doctrine will grab a cache tag because of NodeTreeWidget
          * that is initialized before calling route method.
          */
-        /** @var Node $gnode */
+        /** @var Node|null $gnode */
         $gnode = $this->get('em')->find(Node::class, $nodeId);
 
         if ($translation !== null && $gnode !== null) {
@@ -182,7 +182,7 @@ class NodesSourcesController extends RozierApp
      */
     public function removeAction(Request $request, int $nodeSourceId)
     {
-        /** @var NodesSources $ns */
+        /** @var NodesSources|null $ns */
         $ns = $this->get("em")->find(NodesSources::class, $nodeSourceId);
         if (null === $ns) {
             throw new ResourceNotFoundException();

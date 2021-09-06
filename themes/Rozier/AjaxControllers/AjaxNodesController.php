@@ -68,7 +68,7 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateRequest($request);
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if ($node !== null) {
@@ -140,7 +140,7 @@ class AjaxNodesController extends AbstractAjaxController
         /*
          * First, we set the new parent
          */
-        $parent = $this->parseParentNode($parameters, $node->getParent());
+        $parent = $this->parseParentNode($parameters);
         /*
          * Then compute new position
          */
@@ -178,11 +178,10 @@ class AjaxNodesController extends AbstractAjaxController
 
     /**
      * @param array     $parameters
-     * @param Node|null $default
      *
      * @return Node|null
      */
-    protected function parseParentNode(array $parameters, ?Node $default): ?Node
+    protected function parseParentNode(array $parameters): ?Node
     {
         if (!empty($parameters['newParent']) && $parameters['newParent'] > 0) {
             return $this->get('em')->find(Node::class, (int) $parameters['newParent']);
@@ -239,7 +238,7 @@ class AjaxNodesController extends AbstractAjaxController
             throw new BadRequestHttpException($this->getTranslator()->trans('node.id.not_specified'));
         }
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, (int) $request->get('nodeId'));
         if (null === $node) {
             throw $this->createNotFoundException($this->getTranslator()->trans('node.%nodeId%.not_exists', [

@@ -30,7 +30,6 @@ use Themes\Rozier\Forms\TagTranslationType;
 use Themes\Rozier\Forms\TagType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\VersionedControllerTrait;
-use Themes\Rozier\Widgets\TagTreeWidget;
 use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
@@ -88,121 +87,120 @@ class TagsController extends RozierApp
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         if (null === $translationId) {
-            /** @var Translation $translation */
+            /** @var Translation|null $translation */
             $translation = $this->get('defaultTranslation');
         } else {
-            /** @var Translation $translation */
+            /** @var Translation|null $translation */
             $translation = $this->get('em')->find(Translation::class, $translationId);
         }
 
-        if (null !== $translation) {
-            /*
-             * Here we need to directly select tagTranslation
-             * if not doctrine will grab a cache tag because of TagTreeWidget
-             * that is initialized before calling route method.
-             */
-            /** @var Tag $tag */
-            $tag = $this->get('em')->find(Tag::class, (int) $tagId);
+        if (null === $translation) {
+            throw new ResourceNotFoundException();
+        }
+        /*
+         * Here we need to directly select tagTranslation
+         * if not doctrine will grab a cache tag because of TagTreeWidget
+         * that is initialized before calling route method.
+         */
+        /** @var Tag|null $tag */
+        $tag = $this->get('em')->find(Tag::class, $tagId);
 
-            /** @var TagTranslation|null $tagTranslation */
-            $tagTranslation = $this->get('em')->getRepository(TagTranslation::class)
-                ->findOneBy(['translation' => $translation, 'tag' => $tag]);
+        /** @var TagTranslation|null $tagTranslation */
+        $tagTranslation = $this->get('em')->getRepository(TagTranslation::class)
+            ->findOneBy(['translation' => $translation, 'tag' => $tag]);
 
-            if (null === $tagTranslation && null === $tag) {
-                throw new ResourceNotFoundException();
-            }
-
-            if (null === $tagTranslation && null !== $tag) {
-                /*
-                 * If translation does not exist, we created it.
-                 */
-                $this->get('em')->refresh($tag);
-                $baseTranslation = $tag->getTranslatedTags()->first();
-                $tagTranslation = new TagTranslation($tag, $translation);
-                if (false !== $baseTranslation) {
-                    $tagTranslation->setName($baseTranslation->getName());
-                } else {
-                    $tagTranslation->setName('tag_' . $tag->getId());
-                }
-                $this->get('em')->persist($tagTranslation);
-                $this->get('em')->flush();
-            }
-
-            /**
-             * Versioning
-             */
-            if ($this->isGranted('ROLE_ACCESS_VERSIONS')) {
-                if (null !== $response = $this->handleVersions($request, $tagTranslation)) {
-                    return $response;
-                }
-            }
-
-            $form = $this->createForm(TagTranslationType::class, $tagTranslation, [
-                'tagName' => $tag->getTagName(),
-                'disabled' => $this->isReadOnly,
-            ]);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    /*
-                     * Update tag slug if not locked
-                     * only from default translation.
-                     */
-                    $newTagName = StringHandler::slugify($tagTranslation->getName());
-                    if ($tag->getTagName() !== $newTagName) {
-                        if (!$tag->isLocked() &&
-                            $translation->isDefaultTranslation() &&
-                            !$this->tagNameExists($newTagName)) {
-                            $tag->setTagName($tagTranslation->getName());
-                        }
-                    }
-                    $this->get('em')->flush();
-                    /*
-                     * Dispatch event
-                     */
-                    $this->get('dispatcher')->dispatch(
-                        new TagUpdatedEvent($tag)
-                    );
-
-                    $msg = $this->getTranslator()->trans('tag.%name%.updated', [
-                        '%name%' => $tagTranslation->getName(),
-                    ]);
-                    $this->publishConfirmMessage($request, $msg);
-
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    return $this->getPostUpdateRedirection($tagTranslation);
-                }
-
-                /*
-                 * Handle errors when Ajax POST requests
-                 */
-                if ($request->isXmlHttpRequest()) {
-                    $errors = $this->getErrorsAsArray($form);
-                    return new JsonResponse([
-                        'status' => 'fail',
-                        'errors' => $errors,
-                        'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
-                    ], JsonResponse::HTTP_BAD_REQUEST);
-                }
-            }
-            /** @var TranslationRepository $translationRepository */
-            $translationRepository = $this->get('em')->getRepository(Translation::class);
-
-            $this->assignation['tag'] = $tag;
-            $this->assignation['translation'] = $translation;
-            $this->assignation['translatedTag'] = $tagTranslation;
-            $this->assignation['available_translations'] = $translationRepository->findAllAvailable();
-            $this->assignation['translations'] = $translationRepository->findAvailableTranslationsForTag($tag);
-            $this->assignation['form'] = $form->createView();
-            $this->assignation['readOnly'] = $this->isReadOnly;
-
-            return $this->render('tags/edit.html.twig', $this->assignation);
+        if (null === $tag) {
+            throw new ResourceNotFoundException();
         }
 
-        throw new ResourceNotFoundException();
+        if (null === $tagTranslation) {
+            /*
+             * If translation does not exist, we created it.
+             */
+            $this->get('em')->refresh($tag);
+            $baseTranslation = $tag->getTranslatedTags()->first();
+            $tagTranslation = new TagTranslation($tag, $translation);
+            if (false !== $baseTranslation) {
+                $tagTranslation->setName($baseTranslation->getName());
+            } else {
+                $tagTranslation->setName('tag_' . $tag->getId());
+            }
+            $this->get('em')->persist($tagTranslation);
+            $this->get('em')->flush();
+        }
+
+        /**
+         * Versioning
+         */
+        if ($this->isGranted('ROLE_ACCESS_VERSIONS')) {
+            if (null !== $response = $this->handleVersions($request, $tagTranslation)) {
+                return $response;
+            }
+        }
+
+        $form = $this->createForm(TagTranslationType::class, $tagTranslation, [
+            'tagName' => $tag->getTagName(),
+            'disabled' => $this->isReadOnly,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                /*
+                 * Update tag slug if not locked
+                 * only from default translation.
+                 */
+                $newTagName = StringHandler::slugify($tagTranslation->getName());
+                if ($tag->getTagName() !== $newTagName) {
+                    if (!$tag->isLocked() &&
+                        $translation->isDefaultTranslation() &&
+                        !$this->tagNameExists($newTagName)) {
+                        $tag->setTagName($tagTranslation->getName());
+                    }
+                }
+                $this->get('em')->flush();
+                /*
+                 * Dispatch event
+                 */
+                $this->get('dispatcher')->dispatch(
+                    new TagUpdatedEvent($tag)
+                );
+
+                $msg = $this->getTranslator()->trans('tag.%name%.updated', [
+                    '%name%' => $tagTranslation->getName(),
+                ]);
+                $this->publishConfirmMessage($request, $msg);
+
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                return $this->getPostUpdateRedirection($tagTranslation);
+            }
+
+            /*
+             * Handle errors when Ajax POST requests
+             */
+            if ($request->isXmlHttpRequest()) {
+                $errors = $this->getErrorsAsArray($form);
+                return new JsonResponse([
+                    'status' => 'fail',
+                    'errors' => $errors,
+                    'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                ], JsonResponse::HTTP_BAD_REQUEST);
+            }
+        }
+        /** @var TranslationRepository $translationRepository */
+        $translationRepository = $this->get('em')->getRepository(Translation::class);
+
+        $this->assignation['tag'] = $tag;
+        $this->assignation['translation'] = $translation;
+        $this->assignation['translatedTag'] = $tagTranslation;
+        $this->assignation['available_translations'] = $translationRepository->findAllAvailable();
+        $this->assignation['translations'] = $translationRepository->findAvailableTranslationsForTag($tag);
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['readOnly'] = $this->isReadOnly;
+
+        return $this->render('tags/edit.html.twig', $this->assignation);
     }
 
     /**
@@ -271,8 +269,6 @@ class TagsController extends RozierApp
     }
 
     /**
-     * Return an creation form for requested tag.
-     *
      * @param Request $request
      *
      * @return Response
@@ -282,11 +278,9 @@ class TagsController extends RozierApp
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $tag = new Tag();
-
         $translation = $this->get('defaultTranslation');
 
-        if ($tag !== null &&
-            $translation !== null) {
+        if ($translation !== null) {
             $this->assignation['tag'] = $tag;
             $form = $this->createForm(TagType::class, $tag);
             $form->handleRequest($request);
@@ -329,8 +323,6 @@ class TagsController extends RozierApp
     }
 
     /**
-     * Return a edition form for requested tag settings .
-     *
      * @param Request $request
      * @param int $tagId
      *
@@ -342,56 +334,56 @@ class TagsController extends RozierApp
 
         $translation = $this->get('defaultTranslation');
 
-        /** @var Tag $tag */
+        /** @var Tag|null $tag */
         $tag = $this->get('em')->find(Tag::class, $tagId);
 
-        if ($tag !== null) {
-            $form = $this->createForm(TagType::class, $tag, [
-                'tagName' => $tag->getTagName(),
-            ]);
-
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-                    $this->get('em')->flush();
-                    /*
-                     * Dispatch event
-                     */
-                    $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
-
-                    $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
-                    $this->publishConfirmMessage($request, $msg);
-
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    return $this->redirect($this->generateUrl(
-                        'tagsSettingsPage',
-                        ['tagId' => $tag->getId()]
-                    ));
-                }
-                /*
-                 * Handle errors when Ajax POST requests
-                 */
-                if ($request->isXmlHttpRequest()) {
-                    $errors = $this->getErrorsAsArray($form);
-                    return new JsonResponse([
-                        'status' => 'fail',
-                        'errors' => $errors,
-                        'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
-                    ], JsonResponse::HTTP_BAD_REQUEST);
-                }
-            }
-
-            $this->assignation['form'] = $form->createView();
-            $this->assignation['tag'] = $tag;
-            $this->assignation['translation'] = $translation;
-
-            return $this->render('tags/settings.html.twig', $this->assignation);
+        if ($tag === null) {
+            throw new ResourceNotFoundException();
         }
 
-        throw new ResourceNotFoundException();
+        $form = $this->createForm(TagType::class, $tag, [
+            'tagName' => $tag->getTagName(),
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->get('em')->flush();
+                /*
+                 * Dispatch event
+                 */
+                $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
+
+                $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
+                $this->publishConfirmMessage($request, $msg);
+
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                return $this->redirect($this->generateUrl(
+                    'tagsSettingsPage',
+                    ['tagId' => $tag->getId()]
+                ));
+            }
+            /*
+             * Handle errors when Ajax POST requests
+             */
+            if ($request->isXmlHttpRequest()) {
+                $errors = $this->getErrorsAsArray($form);
+                return new JsonResponse([
+                    'status' => 'fail',
+                    'errors' => $errors,
+                    'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                ], JsonResponse::HTTP_BAD_REQUEST);
+            }
+        }
+
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['tag'] = $tag;
+        $this->assignation['translation'] = $translation;
+
+        return $this->render('tags/settings.html.twig', $this->assignation);
     }
 
     /**
@@ -406,13 +398,13 @@ class TagsController extends RozierApp
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $tag = $this->get('em')
-            ->find(Tag::class, (int) $tagId);
+            ->find(Tag::class, $tagId);
         $this->get('em')->refresh($tag);
 
         if (null !== $translationId) {
             $translation = $this->get('em')
                 ->getRepository(Translation::class)
-                ->findOneBy(['id' => (int) $translationId]);
+                ->findOneBy(['id' => $translationId]);
         } else {
             $translation = $this->get('defaultTranslation');
         }
@@ -615,7 +607,7 @@ class TagsController extends RozierApp
      */
     private function buildBulkDeleteForm(
         $referer = false,
-        $tagsIds = []
+        array $tagsIds = []
     ) {
         /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
@@ -643,7 +635,7 @@ class TagsController extends RozierApp
      *
      * @return string
      */
-    private function bulkDeleteTags($data)
+    private function bulkDeleteTags(array $data)
     {
         if (!empty($data['tagsIds'])) {
             $tagsIds = trim($data['tagsIds']);

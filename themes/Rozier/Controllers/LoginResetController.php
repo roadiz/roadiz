@@ -23,7 +23,7 @@ class LoginResetController extends RozierApp
      */
     public function resetAction(Request $request, string $token)
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getUserByToken($this->get('em'), $token);
 
         if (null !== $user) {

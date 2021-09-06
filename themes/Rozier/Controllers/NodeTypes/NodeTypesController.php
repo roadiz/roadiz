@@ -64,10 +64,10 @@ class NodeTypesController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
-        /** @var NodeType $nodeType */
+        /** @var NodeType|null $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
-        if (null === $nodeType || !($nodeType instanceof NodeType)) {
+        if (!($nodeType instanceof NodeType)) {
             throw $this->createNotFoundException();
         }
 
@@ -141,8 +141,6 @@ class NodeTypesController extends RozierApp
     }
 
     /**
-     * Return an deletion form for requested node-type.
-     *
      * @param Request $request
      * @param int     $nodeTypeId
      *
@@ -155,7 +153,7 @@ class NodeTypesController extends RozierApp
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
-        if (null === $nodeType || !($nodeType instanceof NodeType)) {
+        if (!($nodeType instanceof NodeType)) {
             throw $this->createNotFoundException();
         }
 

@@ -19,8 +19,6 @@ use Themes\Rozier\RozierApp;
 class UsersRolesController extends RozierApp
 {
     /**
-     * Return an edition form for requested user.
-     *
      * @param Request $request
      * @param int     $userId
      *

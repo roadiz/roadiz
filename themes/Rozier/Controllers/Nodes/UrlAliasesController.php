@@ -40,7 +40,7 @@ class UrlAliasesController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
-        if (null === $translationId && $translationId < 1) {
+        if (null === $translationId || $translationId < 1) {
             $translation = $this->get('defaultTranslation');
         } else {
             $translation = $this->get('em')->find(Translation::class, $translationId);
@@ -167,14 +167,14 @@ class UrlAliasesController extends RozierApp
      */
     private function addNodeUrlAlias(UrlAlias $alias, Node $node, Translation $translation): UrlAlias
     {
-        /** @var NodesSources $nodeSource */
+        /** @var NodesSources|null $nodeSource */
         $nodeSource = $this->get('em')
                            ->getRepository(NodesSources::class)
                            ->setDisplayingAllNodesStatuses(true)
                            ->setDisplayingNotPublishedNodes(true)
                            ->findOneBy(['node' => $node, 'translation' => $translation]);
 
-        if ($translation !== null && $nodeSource !== null) {
+        if ($nodeSource !== null) {
             $alias->setNodeSource($nodeSource);
             $this->get('em')->persist($alias);
             $this->get('em')->flush();

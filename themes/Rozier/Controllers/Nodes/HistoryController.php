@@ -24,7 +24,7 @@ class HistoryController extends RozierApp
     public function historyAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted(['ROLE_ACCESS_NODES', 'ROLE_ACCESS_LOGS']);
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {

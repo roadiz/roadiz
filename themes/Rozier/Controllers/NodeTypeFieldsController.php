@@ -21,10 +21,8 @@ use Themes\Rozier\RozierApp;
 class NodeTypeFieldsController extends RozierApp
 {
     /**
-     * List every node-type-fields.
-     *
      * @param Request $request
-     * @param int     $nodeTypeId
+     * @param int $nodeTypeId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -32,7 +30,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
-        /** @var NodeType $nodeType */
+        /** @var NodeType|null $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         if ($nodeType !== null) {
@@ -48,8 +46,6 @@ class NodeTypeFieldsController extends RozierApp
     }
 
     /**
-     * Return an edition form for requested node-type.
-     *
      * @param Request $request
      * @param int     $nodeTypeFieldId
      *
@@ -59,7 +55,7 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
-        /** @var NodeTypeField $field */
+        /** @var NodeTypeField|null $field */
         $field = $this->get('em')->find(NodeTypeField::class, $nodeTypeFieldId);
 
         if ($field !== null) {
@@ -102,8 +98,6 @@ class NodeTypeFieldsController extends RozierApp
     }
 
     /**
-     * Return an creation form for requested node-type.
-     *
      * @param Request $request
      * @param int     $nodeTypeId
      *
@@ -114,11 +108,10 @@ class NodeTypeFieldsController extends RozierApp
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $field = new NodeTypeField();
-        /** @var NodeType $nodeType */
+        /** @var NodeType|null $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
-        if ($nodeType !== null &&
-            $field !== null) {
+        if ($nodeType !== null) {
             $latestPosition = $this->get('em')
                                    ->getRepository(NodeTypeField::class)
                                    ->findLatestPositionInNodeType($nodeType);
@@ -182,8 +175,6 @@ class NodeTypeFieldsController extends RozierApp
     }
 
     /**
-     * Return an deletion form for requested node.
-     *
      * @param Request $request
      * @param int     $nodeTypeFieldId
      *
@@ -193,17 +184,14 @@ class NodeTypeFieldsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODEFIELDS_DELETE');
 
-        /** @var NodeTypeField $field */
+        /** @var NodeTypeField|null $field */
         $field = $this->get('em')->find(NodeTypeField::class, $nodeTypeFieldId);
 
         if ($field !== null) {
-            $this->assignation['field'] = $field;
-            $form = $this->buildDeleteForm($field);
+            $form = $this->createForm();
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['nodeTypeFieldId'] == $field->getId()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $nodeTypeId = $field->getNodeType()->getId();
                 $this->get('em')->remove($field);
                 $this->get('em')->flush();
@@ -211,7 +199,7 @@ class NodeTypeFieldsController extends RozierApp
                 /*
                  * Update Database
                  */
-                /** @var NodeType $nodeType */
+                /** @var NodeType|null $nodeType */
                 $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
 
                 /** @var NodeTypeHandler $handler */
@@ -236,6 +224,7 @@ class NodeTypeFieldsController extends RozierApp
                 ));
             }
 
+            $this->assignation['field'] = $field;
             $this->assignation['form'] = $form->createView();
 
             return $this->render('node-type-fields/delete.html.twig', $this->assignation);

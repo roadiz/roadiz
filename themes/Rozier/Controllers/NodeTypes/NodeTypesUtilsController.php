@@ -8,7 +8,6 @@ use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Documentation\Generators\DocumentationGenerator;
-use RZ\Roadiz\Documentation\Generators\NodeTypeGenerator;
 use RZ\Roadiz\Typescript\Declaration\DeclarationGeneratorFactory;
 use RZ\Roadiz\Typescript\Declaration\Generators\DeclarationGenerator;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -39,7 +38,7 @@ class NodeTypesUtilsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
-        /** @var NodeType $nodeType */
+        /** @var NodeType|null $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         if (null === $nodeType) {
@@ -174,7 +173,7 @@ class NodeTypesUtilsController extends RozierApp
     }
 
     /**
-     * Import a Json file (.rzt) containing NodeType datas and fields.
+     * Import a Json file (.json) containing NodeType datas and fields.
      *
      * @param Request $request
      *

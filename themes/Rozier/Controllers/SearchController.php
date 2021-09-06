@@ -27,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,8 +40,8 @@ use Themes\Rozier\RozierApp;
  */
 class SearchController extends RozierApp
 {
-    protected $pagination = true;
-    protected $itemPerPage = null;
+    protected bool $pagination = true;
+    protected ?int $itemPerPage = null;
 
     /**
      * @param mixed $var
@@ -118,7 +119,7 @@ class SearchController extends RozierApp
 
         if (isset($data[$prefix . "limitResult"])) {
             $this->pagination = false;
-            $this->itemPerPage = $data[$prefix . "limitResult"];
+            $this->itemPerPage = (int) $data[$prefix . "limitResult"];
             unset($data[$prefix . "limitResult"]);
         }
 
@@ -227,7 +228,7 @@ class SearchController extends RozierApp
             $listManager->setDisplayingAllNodesStatuses(true);
 
             if ($this->pagination === false) {
-                $listManager->setItemPerPage($this->itemPerPage);
+                $listManager->setItemPerPage($this->itemPerPage ?? 999);
                 $listManager->disablePagination();
             }
             $listManager->handle();
@@ -251,6 +252,7 @@ class SearchController extends RozierApp
      */
     public function searchNodeSourceAction(Request $request, int $nodetypeId)
     {
+        /** @var NodeType|null $nodetype */
         $nodetype = $this->get('em')->find(NodeType::class, $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
@@ -339,11 +341,11 @@ class SearchController extends RozierApp
     }
 
     /**
-     * @param Form $nodeTypeForm
+     * @param FormInterface $nodeTypeForm
      *
      * @return null|RedirectResponse
      */
-    protected function handleNodeTypeForm(Form $nodeTypeForm)
+    protected function handleNodeTypeForm(FormInterface $nodeTypeForm)
     {
         if ($nodeTypeForm->isSubmitted() && $nodeTypeForm->isValid()) {
             if (empty($nodeTypeForm->getData()['nodetype'])) {
@@ -362,12 +364,12 @@ class SearchController extends RozierApp
     }
 
     /**
-     * @param Form $form
+     * @param FormInterface $form
      * @param NodeType $nodetype
      *
      * @return null|Response
      */
-    protected function handleNodeForm(Form $form, NodeType $nodetype)
+    protected function handleNodeForm(FormInterface $form, NodeType $nodetype)
     {
         if ($form->isSubmitted() && $form->isValid()) {
             $data = [];
@@ -393,7 +395,7 @@ class SearchController extends RozierApp
             $listManager->setDisplayingNotPublishedNodes(true);
             $listManager->setDisplayingAllNodesStatuses(true);
             if ($this->pagination === false) {
-                $listManager->setItemPerPage($this->itemPerPage);
+                $listManager->setItemPerPage($this->itemPerPage ?? 999);
                 $listManager->disablePagination();
             }
             $listManager->handle();

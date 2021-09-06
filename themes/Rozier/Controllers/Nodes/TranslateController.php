@@ -8,7 +8,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesCreatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +30,7 @@ class TranslateController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null !== $node) {
@@ -96,7 +95,7 @@ class TranslateController extends RozierApp
                          ->findOneByNodeAndTranslation($node, $translation);
         if (null === $existing) {
             $baseSource = $node->getNodeSources()->first();
-            if (null !== $baseSource && $baseSource instanceof NodesSources) {
+            if ($baseSource instanceof NodesSources) {
                 $source = clone $baseSource;
 
                 foreach ($source->getDocumentsByFields() as $document) {
@@ -125,6 +124,7 @@ class TranslateController extends RozierApp
         $this->translateNode($translation, $node);
 
         if ($translateChildren) {
+            /** @var Node $child */
             foreach ($node->getChildren() as $child) {
                 $this->doTranslate($translation, $child, $translateChildren);
             }

@@ -36,7 +36,7 @@ class NodesTagsController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
-        /** @var NodesSources $source */
+        /** @var NodesSources|null $source */
         $source = $this->get('em')
                        ->getRepository(NodesSources::class)
                        ->setDisplayingAllNodesStatuses(true)
@@ -46,7 +46,7 @@ class NodesTagsController extends RozierApp
                            'translation' => $this->get('defaultTranslation')
                        ]);
         if (null === $source) {
-            /** @var NodesSources $source */
+            /** @var NodesSources|null $source */
             $source = $this->get('em')
                 ->getRepository(NodesSources::class)
                 ->setDisplayingAllNodesStatuses(true)
@@ -88,76 +88,5 @@ class NodesTagsController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * Link a node with a tag.
-     *
-     * @param array $data
-     * @param Node  $node
-     */
-    protected function repopulateNodeTags(array $data, Node $node)
-    {
-        $node->getTags()->clear();
-
-        if (!empty($data['tagPaths'])) {
-            $paths = explode(',', $data['tagPaths']);
-            $paths = array_filter($paths);
-
-            foreach ($paths as $path) {
-                $tag = $this->get('em')
-                            ->getRepository(Tag::class)
-                            ->findOrCreateByPath($path);
-
-                $node->addTag($tag);
-            }
-        }
-
-        $this->get('em')->flush();
-    }
-
-    /**
-     * @param array $data
-     * @param Node  $node
-     * @param Tag   $tag
-     *
-     * @return Tag
-     */
-    protected function removeNodeTag(array $data, Node $node, Tag $tag)
-    {
-        if ($data['nodeId'] == $node->getId() &&
-            $data['tagId'] == $tag->getId()) {
-            $node->removeTag($tag);
-            $this->get('em')->flush();
-        }
-
-        return $tag;
-    }
-
-    /**
-     * @param Node $node
-     * @param Tag  $tag
-     *
-     * @return FormInterface
-     */
-    protected function buildRemoveTagForm(Node $node, Tag $tag)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('nodeId', HiddenType::class, [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('tagId', HiddenType::class, [
-                            'data' => $tag->getId(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ]);
-
-        return $builder->getForm();
     }
 }

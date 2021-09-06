@@ -21,7 +21,7 @@ class NodesUtilsController extends RozierApp
 {
 
     /**
-     * Export a Node in a Json file (.rzn).
+     * Export a Node in a Json file (.json).
      *
      * @param Request $request
      * @param int     $nodeId
@@ -49,9 +49,9 @@ class NodesUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'node-' . $existingNode->getNodeName() . '-' . date("YmdHis") . '.rzn'
+                'node-' . $existingNode->getNodeName() . '-' . date("YmdHis") . '.json'
             )
-        ); // Rezo-Zero Type
+        );
 
         $response->prepare($request);
 
@@ -92,7 +92,7 @@ class NodesUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'node-all-' . date("YmdHis") . '.rzn'
+                'node-all-' . date("YmdHis") . '.json'
             )
         );
 

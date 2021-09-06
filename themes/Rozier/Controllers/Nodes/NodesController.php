@@ -131,7 +131,7 @@ class NodesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null !== $node) {
@@ -234,9 +234,9 @@ class NodesController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
-        /** @var NodeType $type */
+        /** @var NodeType|null $type */
         $type = $this->get('em')->find(NodeType::class, $typeId);
 
         if (null !== $node && null !== $type) {
@@ -437,7 +437,7 @@ class NodesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {
@@ -464,7 +464,7 @@ class NodesController extends RozierApp
         if ($form->isSubmitted() &&
             $form->isValid() &&
             $form->getData()['nodeId'] == $node->getId()) {
-            /** @var Node $parent */
+            /** @var Node|null $parent */
             $parent = $node->getParent();
             /*
              * Dispatch event
@@ -568,7 +568,7 @@ class NodesController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {
@@ -653,7 +653,7 @@ class NodesController extends RozierApp
     public function publishAllAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES_STATUS');
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {

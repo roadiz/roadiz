@@ -31,7 +31,7 @@ final class UserExplorerItem extends AbstractExplorerItem
      */
     public function getAlternativeDisplayable(): ?string
     {
-        return null !== ($this->user) ? ($this->user->getEmail() ?: '') : ('');
+        return $this->user->getEmail();
     }
 
     /**
@@ -39,7 +39,7 @@ final class UserExplorerItem extends AbstractExplorerItem
      */
     public function getDisplayable(): string
     {
-        $fullName = trim((string) $this->user->getFirstName() . ' ' . (string) $this->user->getLastName());
+        $fullName = trim($this->user->getFirstName() ?? '' . ' ' . $this->user->getLastName() ?? '');
         if ($fullName !== '') {
             return $fullName;
         }

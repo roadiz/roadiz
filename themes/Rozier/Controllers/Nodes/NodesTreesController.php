@@ -23,7 +23,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Workflow\Workflow;
 use Themes\Rozier\RozierApp;
-use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
@@ -42,7 +41,7 @@ class NodesTreesController extends RozierApp
     {
         if (null !== $nodeId) {
             $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
-            /** @var Node $node */
+            /** @var Node|null $node */
             $node = $this->get('em')->find(Node::class, $nodeId);
 
             if (null === $node) {
