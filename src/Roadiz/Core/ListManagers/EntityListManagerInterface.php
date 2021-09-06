@@ -10,18 +10,18 @@ interface EntityListManagerInterface
     /**
      * @return bool
      */
-    public function isDisplayingNotPublishedNodes();
+    public function isDisplayingNotPublishedNodes(): bool;
 
     /**
      * @param bool $displayNotPublishedNodes
      * @return EntityListManagerInterface
      */
-    public function setDisplayingNotPublishedNodes($displayNotPublishedNodes);
+    public function setDisplayingNotPublishedNodes(bool $displayNotPublishedNodes);
 
     /**
      * @return bool
      */
-    public function isDisplayingAllNodesStatuses();
+    public function isDisplayingAllNodesStatuses(): bool;
 
     /**
      * Switch repository to disable any security on Node status. To use ONLY in order to
@@ -30,15 +30,15 @@ interface EntityListManagerInterface
      * @param bool $displayAllNodesStatuses
      * @return EntityListManagerInterface
      */
-    public function setDisplayingAllNodesStatuses($displayAllNodesStatuses);
+    public function setDisplayingAllNodesStatuses(bool $displayAllNodesStatuses);
 
     /**
      * Handle request to find filter to apply to entity listing.
      *
-     * @param boolean $disabled Disable pagination and filtering over GET params
+     * @param bool $disabled Disable pagination and filtering over GET params
      * @return void
      */
-    public function handle($disabled = false);
+    public function handle(bool $disabled = false);
 
     /**
      * Configure a custom current page.
@@ -47,7 +47,7 @@ interface EntityListManagerInterface
      *
      * @return EntityListManagerInterface
      */
-    public function setPage($page);
+    public function setPage(int $page);
 
     /**
      * @return EntityListManagerInterface
@@ -74,17 +74,17 @@ interface EntityListManagerInterface
      *
      * @return array
      */
-    public function getAssignation();
+    public function getAssignation(): array;
 
     /**
      * @return int
      */
-    public function getItemCount();
+    public function getItemCount(): int;
 
     /**
      * @return int
      */
-    public function getPageCount();
+    public function getPageCount(): int;
 
     /**
      * Return filtered entities.
@@ -100,5 +100,5 @@ interface EntityListManagerInterface
      *
      * @return EntityListManagerInterface
      */
-    public function setItemPerPage($itemPerPage);
+    public function setItemPerPage(int $itemPerPage);
 }

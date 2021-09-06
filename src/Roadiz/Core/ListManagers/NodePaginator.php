@@ -69,7 +69,7 @@ class NodePaginator extends Paginator
     /**
      * @return int
      */
-    public function getTotalCount()
+    public function getTotalCount(): int
     {
         if (null === $this->totalCount) {
             if (null !== $this->searchPattern) {

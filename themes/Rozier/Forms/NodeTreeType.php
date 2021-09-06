@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -16,7 +16,6 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TreeWidgetFactory;
 
 /**
@@ -61,13 +60,13 @@ class NodeTreeType extends AbstractType
     {
         parent::finishView($view, $form, $options);
 
-        if ($options['nodeTypeField']->getType() !== NodeTypeField::CHILDREN_T) {
+        if ($options['nodeTypeField']->getType() !== AbstractField::CHILDREN_T) {
             throw new \RuntimeException("Given field is not a NodeTypeField::CHILDREN_T field.", 1);
         }
 
         $view->vars['authorizationChecker'] = $this->authorizationChecker;
         /*
-         * Inject data as plain documents entities
+         * Inject data as plain document entities
          */
         $view->vars['request'] = $this->requestStack->getCurrentRequest();
 

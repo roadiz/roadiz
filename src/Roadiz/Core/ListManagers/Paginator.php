@@ -12,44 +12,18 @@ use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
  */
 class Paginator
 {
+    protected int $itemsPerPage;
+    protected ?int $itemCount = null;
     /**
-     * @var int
+     * @var class-string
      */
-    protected $itemsPerPage;
-    /**
-     * @var int
-     */
-    protected $itemCount;
-    /**
-     * @var string
-     */
-    protected $entityName;
-    /**
-     * @var array
-     */
-    protected $criteria;
-    /**
-     * @var null|string
-     */
-    protected $searchPattern = null;
-    /**
-     * @var ObjectManager
-     */
-    protected $em;
-    /**
-     * @var null|int
-     */
-    protected $totalCount = null;
-
-    /**
-     * @var bool
-     */
-    protected $displayNotPublishedNodes;
-
-    /**
-     * @var bool
-     */
-    protected $displayAllNodesStatuses;
+    protected string $entityName;
+    protected array $criteria;
+    protected ?string $searchPattern = null;
+    protected ObjectManager $em;
+    protected ?int $totalCount = null;
+    protected bool $displayNotPublishedNodes;
+    protected bool $displayAllNodesStatuses;
 
     /**
      * @param ObjectManager $em
@@ -81,7 +55,7 @@ class Paginator
     /**
      * @return bool
      */
-    public function isDisplayingNotPublishedNodes()
+    public function isDisplayingNotPublishedNodes(): bool
     {
         return $this->displayNotPublishedNodes;
     }
@@ -90,7 +64,7 @@ class Paginator
      * @param bool $displayNonPublishedNodes
      * @return Paginator
      */
-    public function setDisplayingNotPublishedNodes($displayNonPublishedNodes)
+    public function setDisplayingNotPublishedNodes(bool $displayNonPublishedNodes)
     {
         $this->displayNotPublishedNodes = $displayNonPublishedNodes;
         return $this;
@@ -99,7 +73,7 @@ class Paginator
     /**
      * @return bool
      */
-    public function isDisplayingAllNodesStatuses()
+    public function isDisplayingAllNodesStatuses(): bool
     {
         return $this->displayAllNodesStatuses;
     }
@@ -111,7 +85,7 @@ class Paginator
      * @param bool $displayAllNodesStatuses
      * @return $this
      */
-    public function setDisplayingAllNodesStatuses($displayAllNodesStatuses)
+    public function setDisplayingAllNodesStatuses(bool $displayAllNodesStatuses)
     {
         $this->displayAllNodesStatuses = $displayAllNodesStatuses;
         return $this;
@@ -142,7 +116,7 @@ class Paginator
      *
      * @return int
      */
-    public function getTotalCount()
+    public function getTotalCount(): int
     {
         if (null === $this->totalCount) {
             $repository = $this->getRepository();
@@ -167,7 +141,7 @@ class Paginator
      *
      * @return int
      */
-    public function getPageCount()
+    public function getPageCount(): int
     {
         return (int) ceil($this->getTotalCount() / $this->getItemsPerPage());
     }
@@ -176,11 +150,11 @@ class Paginator
      * Return entities filtered for current page.
      *
      * @param array   $order
-     * @param integer $page
+     * @param int $page
      *
      * @return array|\Doctrine\ORM\Tools\Pagination\Paginator
      */
-    public function findByAtPage(array $order = [], $page = 1)
+    public function findByAtPage(array $order = [], int $page = 1)
     {
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);
@@ -199,11 +173,11 @@ class Paginator
      * Use a search query to paginate instead of a findBy.
      *
      * @param array   $order
-     * @param integer $page
+     * @param int $page
      *
      * @return array
      */
-    public function searchByAtPage(array $order = [], $page = 1)
+    public function searchByAtPage(array $order = [], int $page = 1)
     {
         $repository = $this->getRepository();
         if ($repository instanceof EntityRepository) {
@@ -220,11 +194,11 @@ class Paginator
     }
 
     /**
-     * @param integer $itemsPerPage
+     * @param int $itemsPerPage
      *
      * @return $this
      */
-    public function setItemsPerPage($itemsPerPage)
+    public function setItemsPerPage(int $itemsPerPage)
     {
         $this->itemsPerPage = $itemsPerPage;
 
@@ -233,7 +207,7 @@ class Paginator
     /**
      * @return int
      */
-    public function getItemsPerPage()
+    public function getItemsPerPage(): int
     {
         return $this->itemsPerPage;
     }

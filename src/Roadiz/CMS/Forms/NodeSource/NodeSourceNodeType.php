@@ -19,7 +19,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class NodeSourceNodeType extends AbstractNodeSourceFieldType
 {
-
     protected NodeHandler $nodeHandler;
 
     /**

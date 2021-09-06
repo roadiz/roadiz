@@ -66,7 +66,7 @@ final class NodeSourceType extends AbstractType
             if ($options['withVirtual'] === true || !$field->isVirtual()) {
                 $builder->add(
                     $field->getVarName(),
-                    static::getFormTypeFromFieldType($field),
+                    self::getFormTypeFromFieldType($field),
                     $this->getFormOptionsFromFieldType($builder->getData(), $field, $options)
                 );
             }

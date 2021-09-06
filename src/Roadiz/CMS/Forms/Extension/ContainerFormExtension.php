@@ -14,12 +14,9 @@ use Symfony\Component\Form\FormExtensionInterface;
  */
 final class ContainerFormExtension implements FormExtensionInterface
 {
-    /** @var Container  */
-    protected $container;
+    protected Container $container;
 
     /**
-     * ContainerFormExtension constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)

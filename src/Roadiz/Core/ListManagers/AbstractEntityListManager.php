@@ -7,34 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractEntityListManager implements EntityListManagerInterface
 {
-    /**
-     * @var null|Request
-     */
-    protected $request = null;
-    /**
-     * @var bool
-     */
-    protected $pagination = true;
-    /**
-     * @var array|null
-     */
-    protected $queryArray = null;
-    /**
-     * @var int|null
-     */
-    protected $currentPage = null;
-    /**
-     * @var int|null
-     */
-    protected $itemPerPage = null;
-    /**
-     * @var bool
-     */
-    protected $displayNotPublishedNodes;
-    /**
-     * @var bool
-     */
-    protected $displayAllNodesStatuses;
+    protected ?Request $request = null;
+    protected bool $pagination = true;
+    protected ?array $queryArray = null;
+    protected ?int $currentPage = null;
+    protected ?int $itemPerPage = null;
+    protected bool $displayNotPublishedNodes;
+    protected bool $displayAllNodesStatuses;
 
     /**
      * @param Request|null  $request
@@ -55,7 +34,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     /**
      * @return bool
      */
-    public function isDisplayingNotPublishedNodes()
+    public function isDisplayingNotPublishedNodes(): bool
     {
         return $this->displayNotPublishedNodes;
     }
@@ -64,7 +43,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
      * @param bool $displayNotPublishedNodes
      * @return EntityListManagerInterface
      */
-    public function setDisplayingNotPublishedNodes($displayNotPublishedNodes)
+    public function setDisplayingNotPublishedNodes(bool $displayNotPublishedNodes)
     {
         $this->displayNotPublishedNodes = $displayNotPublishedNodes;
         return $this;
@@ -73,7 +52,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     /**
      * @return bool
      */
-    public function isDisplayingAllNodesStatuses()
+    public function isDisplayingAllNodesStatuses(): bool
     {
         return $this->displayAllNodesStatuses;
     }
@@ -85,7 +64,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
      * @param bool $displayAllNodesStatuses
      * @return EntityListManagerInterface
      */
-    public function setDisplayingAllNodesStatuses($displayAllNodesStatuses)
+    public function setDisplayingAllNodesStatuses(bool $displayAllNodesStatuses)
     {
         $this->displayAllNodesStatuses = $displayAllNodesStatuses;
         return $this;
@@ -94,7 +73,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     /**
      * @inheritDoc
      */
-    public function setPage($page)
+    public function setPage(int $page)
     {
         if ($page < 1) {
             throw new \RuntimeException("Page cannot be lesser than 1.", 1);
@@ -107,7 +86,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     /**
      * @return int
      */
-    protected function getPage()
+    protected function getPage(): int
     {
         return $this->currentPage;
     }
@@ -135,7 +114,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     /**
      * @inheritDoc
      */
-    public function getAssignation()
+    public function getAssignation(): array
     {
         $assign = [
             'currentPage' => $this->getPage(),
@@ -189,7 +168,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     /**
      * @return int
      */
-    protected function getItemPerPage()
+    protected function getItemPerPage(): int
     {
         return $this->itemPerPage;
     }
@@ -201,7 +180,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
      *
      * @return EntityListManagerInterface
      */
-    public function setItemPerPage($itemPerPage)
+    public function setItemPerPage(int $itemPerPage)
     {
         if ($itemPerPage < 1) {
             throw new \RuntimeException("Item count per page cannot be lesser than 1.", 1);
@@ -215,7 +194,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     /**
      * @return int
      */
-    public function getPageCount()
+    public function getPageCount(): int
     {
         return (int) ceil($this->getItemCount() / $this->getItemPerPage());
     }

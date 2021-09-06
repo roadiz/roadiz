@@ -64,12 +64,12 @@ class QueryBuilderListManager extends AbstractEntityListManager
 
             if ($this->request->query->has('item_per_page') &&
                 $this->request->query->get('item_per_page') > 0) {
-                $this->setItemPerPage($this->request->query->get('item_per_page'));
+                $this->setItemPerPage((int) $this->request->query->get('item_per_page'));
             }
 
             if ($this->request->query->has('page') &&
                 $this->request->query->get('page') > 1) {
-                $this->setPage($this->request->query->get('page'));
+                $this->setPage((int) $this->request->query->get('page'));
             } else {
                 $this->setPage(1);
             }
@@ -95,7 +95,7 @@ class QueryBuilderListManager extends AbstractEntityListManager
     /**
      * @inheritDoc
      */
-    public function setPage($page)
+    public function setPage(int $page)
     {
         parent::setPage($page);
         $this->queryBuilder->setFirstResult($this->getItemPerPage() * ($page - 1));
@@ -105,7 +105,7 @@ class QueryBuilderListManager extends AbstractEntityListManager
     /**
      * @inheritDoc
      */
-    public function setItemPerPage($itemPerPage)
+    public function setItemPerPage(int $itemPerPage)
     {
         parent::setItemPerPage($itemPerPage);
         $this->queryBuilder->setMaxResults((int) $itemPerPage);
@@ -116,7 +116,7 @@ class QueryBuilderListManager extends AbstractEntityListManager
     /**
      * @inheritDoc
      */
-    public function getItemCount()
+    public function getItemCount(): int
     {
         return $this->getPaginator()->count();
     }
@@ -132,7 +132,7 @@ class QueryBuilderListManager extends AbstractEntityListManager
     /**
      * @return array
      */
-    public function getAssignation()
+    public function getAssignation(): array
     {
         if ($this->debug) {
             return array_merge(parent::getAssignation(), [
