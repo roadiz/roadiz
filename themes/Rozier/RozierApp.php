@@ -94,8 +94,7 @@ class RozierApp extends BackendController
             $requirements = new Requirements($this->get('kernel'));
             $post_max_size = $requirements->parseSuffixedAmount(ini_get('post_max_size') ?: '');
             $upload_max_filesize = $requirements->parseSuffixedAmount(ini_get('upload_max_filesize') ?: '');
-            $maxFileSize = min($post_max_size, $upload_max_filesize);
-            return $maxFileSize;
+            return min($post_max_size, $upload_max_filesize);
         };
 
         $this->themeContainer['settingGroups'] = function () {

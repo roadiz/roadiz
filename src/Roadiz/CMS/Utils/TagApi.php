@@ -35,8 +35,8 @@ class TagApi extends AbstractApi
     public function getBy(
         array $criteria,
         array $order = null,
-        $limit = null,
-        $offset = null
+        ?int $limit = null,
+        ?int $offset = null
     ) {
         if (null === $order) {
             $order = [

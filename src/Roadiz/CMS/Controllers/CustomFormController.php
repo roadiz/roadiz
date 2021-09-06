@@ -5,8 +5,6 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\Entities\CustomForm;
@@ -100,9 +98,9 @@ class CustomFormController extends CmsController
      * @throws Exception
      */
     public function sendAnswer(
-        $assignation,
+        array $assignation,
         $receiver
-    ) {
+    ): bool {
         /** @var EmailManager $emailManager */
         $emailManager = $this->get('emailManager');
         $emailManager->setAssignation($assignation);
@@ -112,7 +110,7 @@ class CustomFormController extends CmsController
         $emailManager->setEmailTitle($assignation['title']);
         $emailManager->setSender($this->get('settingsBag')->get('email_sender'));
 
-        if (null === $receiver || empty($receiver)) {
+        if (empty($receiver)) {
             $emailManager->setReceiver($this->get('settingsBag')->get('email_sender'));
         } else {
             $emailManager->setReceiver($receiver);
@@ -130,8 +128,6 @@ class CustomFormController extends CmsController
      * @param EntityManagerInterface $em
      *
      * @return array $fieldsData
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @deprecated Use \RZ\Roadiz\Utils\CustomForm\CustomFormHelper to transform Form to CustomFormAnswer.
      */
     public function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManagerInterface $em)

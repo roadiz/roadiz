@@ -59,8 +59,8 @@ class NodeSourceApi extends AbstractApi
     public function getBy(
         array $criteria,
         array $order = null,
-        $limit = null,
-        $offset = null
+        ?int $limit = null,
+        ?int $offset = null
     ) {
         $this->getRepositoryName($criteria);
 
@@ -79,9 +79,8 @@ class NodeSourceApi extends AbstractApi
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countBy(
-        array $criteria
-    ) {
+    public function countBy(array $criteria)
+    {
         $this->getRepositoryName($criteria);
 
         return $this->getRepository()

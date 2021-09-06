@@ -29,7 +29,7 @@ final class DefaultController extends FrontendController
         Request $request,
         Node $node = null,
         TranslationInterface $translation = null,
-        $_format = 'html',
+        string $_format = 'html',
         Theme $theme = null
     ) {
         /*

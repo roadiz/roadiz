@@ -26,7 +26,7 @@ class PageController extends DefaultThemeApp
      *
      * @return JsonResponse
      */
-    public function embedAction(Request $request, $name, $_locale = 'en')
+    public function embedAction(Request $request, $name, string $_locale = 'en')
     {
         $translation = $this->bindLocaleFromRoute($request, $_locale);
         $this->prepareThemeAssignation(null, $translation);
@@ -50,7 +50,7 @@ class PageController extends DefaultThemeApp
         Request $request,
         Node $node = null,
         TranslationInterface $translation = null,
-        $_format = 'html'
+        string $_format = 'html'
     ) {
         $this->prepareThemeAssignation($node, $translation);
 

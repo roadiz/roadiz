@@ -31,6 +31,8 @@ use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\RolesType;
 use RZ\Roadiz\CMS\Forms\SettingDocumentType;
 use RZ\Roadiz\CMS\Forms\SettingGroupType;
+use RZ\Roadiz\CMS\Forms\SettingType;
+use RZ\Roadiz\CMS\Forms\SettingTypeResolver;
 use RZ\Roadiz\CMS\Forms\TagTranslationDocumentType;
 use RZ\Roadiz\CMS\Forms\TranslationsType;
 use RZ\Roadiz\CMS\Forms\UrlAliasType;
@@ -170,6 +172,14 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $container[NodeSourceType::class] = function (Container $c) {
             return new NodeSourceType($c[ManagerRegistry::class]);
+        };
+
+        $container[SettingType::class] = function (Container $c) {
+            return new SettingType($c[SettingTypeResolver::class]);
+        };
+
+        $container[SettingTypeResolver::class] = function () {
+            return new SettingTypeResolver();
         };
 
         $container['formValidator'] = function (Container $c) {
