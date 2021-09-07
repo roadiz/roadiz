@@ -1,8 +1,0 @@
-<nav data-action-menu class="actions-menu uk-navbar">
-    {% if item.getId %}
-    <a class="uk-button uk-button-danger" href="{{ path('settingGroupsDeletePage', { id: item.getId}) }}">
-        <span class="icon-container"><i class="uk-icon-rz-trash-o"></i></span>
-        <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
-    </a>
-    {% endif %}
-</nav>

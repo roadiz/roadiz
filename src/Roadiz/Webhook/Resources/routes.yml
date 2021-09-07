@@ -1,8 +1,0 @@
-
-webhooksHomePage:
-    path:     /rz-admin/webhooks
-    defaults:
-        _controller: RZ\Roadiz\Webhook\Controller\AdminWebhookController::defaultAction
-webhooksRoutes:
-    resource: "routing/webhooks.yml"
-    prefix: /rz-admin/webhooks

@@ -21,16 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
-class CustomFormController extends CmsController
+final class CustomFormController extends CmsController
 {
-    /**
-     * @return string
-     */
-    public function getStaticResourcesUrl(): string
-    {
-        return $this->get('assetPackages')->getUrl('themes/Rozier/static/');
-    }
-
     /**
      * @param Request $request
      * @param int $customFormId
@@ -188,7 +180,7 @@ class CustomFormController extends CmsController
     public function buildForm(
         Request $request,
         CustomForm $customForm,
-        $forceExpanded = false
+        bool $forceExpanded = false
     ) {
         $defaults = $request->query->all();
         return $this->createForm(CustomFormsType::class, $defaults, [
@@ -222,8 +214,8 @@ class CustomFormController extends CmsController
         Request $request,
         CustomForm $customFormsEntity,
         RedirectResponse $redirection,
-        $forceExpanded = false,
-        $emailSender = null
+        bool $forceExpanded = false,
+        ?string $emailSender = null
     ) {
         $assignation = [];
         $assignation['customForm'] = $customFormsEntity;

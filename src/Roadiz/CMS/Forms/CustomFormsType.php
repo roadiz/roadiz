@@ -4,15 +4,23 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
-use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -56,7 +64,7 @@ class CustomFormsType extends AbstractType
         }
 
         /*
-         * Add Google Recaptcha if setting optionnal options.
+         * Add Google Recaptcha if setting optional options.
          */
         if (!empty($options['recaptcha_public_key']) &&
             !empty($options['recaptcha_private_key']) &&
@@ -122,20 +130,41 @@ class CustomFormsType extends AbstractType
 
     /**
      * @param CustomFormField $field
-     * @return MarkdownType|string
+     * @return class-string<AbstractType>
      */
     protected function getTypeForField(CustomFormField $field)
     {
         switch ($field->getType()) {
             case AbstractField::ENUM_T:
             case AbstractField::MULTIPLE_T:
+            case AbstractField::RADIO_GROUP_T:
+            case AbstractField::CHECK_GROUP_T:
                 return ChoiceType::class;
             case AbstractField::DOCUMENTS_T:
                 return FileType::class;
             case AbstractField::MARKDOWN_T:
                 return MarkdownType::class;
+            case AbstractField::COLOUR_T:
+                return ColorType::class;
+            case AbstractField::DATETIME_T:
+                return DateTimeType::class;
+            case AbstractField::DATE_T:
+                return DateType::class;
+            case AbstractField::RICHTEXT_T:
+            case AbstractField::TEXT_T:
+                return TextareaType::class;
+            case AbstractField::BOOLEAN_T:
+                return CheckboxType::class;
+            case AbstractField::INTEGER_T:
+                return IntegerType::class;
+            case AbstractField::DECIMAL_T:
+                return NumberType::class;
+            case AbstractField::EMAIL_T:
+                return EmailType::class;
+            case AbstractField::COUNTRY_T:
+                return CountryType::class;
             default:
-                return NodeSourceType::getFormTypeFromFieldType($field);
+                return TextType::class;
         }
     }
 

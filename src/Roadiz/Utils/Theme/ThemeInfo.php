@@ -44,7 +44,7 @@ final class ThemeInfo
 
     public function isProtected(): bool
     {
-        return in_array($this->getThemeName(), self::$protectedThemeNames);
+        return in_array($this->getThemeName(), self::$protectedThemeNames) && $this->getThemeName() !== 'Rozier';
     }
 
     /**

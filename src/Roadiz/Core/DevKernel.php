@@ -10,7 +10,7 @@ namespace RZ\Roadiz\Core;
  * @see http://www.whitewashing.de/2013/08/19/speedup_symfony2_on_vagrant_boxes.html
  * @package RZ\Roadiz\Core
  */
-class DevKernel extends Kernel
+class DevKernel extends SourceKernel
 {
     private string $appName;
 

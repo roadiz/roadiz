@@ -104,7 +104,8 @@
         "phpstan/phpstan-doctrine": "^0.12.25",
         "phpunit/phpunit": "^9.4.3",
         "sentry/sentry": "^3.0.4",
-        "squizlabs/php_codesniffer": "^3.5"
+        "squizlabs/php_codesniffer": "^3.5",
+        "roadiz/rozier": "~1.7.0 || dev-main"
     },
     "suggest": {
         "ext-apcu": "Allows APCU system cache",
@@ -145,7 +146,8 @@
             "php bin/roadiz cache:clear --clear-appcache --clear-nsurls --clear-translations --clear-templates --clear-routes --clear-configuration -e dev",
             "php bin/roadiz cache:clear --clear-appcache --clear-nsurls --clear-translations --clear-templates --clear-routes --clear-configuration -e prod --preview",
             "php bin/roadiz cache:clear-fpm -e prod",
-            "php bin/roadiz cache:clear-fpm -e prod --preview"
+            "php bin/roadiz cache:clear-fpm -e prod --preview",
+            "php bin/roadiz themes:assets:install --relative --symlink Rozier"
         ],
         "post-install-cmd": [
             "RZ\\Roadiz\\Utils\\Composer\\InstallFiles\\ScriptHandler::install",
@@ -160,11 +162,11 @@
         "test": [
             "php -d \"memory_limit=-1\" bin/phpcs --report=full --report-file=./report.txt -p ./",
             "php -d \"memory_limit=-1\" bin/phpstan analyse -c phpstan.neon -l 4 src",
-            "php -d \"memory_limit=-1\" bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install themes/DefaultTheme",
+            "php -d \"memory_limit=-1\" bin/phpstan analyse -c phpstan.neon -l 3 themes/Install themes/DefaultTheme",
             "php -d \"memory_limit=-1\" bin/roadiz lint:twig",
             "php -d \"memory_limit=-1\" bin/roadiz lint:twig src/Roadiz/Webhook/Resources/views",
             "php -d \"memory_limit=-1\" bin/roadiz lint:twig themes/Install/Resources/views",
-            "php -d \"memory_limit=-1\" bin/roadiz lint:twig themes/Rozier/Resources/views"
+            "php -d \"memory_limit=-1\" bin/roadiz lint:twig vendor/roadiz/rozier/src/Resources/views"
         ]
     }
 }

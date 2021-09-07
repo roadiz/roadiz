@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Themes\DefaultTheme\Controllers;
 
 use JMS\Serializer\SerializationContext;
-use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\DefaultTheme\DefaultThemeApp;
+use Themes\Rozier\Forms\NodeSource\NodeSourceType;
 
 /**
  * Frontend controller to handle Page node-type request.

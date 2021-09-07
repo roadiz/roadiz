@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use RZ\Roadiz\Core\Kernel;
 // use RZ\Roadiz\Core\DevKernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use Symfony\Component\ErrorHandler\Debug;
@@ -15,7 +14,6 @@ $allowedIp = [
 // This check prevents access to debug front controllers that are deployed by accident to production servers.
 // Feel free to remove this, extend it, or make something more sophisticated.
 if (isset($_SERVER['HTTP_CLIENT_IP'])
-    || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
     || !(in_array(@$_SERVER['REMOTE_ADDR'], $allowedIp) || php_sapi_name() === 'cli-server')
 ) {
     header('HTTP/1.0 403 Forbidden');
@@ -30,7 +28,7 @@ Debug::enable();
 // Use DevKernel on Vagrant box to use a cache dir not
 // in the shared folder.
 //$kernel = new DevKernel('dev', true, false, 'my_site');
-$kernel = new Kernel('dev', true, false);
+$kernel = new \RZ\Roadiz\Core\SourceKernel('dev', true, false);
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);

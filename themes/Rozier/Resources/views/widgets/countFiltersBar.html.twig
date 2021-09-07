@@ -1,7 +1,0 @@
-{% if filters and filters.itemCount %}
-    <nav class="count-filters-bar uk-navbar">
-        <div class="uk-navbar-content" id="uk-navbar-filter-count">
-            {{ '{0} no.item|{1} 1.item|]1,Inf] %count%.items'|transchoice(filters.itemCount)|raw }}
-        </div>
-    </nav>
-{% endif %}

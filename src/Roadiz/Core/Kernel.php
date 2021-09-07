@@ -54,9 +54,11 @@ use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
-use Themes\Rozier\Services\RozierServiceProvider;
 
 /**
+ * Roadiz main Kernel class.
+ * Do not use it directly, extend it to add your own service providers.
+ *
  * @package RZ\Roadiz\Core
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
@@ -228,7 +230,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $pimple->register(new NodeServiceProvider());
         $pimple->register(new MarkdownServiceProvider());
         $pimple->register(new OpenIdServiceProvider());
-        $pimple->register(new RozierServiceProvider());
         $pimple->register(new PreviewServiceProvider());
         $pimple->register(new EntityGeneratorServiceProvider());
         $pimple->register(new DocumentationServiceProvider());

@@ -62,23 +62,6 @@ class WebhookServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $pimple->extend('twig.loaderFileSystem', function (FilesystemLoader $filesystemLoader) {
-            $filesystemLoader->addPath(dirname(__FILE__) . '/Resources/views');
-            $filesystemLoader->addPath(dirname(__FILE__) . '/Resources/views', 'Rozier');
-            return $filesystemLoader;
-        });
-
-        $pimple->extend('routeCollection', function (RouteCollection $routeCollection, Container $c) {
-            $resourcesFolder = dirname(__FILE__) . '/Resources';
-            $loader = new YamlFileLoader(new FileLocator([
-                $resourcesFolder,
-                $resourcesFolder . '/routing',
-                $resourcesFolder . '/config',
-            ]));
-            $routeCollection->addCollection($loader->load('routes.yml'));
-            return $routeCollection;
-        });
-
         $pimple->extend('messenger.handlers', function (array $handlers, Container $c) {
             $handlers[GitlabPipelineTriggerMessage::class] = [
                 $c[HttpRequestMessageHandler::class]

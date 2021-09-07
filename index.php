@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
 
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 
-/** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(__FILE__));
 require dirname(realpath(__FILE__)) . "/bootstrap.php";
 
-$kernel = new Kernel('prod', false);
+$kernel = new \RZ\Roadiz\Core\SourceKernel('prod', false);
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);
