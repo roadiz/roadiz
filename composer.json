@@ -134,7 +134,6 @@
             "samples/clear_cache.php.sample": "./clear_cache.php",
             "samples/install.php.sample": "./install.php",
             "samples/dev.php.sample": "./dev.php",
-            "samples/Vagrantfile.sample": "./Vagrantfile",
             "./.env.dist": "./.env"
         },
         "config-path": "./conf/config.yml"

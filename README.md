@@ -25,7 +25,7 @@ To create a new project, use our [Roadiz Standard Edition](https://github.com/ro
 ## Installation
 
 * [*Getting started* section](http://docs.roadiz.io/en/latest/developer/first-steps/installation.html).
-* Developing on a local machine: [use *Vagrant*](http://docs.roadiz.io/en/latest/developer/first-steps/vagrant.html)
+* Developing on a local machine: [use *Docker*](https://docs.roadiz.io/en/latest/developer/first-steps/docker.html)
 or [built-in PHP dev server](https://docs.roadiz.io/en/latest/developer/first-steps/php_server.html)
 * [Troubleshooting](http://docs.roadiz.io/en/latest/developer/troubleshooting.html)
 
