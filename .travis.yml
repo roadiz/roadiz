@@ -11,7 +11,6 @@ stages:
     - "PHP lint tests"
     - "PHP unit tests"
     - "Install assets tests"
-    - "Backoffice assets tests"
     - "Default theme assets tests"
 branches:
     except:
@@ -47,19 +46,6 @@ jobs:
             language: node_js
             node_js: "10"
             script: sh .travis/install_assets.sh
-
-        -   stage: "Backoffice assets tests"
-            language: node_js
-            node_js: "lts/*"
-            script: sh .travis/backoffice_assets.sh
-        -   stage: "Backoffice assets tests"
-            language: node_js
-            node_js: "12"
-            script: sh .travis/backoffice_assets.sh
-        -   stage: "Backoffice assets tests"
-            language: node_js
-            node_js: "10"
-            script: sh .travis/backoffice_assets.sh
 
         -   stage: "PHP lint tests"
             language: php

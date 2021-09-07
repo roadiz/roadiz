@@ -18,28 +18,13 @@ use Twig\TwigTest;
 /**
  * Extension that allow to gather nodes-source from hierarchy
  */
-class NodesSourcesExtension extends AbstractExtension
+final class NodesSourcesExtension extends AbstractExtension
 {
-    /**
-     * @var AuthorizationChecker
-     */
-    protected $securityAuthorizationChecker;
-    /**
-     * @var HandlerFactory
-     */
-    protected $handlerFactory;
-    /**
-     * @var bool
-     */
-    private $throwExceptions;
-    /**
-     * @var NodeSourceApi
-     */
-    private $nodeSourceApi;
-    /**
-     * @var NodeTypes
-     */
-    private $nodeTypesBag;
+    protected AuthorizationChecker $securityAuthorizationChecker;
+    protected HandlerFactory $handlerFactory;
+    private bool $throwExceptions;
+    private NodeSourceApi $nodeSourceApi;
+    private NodeTypes $nodeTypesBag;
 
     /**
      * @param AuthorizationChecker $securityAuthorizationChecker
@@ -53,7 +38,7 @@ class NodesSourcesExtension extends AbstractExtension
         HandlerFactory $handlerFactory,
         NodeSourceApi $nodeSourceApi,
         NodeTypes $nodeTypesBag,
-        $throwExceptions = false
+        bool $throwExceptions = false
     ) {
         $this->securityAuthorizationChecker = $securityAuthorizationChecker;
         $this->throwExceptions = $throwExceptions;

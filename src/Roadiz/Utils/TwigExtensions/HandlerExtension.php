@@ -11,18 +11,16 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 /**
- * Class HandlerExtension
  * @package RZ\Roadiz\Utils\TwigExtensions
  */
-class HandlerExtension extends AbstractExtension
+final class HandlerExtension extends AbstractExtension
 {
     /**
      * @var HandlerFactory
      */
-    private $handlerFactory;
+    private HandlerFactory $handlerFactory;
 
     /**
-     * HandlerExtension constructor.
      * @param HandlerFactory $handlerFactory
      */
     public function __construct(HandlerFactory $handlerFactory)

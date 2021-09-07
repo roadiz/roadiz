@@ -8,7 +8,7 @@ use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class CustormFormAnswerSerializer
+class CustomFormAnswerSerializer
 {
     /**
      * @var UrlGeneratorInterface

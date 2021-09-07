@@ -18,17 +18,8 @@ use Twig\TwigFilter;
  */
 class UrlExtension extends AbstractExtension
 {
-    /**
-     * @var CacheProvider|null
-     */
     protected ?CacheProvider $cacheProvider;
-    /**
-     * @var DocumentUrlGeneratorInterface
-     */
     protected DocumentUrlGeneratorInterface $documentUrlGenerator;
-    /**
-     * @var bool
-     */
     private bool $throwExceptions;
 
     /**

@@ -10,10 +10,7 @@ use Twig\TwigFunction;
 
 class HttpKernelExtension extends AbstractExtension
 {
-    /**
-     * @var FragmentHandler
-     */
-    private $handler;
+    private FragmentHandler $handler;
 
     public function __construct(FragmentHandler $handler)
     {
