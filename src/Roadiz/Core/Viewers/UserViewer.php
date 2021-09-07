@@ -41,7 +41,7 @@ class UserViewer
     }
 
     /**
-     * Send an email to reset user password.
+     * Send email to reset user password.
      *
      * @param UrlGeneratorInterface $urlGenerator
      * @param string|NodesSources $route

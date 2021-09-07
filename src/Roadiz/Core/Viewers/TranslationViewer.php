@@ -221,7 +221,7 @@ final class TranslationViewer
                     'name' => $name,
                     'url' => $url,
                     'locale' => $translation->getPreferredLocale(),
-                    'active' => $this->translation->getPreferredLocale() == $translation->getPreferredLocale(),
+                    'active' => $this->translation->getPreferredLocale() === $translation->getPreferredLocale(),
                     'translation' => $translation->getName(),
                 ];
             }
