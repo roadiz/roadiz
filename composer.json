@@ -105,7 +105,7 @@
         "phpunit/phpunit": "^9.4.3",
         "sentry/sentry": "^3.0.4",
         "squizlabs/php_codesniffer": "^3.5",
-        "roadiz/rozier": "~1.7.0 || dev-main"
+        "roadiz/rozier": "~1.7.0 || dev-develop"
     },
     "suggest": {
         "ext-apcu": "Allows APCU system cache",

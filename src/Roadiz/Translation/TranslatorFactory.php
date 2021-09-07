@@ -174,7 +174,7 @@ final class TranslatorFactory implements TranslatorFactoryInterface
         }
 
         foreach ($classes as $theme) {
-            if (null !== $theme) {
+            if (null !== $theme && class_exists($theme->getClassName())) {
                 $resourcesFolder = call_user_func([$theme->getClassName(), 'getResourcesFolder']);
                 $this->addTranslatorResource(
                     $translator,
