@@ -42,7 +42,7 @@ class InstallCommand extends Command implements ContainerAwareInterface
         $managerRegistry = $this->getHelper('doctrine')->getManagerRegistry();
 
         $io->note('Before installing Roadiz, did you create database schema? ' . PHP_EOL .
-            'If not execute: bin/roadiz orm:schema-tool:create');
+            'If not execute: bin/roadiz doctrine:migrations:migrate');
         $question = new ConfirmationQuestion(
             '<question>Are you sure to perform installation?</question>',
             false
