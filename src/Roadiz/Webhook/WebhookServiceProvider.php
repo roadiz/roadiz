@@ -17,15 +17,10 @@ use RZ\Roadiz\Webhook\Message\GitlabPipelineTriggerMessage;
 use RZ\Roadiz\Webhook\Message\NetlifyBuildHookMessage;
 use RZ\Roadiz\Webhook\Message\WebhookMessageFactory;
 use RZ\Roadiz\Webhook\Message\WebhookMessageFactoryInterface;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Translation\Translator;
-use Twig\Loader\FilesystemLoader;
 
 class WebhookServiceProvider implements ServiceProviderInterface
 {
@@ -85,19 +80,6 @@ class WebhookServiceProvider implements ServiceProviderInterface
         $pimple->extend('doctrine.entities_paths', function (array $paths) {
             $paths[] = dirname(__FILE__) . '/Entity';
             return $paths;
-        });
-
-        $pimple->extend('backoffice.entries', function (array $entries, $c) {
-            /** @var UrlGenerator $urlGenerator */
-            $urlGenerator = $c['urlGenerator'];
-            $entries['construction']['roles'][] = 'ROLE_ACCESS_WEBHOOKS';
-            $entries['construction']['subentries']['manage.webhooks'] = [
-                'name' => 'manage.webhooks',
-                'path' => $urlGenerator->generate('webhooksHomePage'),
-                'icon' => 'uk-icon-space-shuttle',
-                'roles' => ['ROLE_ACCESS_WEBHOOKS'],
-            ];
-            return $entries;
         });
 
         $pimple->extend('translator', function (Translator $translator) {
