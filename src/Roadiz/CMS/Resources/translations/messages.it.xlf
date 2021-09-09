@@ -141,18 +141,6 @@
                 <target state="translated">Valore già utilizzato.</target>
                 <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="password_should_contains_at_least_one_capital_one_digit">
-                <source>password_should_contains_at_least_one_capital_one_digit</source>
-                <target state="translated">password_should_contains_at_least_one_capital_one_digit</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="password_blacklisted">
-                <source>password_blacklisted</source>
-                <target state="translated">password_blacklisted</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="password_should_be_at_least_characters_long">
-                <source>password_should_be_at_least_{{length}}_characters_long</source>
-                <target state="translated">password_should_be_at_least_{{length}}_characters_long</target>
-            </trans-unit>
     </body>
   </file>
 </xliff>
