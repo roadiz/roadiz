@@ -78,10 +78,6 @@
         <source>error404.message</source>
         <target state="translated">La pagina richiesta non può essere trovata.</target>
       </trans-unit>
-      <trans-unit id=" email.successfully.sent">
-        <source>email.successfully.sent</source>
-        <target state="translated">email.successfully.sent</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>
