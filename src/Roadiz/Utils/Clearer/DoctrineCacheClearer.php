@@ -18,8 +18,8 @@ class DoctrineCacheClearer extends Clearer
 
     /**
      * @param ManagerRegistry $managerRegistry
-     * @param Kernel                 $kernel
-     * @param bool                   $recreateProxies
+     * @param Kernel $kernel
+     * @param bool $recreateProxies
      */
     public function __construct(ManagerRegistry $managerRegistry, Kernel $kernel, bool $recreateProxies = true)
     {
