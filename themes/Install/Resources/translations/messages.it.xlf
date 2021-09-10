@@ -410,10 +410,6 @@
                 <source>now_you_can_delete_install_file_and_use_roadiz</source>
                 <target state="translated">L'installazione di Roadiz ora è completa, puoi cancellare il file install.php e iniziare a utilizzare il tuo nuovo sito web.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="import_node">
-                <source>import_node</source>
-                <target state="translated">import_attribute</target>
-            </trans-unit>
     </body>
   </file>
 </xliff>
