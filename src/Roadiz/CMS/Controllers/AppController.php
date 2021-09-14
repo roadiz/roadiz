@@ -366,10 +366,10 @@ abstract class AppController extends Controller
             'head' => [
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'devMode' => $kernel->isDevMode(),
-                'maintenanceMode' => (boolean) $this->get('settingsBag')->get('maintenance_mode'),
-                'useCdn' => (boolean) $this->get('settingsBag')->get('use_cdn'),
-                'universalAnalyticsId' => $this->get('settingsBag')->get('universal_analytics_id'),
-                'googleTagManagerId' => $this->get('settingsBag')->get('google_tag_manager_id'),
+                'maintenanceMode' => (boolean) $this->getSettingsBag()->get('maintenance_mode'),
+                'useCdn' => (boolean) $this->getSettingsBag()->get('use_cdn'),
+                'universalAnalyticsId' => $this->getSettingsBag()->get('universal_analytics_id'),
+                'googleTagManagerId' => $this->getSettingsBag()->get('google_tag_manager_id'),
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
                 'filesUrl' => $this->getRequest()->getBaseUrl() . $kernel->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
@@ -624,8 +624,7 @@ abstract class AppController extends Controller
         $kernel = $this->get('kernel');
         /** @var RequestStack $requestStack */
         $requestStack = $kernel->get('requestStack');
-        /** @var Settings $settings */
-        $settings = $this->get('settingsBag');
+        $settings = $this->getSettingsBag();
         /** @var PreviewResolverInterface $previewResolver */
         $previewResolver = $this->get(PreviewResolverInterface::class);
 

@@ -5,6 +5,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -109,6 +110,14 @@ abstract class Controller implements ContainerAwareInterface
     public function getTranslator()
     {
         return $this->get('translator');
+    }
+
+    /**
+     * @return Settings
+     */
+    public function getSettingsBag(): Settings
+    {
+        return $this->get('settingsBag');
     }
 
     /**

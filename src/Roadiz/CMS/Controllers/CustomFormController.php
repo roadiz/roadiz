@@ -100,10 +100,10 @@ final class CustomFormController extends CmsController
         $emailManager->setEmailPlainTextTemplate('forms/answerForm.txt.twig');
         $emailManager->setSubject($assignation['title']);
         $emailManager->setEmailTitle($assignation['title']);
-        $emailManager->setSender($this->get('settingsBag')->get('email_sender'));
+        $emailManager->setSender($this->getSettingsBag()->get('email_sender'));
 
         if (empty($receiver)) {
-            $emailManager->setReceiver($this->get('settingsBag')->get('email_sender'));
+            $emailManager->setReceiver($this->getSettingsBag()->get('email_sender'));
         } else {
             $emailManager->setReceiver($receiver);
         }
@@ -184,8 +184,8 @@ final class CustomFormController extends CmsController
     ) {
         $defaults = $request->query->all();
         return $this->createForm(CustomFormsType::class, $defaults, [
-            'recaptcha_public_key' => $this->get('settingsBag')->get('recaptcha_public_key'),
-            'recaptcha_private_key' => $this->get('settingsBag')->get('recaptcha_private_key'),
+            'recaptcha_public_key' => $this->getSettingsBag()->get('recaptcha_public_key'),
+            'recaptcha_private_key' => $this->getSettingsBag()->get('recaptcha_private_key'),
             'request' => $request,
             'customForm' => $customForm,
             'forceExpanded' => $forceExpanded,
@@ -264,7 +264,7 @@ final class CustomFormController extends CmsController
                     false !== filter_var($emailSender, FILTER_VALIDATE_EMAIL)) {
                     $assignation['mailContact'] = $emailSender;
                 } else {
-                    $assignation['mailContact'] = $this->get('settingsBag')->get('email_sender');
+                    $assignation['mailContact'] = $this->getSettingsBag()->get('email_sender');
                 }
 
                 /*
