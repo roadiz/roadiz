@@ -33,7 +33,7 @@ final class CustomFormController extends CmsController
     public function addAction(Request $request, int $customFormId)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->get('em')->find(CustomForm::class, $customFormId);
+        $customForm = $this->em()->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
@@ -69,7 +69,7 @@ final class CustomFormController extends CmsController
      */
     public function sentAction(Request $request, int $customFormId)
     {
-        $customForm = $this->get('em')
+        $customForm = $this->em()
             ->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm) {
@@ -221,7 +221,7 @@ final class CustomFormController extends CmsController
         $assignation['customForm'] = $customFormsEntity;
         $assignation['fields'] = $customFormsEntity->getFields();
         $helper = new CustomFormHelper(
-            $this->get('em'),
+            $this->em(),
             $customFormsEntity,
             $this->get(PrivateDocumentFactory::class)
         );
