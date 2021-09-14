@@ -128,29 +128,32 @@ abstract class Controller implements ContainerAwareInterface
      *
      * @return string
      */
-    public function generateUrl($route, $parameters = [], $referenceType = Router::ABSOLUTE_PATH)
+    public function generateUrl($route, array $parameters = [], int $referenceType = Router::ABSOLUTE_PATH): string
     {
         if ($route instanceof NodesSources) {
-            return $this->get('urlGenerator')->generate(
+            return $this->get('router')->generate(
                 RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
                 array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $route]),
                 $referenceType
             );
         }
-        return $this->get('urlGenerator')->generate($route, $parameters, $referenceType);
+        return $this->get('router')->generate($route, $parameters, $referenceType);
     }
 
     /**
      * Returns a RedirectResponse to the given URL.
-     *
-     * @param  string $url
-     * @param  integer $status
-     *
-     * @return RedirectResponse
      */
-    public function redirect($url, $status = Response::HTTP_FOUND)
+    protected function redirect(string $url, int $status = 302): RedirectResponse
     {
         return new RedirectResponse($url, $status);
+    }
+
+    /**
+     * Returns a RedirectResponse to the given route with the given parameters.
+     */
+    protected function redirectToRoute($route, array $parameters = [], int $status = 302): RedirectResponse
+    {
+        return $this->redirect($this->generateUrl($route, $parameters), $status);
     }
 
     /**
