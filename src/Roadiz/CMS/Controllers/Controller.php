@@ -157,6 +157,15 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
+     * @param object $event
+     * @return object The passed $event MUST be returned
+     */
+    protected function dispatchEvent($event)
+    {
+        return $this->get('dispatcher')->dispatch($event);
+    }
+
+    /**
      * @return string
      */
     public static function getCalledClass()
