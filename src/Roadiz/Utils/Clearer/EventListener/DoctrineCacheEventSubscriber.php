@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Utils\Clearer\EventListener;
 
 use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,8 +26,15 @@ class DoctrineCacheEventSubscriber implements EventSubscriberInterface
      */
     public function onPurgeRequest(CachePurgeRequestEvent $event)
     {
+        $kernel = $event->getKernel();
+        if (!$kernel instanceof Kernel) {
+            return;
+        }
         try {
-            $clearer = new DoctrineCacheClearer($event->getKernel()->get(ManagerRegistry::class), $event->getKernel());
+            $clearer = new DoctrineCacheClearer(
+                $kernel->get(ManagerRegistry::class),
+                $kernel
+            );
             $clearer->clear();
             $event->addMessage($clearer->getOutput(), static::class, 'Doctrine cache');
         } catch (\Exception $e) {

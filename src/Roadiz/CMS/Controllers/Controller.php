@@ -132,7 +132,7 @@ abstract class Controller implements ContainerAwareInterface
      * Wrap `$this->container['urlGenerator']->generate`
      *
      * @param string|NodesSources $route
-     * @param mixed  $parameters
+     * @param array $parameters
      * @param int $referenceType
      *
      * @return string

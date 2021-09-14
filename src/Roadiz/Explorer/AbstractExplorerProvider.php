@@ -26,7 +26,7 @@ abstract class AbstractExplorerProvider implements ExplorerProviderInterface
     }
 
     /**
-     * @param $serviceName
+     * @param string $serviceName
      * @return mixed
      */
     public function get($serviceName)
@@ -35,7 +35,7 @@ abstract class AbstractExplorerProvider implements ExplorerProviderInterface
     }
 
     /**
-     * @param $serviceName
+     * @param string $serviceName
      * @return bool
      */
     public function has($serviceName): bool
