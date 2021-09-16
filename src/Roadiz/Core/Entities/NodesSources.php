@@ -180,13 +180,21 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @param ArrayCollection $documentsByFields
+     * @param ArrayCollection<NodesSourcesDocuments> $documentsByFields
      *
      * @return NodesSources
      */
     public function setDocumentsByFields(ArrayCollection $documentsByFields): NodesSources
     {
-        $this->documentsByFields = $documentsByFields;
+        foreach ($this->documentsByFields as $documentsByField) {
+            $documentsByField->setNodeSource(null);
+        }
+        $this->documentsByFields->clear();
+        foreach ($documentsByFields as $documentsByField) {
+            if (!$this->hasNodesSourcesDocuments($documentsByField)) {
+                $this->addDocumentsByFields($documentsByField);
+            }
+        }
         return $this;
     }
 
@@ -201,8 +209,30 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     {
         if (!$this->getDocumentsByFields()->contains($nodesSourcesDocuments)) {
             $this->getDocumentsByFields()->add($nodesSourcesDocuments);
+            $nodesSourcesDocuments->setNodeSource($this);
         }
         return $this;
+    }
+
+    public function hasNodesSourcesDocuments(NodesSourcesDocuments $nodesSourcesDocuments): bool
+    {
+        return $this->getDocumentsByFields()->exists(function ($key, NodesSourcesDocuments $element) use ($nodesSourcesDocuments) {
+            return $nodesSourcesDocuments->getDocument()->getId() !== null &&
+                $element->getDocument()->getId() === $nodesSourcesDocuments->getDocument()->getId() &&
+                $element->getField()->getId() === $nodesSourcesDocuments->getField()->getId();
+        });
+    }
+
+    public function clearDocumentsByFields(NodeTypeField $nodeTypeField)
+    {
+        $toRemoveCollection = $this->getDocumentsByFields()->filter(function (NodesSourcesDocuments $element) use ($nodeTypeField) {
+            return $element->getField()->getId() === $nodeTypeField->getId();
+        });
+        /** @var NodesSourcesDocuments $toRemove */
+        foreach ($toRemoveCollection as $toRemove) {
+            $this->getDocumentsByFields()->removeElement($toRemove);
+            $toRemove->setNodeSource(null);
+        }
     }
 
     /**
