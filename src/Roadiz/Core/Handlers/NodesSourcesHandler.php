@@ -100,18 +100,10 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function cleanDocumentsFromField(NodeTypeField $field, $flush = true)
     {
-        $nsDocuments = $this->objectManager
-            ->getRepository(NodesSourcesDocuments::class)
-            ->findBy(['nodeSource' => $this->nodeSource, 'field' => $field]);
+        $this->nodeSource->clearDocumentsByFields($field);
 
-        if (count($nsDocuments) > 0) {
-            foreach ($nsDocuments as $nsDoc) {
-                $this->objectManager->remove($nsDoc);
-            }
-
-            if (true === $flush) {
-                $this->objectManager->flush();
-            }
+        if (true === $flush) {
+            $this->objectManager->flush();
         }
 
         return $this;
@@ -130,19 +122,21 @@ class NodesSourcesHandler extends AbstractHandler
     {
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
-        if (null === $position) {
-            $latestPosition = $this->objectManager
-                ->getRepository(NodesSourcesDocuments::class)
-                ->getLatestPosition($this->nodeSource, $field);
+        if (!$this->nodeSource->hasNodesSourcesDocuments($nsDoc)) {
+            if (null === $position) {
+                $latestPosition = $this->objectManager
+                    ->getRepository(NodesSourcesDocuments::class)
+                    ->getLatestPosition($this->nodeSource, $field);
 
-            $nsDoc->setPosition($latestPosition + 1);
-        } else {
-            $nsDoc->setPosition($position);
-        }
-
-        $this->objectManager->persist($nsDoc);
-        if (true === $flush) {
-            $this->objectManager->flush();
+                $nsDoc->setPosition($latestPosition + 1);
+            } else {
+                $nsDoc->setPosition($position);
+            }
+            $this->nodeSource->addDocumentsByFields($nsDoc);
+            $this->objectManager->persist($nsDoc);
+            if (true === $flush) {
+                $this->objectManager->flush();
+            }
         }
 
         return $this;

@@ -22,25 +22,25 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 class NodesToNodes extends AbstractPositioned
 {
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="bNodes", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="bNodes", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node|null
      */
-    protected $nodeA;
+    protected ?Node $nodeA;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node|null
      */
-    protected $nodeB;
+    protected ?Node $nodeB;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var NodeTypeField|null
      */
-    protected $field;
+    protected ?NodeTypeField $field;
 
     /**
      * Create a new relation between two Nodes and a NodeTypeField.
@@ -77,11 +77,11 @@ class NodesToNodes extends AbstractPositioned
     /**
      * Sets the value of nodeA.
      *
-     * @param Node $nodeA the node
+     * @param Node|null $nodeA the node
      *
      * @return self
      */
-    public function setNodeA(Node $nodeA): NodesToNodes
+    public function setNodeA(?Node $nodeA): NodesToNodes
     {
         $this->nodeA = $nodeA;
 
@@ -91,9 +91,9 @@ class NodesToNodes extends AbstractPositioned
     /**
      * Gets the value of nodeB.
      *
-     * @return Node
+     * @return Node|null
      */
-    public function getNodeB(): Node
+    public function getNodeB(): ?Node
     {
         return $this->nodeB;
     }
@@ -101,11 +101,11 @@ class NodesToNodes extends AbstractPositioned
     /**
      * Sets the value of nodeB.
      *
-     * @param Node $nodeB the node
+     * @param Node|null $nodeB the node
      *
      * @return self
      */
-    public function setNodeB(Node $nodeB): NodesToNodes
+    public function setNodeB(?Node $nodeB): NodesToNodes
     {
         $this->nodeB = $nodeB;
 
@@ -115,9 +115,9 @@ class NodesToNodes extends AbstractPositioned
     /**
      * Gets the value of field.
      *
-     * @return NodeTypeField
+     * @return NodeTypeField|null
      */
-    public function getField(): NodeTypeField
+    public function getField(): ?NodeTypeField
     {
         return $this->field;
     }
@@ -125,11 +125,11 @@ class NodesToNodes extends AbstractPositioned
     /**
      * Sets the value of field.
      *
-     * @param NodeTypeField $field the field
+     * @param NodeTypeField|null $field the field
      *
      * @return self
      */
-    public function setField(NodeTypeField $field): NodesToNodes
+    public function setField(?NodeTypeField $field): NodesToNodes
     {
         $this->field = $field;
 
