@@ -62,9 +62,11 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
                 $document,
                 $field
             );
-            $this->objectManager->persist($nodeSourceDocument);
-            $this->addDocumentsByFields($nodeSourceDocument);
-            $this->' . $this->field->getVarName() . ' = null;
+            if (!$this->hasNodesSourcesDocuments($nodeSourceDocument)) {
+                $this->objectManager->persist($nodeSourceDocument);
+                $this->addDocumentsByFields($nodeSourceDocument);
+                $this->' . $this->field->getVarName() . ' = null;
+            }
         }
         return $this;
     }'.PHP_EOL;
