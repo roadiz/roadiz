@@ -750,7 +750,13 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
+     * @ORM\OneToMany(
+     *     targetEntity="NodesToNodes",
+     *     mappedBy="nodeA",
+     *     orphanRemoval=true,
+     *     cascade={"persist"},
+     *     fetch="LAZY"
+     * )
      * @ORM\OrderBy({"position" = "ASC"})
      * @var Collection<NodesToNodes>
      * @Serializer\Exclude()
@@ -778,6 +784,59 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
         $criteria->andWhere(Criteria::expr()->eq('field', $field));
         $criteria->orderBy(['position' => 'ASC']);
         return $this->getBNodes()->matching($criteria);
+    }
+
+    /**
+     * @param ArrayCollection<NodesToNodes> $bNodes
+     *
+     * @return Node
+     */
+    public function setBNodes(ArrayCollection $bNodes): Node
+    {
+        foreach ($this->bNodes as $bNode) {
+            $bNode->setNodeA(null);
+        }
+        $this->bNodes->clear();
+        foreach ($bNodes as $bNode) {
+            if (!$this->hasBNode($bNode)) {
+                $this->addBNode($bNode);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param NodesToNodes $bNode
+     * @return $this
+     */
+    public function addBNode(NodesToNodes $bNode): Node
+    {
+        if (!$this->getBNodes()->contains($bNode)) {
+            $this->getBNodes()->add($bNode);
+            $bNode->setNodeA($this);
+        }
+        return $this;
+    }
+
+    public function hasBNode(NodesToNodes $bNode): bool
+    {
+        return $this->getBNodes()->exists(function ($key, NodesToNodes $element) use ($bNode) {
+            return $bNode->getNodeB()->getId() !== null &&
+                $element->getNodeB()->getId() === $bNode->getNodeB()->getId() &&
+                $element->getField()->getId() === $bNode->getField()->getId();
+        });
+    }
+
+    public function clearBNodesForField(NodeTypeField $nodeTypeField)
+    {
+        $toRemoveCollection = $this->getBNodes()->filter(function (NodesToNodes $element) use ($nodeTypeField) {
+            return $element->getField()->getId() === $nodeTypeField->getId();
+        });
+        /** @var NodesToNodes $toRemove */
+        foreach ($toRemoveCollection as $toRemove) {
+            $this->getBNodes()->removeElement($toRemove);
+            $toRemove->setNodeA(null);
+        }
     }
 
     /**
