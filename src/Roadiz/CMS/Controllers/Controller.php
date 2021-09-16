@@ -37,6 +37,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -538,6 +539,21 @@ abstract class Controller implements ContainerAwareInterface
         /** @var AuthorizationCheckerInterface $checker */
         $checker = $this->get('securityAuthorizationChecker');
         return $checker->isGranted($attributes, $object);
+    }
+
+    /**
+     * Checks the validity of a CSRF token.
+     *
+     * @param string      $id    The id used when generating the token
+     * @param string|null $token The actual token sent with the request that should be validated
+     */
+    protected function isCsrfTokenValid(string $id, ?string $token): bool
+    {
+        if (!$this->has('csrfTokenManager')) {
+            throw new \LogicException('CSRF protection is not enabled in your application.');
+        }
+
+        return $this->get('csrfTokenManager')->isTokenValid(new CsrfToken($id, $token));
     }
 
     /**
