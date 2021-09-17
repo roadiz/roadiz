@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Explorer;
 
 use RZ\Roadiz\Core\ContainerAwareInterface;
 
-interface ExplorerProviderInterface extends ContainerAwareInterface
+interface ExplorerProviderInterface
 {
     /**
      * @param mixed $item

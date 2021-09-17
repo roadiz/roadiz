@@ -33,7 +33,7 @@ final class CustomFormController extends CmsController
     public function addAction(Request $request, int $customFormId)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->get('em')->find(CustomForm::class, $customFormId);
+        $customForm = $this->em()->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
@@ -69,7 +69,7 @@ final class CustomFormController extends CmsController
      */
     public function sentAction(Request $request, int $customFormId)
     {
-        $customForm = $this->get('em')
+        $customForm = $this->em()
             ->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm) {
@@ -100,10 +100,10 @@ final class CustomFormController extends CmsController
         $emailManager->setEmailPlainTextTemplate('forms/answerForm.txt.twig');
         $emailManager->setSubject($assignation['title']);
         $emailManager->setEmailTitle($assignation['title']);
-        $emailManager->setSender($this->get('settingsBag')->get('email_sender'));
+        $emailManager->setSender($this->getSettingsBag()->get('email_sender'));
 
         if (empty($receiver)) {
-            $emailManager->setReceiver($this->get('settingsBag')->get('email_sender'));
+            $emailManager->setReceiver($this->getSettingsBag()->get('email_sender'));
         } else {
             $emailManager->setReceiver($receiver);
         }
@@ -184,8 +184,8 @@ final class CustomFormController extends CmsController
     ) {
         $defaults = $request->query->all();
         return $this->createForm(CustomFormsType::class, $defaults, [
-            'recaptcha_public_key' => $this->get('settingsBag')->get('recaptcha_public_key'),
-            'recaptcha_private_key' => $this->get('settingsBag')->get('recaptcha_private_key'),
+            'recaptcha_public_key' => $this->getSettingsBag()->get('recaptcha_public_key'),
+            'recaptcha_private_key' => $this->getSettingsBag()->get('recaptcha_private_key'),
             'request' => $request,
             'customForm' => $customForm,
             'forceExpanded' => $forceExpanded,
@@ -221,7 +221,7 @@ final class CustomFormController extends CmsController
         $assignation['customForm'] = $customFormsEntity;
         $assignation['fields'] = $customFormsEntity->getFields();
         $helper = new CustomFormHelper(
-            $this->get('em'),
+            $this->em(),
             $customFormsEntity,
             $this->get(PrivateDocumentFactory::class)
         );
@@ -264,7 +264,7 @@ final class CustomFormController extends CmsController
                     false !== filter_var($emailSender, FILTER_VALIDATE_EMAIL)) {
                     $assignation['mailContact'] = $emailSender;
                 } else {
-                    $assignation['mailContact'] = $this->get('settingsBag')->get('email_sender');
+                    $assignation['mailContact'] = $this->getSettingsBag()->get('email_sender');
                 }
 
                 /*

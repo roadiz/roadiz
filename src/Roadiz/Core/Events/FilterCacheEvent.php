@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -13,10 +13,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 abstract class FilterCacheEvent extends Event
 {
-    /**
-     * @var Kernel
-     */
-    private $kernel;
+    private KernelInterface $kernel;
 
     /**
      * @var Collection
@@ -29,9 +26,9 @@ abstract class FilterCacheEvent extends Event
     private $errorCollection;
 
     /**
-     * @param Kernel $kernel
+     * @param KernelInterface $kernel
      */
-    public function __construct(Kernel $kernel)
+    public function __construct(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
         $this->messageCollection = new ArrayCollection();
@@ -39,9 +36,9 @@ abstract class FilterCacheEvent extends Event
     }
 
     /**
-     * @return Kernel
+     * @return KernelInterface
      */
-    public function getKernel(): Kernel
+    public function getKernel(): KernelInterface
     {
         return $this->kernel;
     }

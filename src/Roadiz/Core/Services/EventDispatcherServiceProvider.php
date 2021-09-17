@@ -12,14 +12,20 @@ use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\LoggableUsernameSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
+use RZ\Roadiz\Core\Events\NodeDuplicationSubscriber;
+use RZ\Roadiz\Core\Events\NodeRedirectionSubscriber;
 use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
+use RZ\Roadiz\Core\Events\NodesSourcesUniversalSubscriber;
+use RZ\Roadiz\Core\Events\NodesSourcesUrlSubscriber;
 use RZ\Roadiz\Core\Events\RoleSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Events\TranslationSubscriber;
 use RZ\Roadiz\Core\Events\UpdateFontSubscriber;
 use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Clearer\EventListener\AnnotationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
@@ -33,6 +39,7 @@ use RZ\Roadiz\Utils\Clearer\EventListener\ReverseProxyCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Security\Firewall;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
@@ -123,6 +130,24 @@ class EventDispatcherServiceProvider implements \Pimple\ServiceProviderInterface
                     $c[ManagerRegistry::class],
                     $c['rolesBag']
                 ));
+                /*
+                 * Add custom event subscriber to empty NS Url cache
+                 */
+                $dispatcher->addSubscriber(
+                    new NodesSourcesUrlSubscriber($c['nodesSourcesUrlCacheProvider'])
+                );
+                /*
+                 * Add custom event subscriber to Translation result cache
+                 */
+                $dispatcher->addSubscriber(
+                    new TranslationSubscriber($c['em']->getConfiguration()->getResultCacheImpl())
+                );
+                /*
+                 * Add custom event subscriber to manage universal node-type fields
+                 */
+                $dispatcher->addSubscriber(
+                    new NodesSourcesUniversalSubscriber($c[ManagerRegistry::class], $c['utils.universalDataDuplicator'])
+                );
             }
             /*
              * If debug, alter HTML responses to append Debug panel to view
@@ -130,6 +155,22 @@ class EventDispatcherServiceProvider implements \Pimple\ServiceProviderInterface
             if (!$kernel->isInstallMode() && $kernel->isDebug()) {
                 $dispatcher->addSubscriber(new DebugBarSubscriber($c));
             }
+            /*
+             * Add custom event subscriber to manage node duplication
+             */
+            $dispatcher->addSubscriber(
+                new NodeDuplicationSubscriber(
+                    $c[ManagerRegistry::class],
+                    $c['factory.handler']
+                )
+            );
+
+            /*
+             * Add event to create redirection after renaming a node.
+             */
+            $dispatcher->addSubscriber(
+                new NodeRedirectionSubscriber($c[NodeMover::class], $kernel, $c[PreviewResolverInterface::class])
+            );
 
             return $dispatcher;
         };

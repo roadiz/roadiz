@@ -46,8 +46,10 @@ use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Webhook\WebhookServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\RebootableInterface;
@@ -69,7 +71,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static ?string $cmsBuild = null;
-    public static string $cmsVersion = "1.6.29";
+    public static string $cmsVersion = "1.6.30";
     protected string $environment;
     protected bool $debug;
     /**
@@ -575,5 +577,30 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public function getFontsFilesBasePath(): string
     {
         return '/files/fonts';
+    }
+
+    public function registerBundles()
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function getBundles()
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function getBundle($name)
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function locateResource($name)
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
     }
 }
