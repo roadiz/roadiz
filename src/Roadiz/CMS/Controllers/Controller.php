@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -391,12 +392,12 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Creates and returns a Form instance from the type of the form.
      *
-     * @param string $type    The built type of the form
-     * @param mixed $data    The initial data for the form
+     * @param class-string $type The built type of the form
+     * @param mixed|null $data    The initial data for the form
      * @param array $options Options for the form
-     * @return Form
+     * @return FormInterface
      */
-    protected function createForm($type = FormType::class, $data = null, array $options = [])
+    protected function createForm(string $type, $data = null, array $options = []): FormInterface
     {
         return $this->get('formFactory')->create($type, $data, $options);
     }
