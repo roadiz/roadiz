@@ -19,7 +19,7 @@
 <html itemscope
       itemtype="http://schema.org/WebPage"
       class="no-js"
-      lang="{{ formattedLocale }}"{% if request.locale is rtl %} dir="rtl"{% endif %}>
+      lang="{{ formattedLocale }}"{% if app.request.locale is rtl %} dir="rtl"{% endif %}>
 <head>
     <meta charset="utf-8">
     <title>{{ pageMetaTitle }}</title>
@@ -106,7 +106,7 @@
     formattedLocale
     ]) %}
 {% endif %}
-{% if request.locale is rtl %}
+{% if app.request.locale is rtl %}
     {% set bodyClasses = bodyClasses|merge([
         'rtl'
     ]) %}
@@ -141,7 +141,7 @@
     {# Passing server vars to JS framework #}
     window.temp = {
         devMode: {% if head.devMode %}true{% else %}false{% endif %},
-        locale: '{{ request.locale }}',
+        locale: '{{ app.request.locale }}',
         resourcesUrl: '{{ asset('', 'DefaultTheme') }}',
         mapsStyle: {% if head.mapsStyle %}JSON.parse('{{ head.mapsStyle|raw }}'){% else %}null{% endif %}
     };

@@ -18,13 +18,13 @@
                     # Page contact
                     #}
                     <li class="nav-item{% if route == 'contactPageLocale' %} active{% endif %}">
-                        <a href="{{ path('contactPageLocale', {"_locale":request.locale}) }}">{% trans %}contact{% endtrans %}</a>
+                        <a href="{{ path('contactPageLocale', {"_locale": app.request.locale}) }}">{% trans %}contact{% endtrans %}</a>
                     </li>
                 {% endif %}
             </ul>
         {% endstopwatch %}
 
-        <form class="navbar-form navbar-left" action="{{ path('searchPageLocale', {'_locale': request.locale}) }}" method="get" role="search">
+        <form class="navbar-form navbar-left" action="{{ path('searchPageLocale', {'_locale': app.request.locale}) }}" method="get" role="search">
             <div class="form-group">
                 <input name="query" {% if query %}value="{{ query }}"{% endif %}  class="form-control" type="search" placeholder="{{ 'search'|trans }}"/>
             </div>

@@ -29,7 +29,7 @@
                                 {{ attributeValueTranslation.value|country_iso(request.locale) }}
                             {% elseif attributeValueTranslation is percent %}
                                 {% set spacer = '' %}
-                                {% if request.locale == 'fr' or request.locale == 'fr_FR' %}
+                                {% if app.request.locale == 'fr' or app.request.locale == 'fr_FR' %}
                                     {% set spacer = ' ' %}
                                 {% endif %}
                                 {{ attributeValueTranslation.value|format_number(locale=app.request.locale) }}{{ spacer }}%
