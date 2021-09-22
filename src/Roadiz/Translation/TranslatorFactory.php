@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Translation;
 
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -18,22 +18,20 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Themes\Install\InstallApp;
-use Themes\Rozier\RozierApp;
 
 final class TranslatorFactory implements TranslatorFactoryInterface
 {
     private KernelInterface $kernel;
     private RequestStack $requestStack;
-    private ?EntityManagerInterface $entityManager;
     private Stopwatch $stopwatch;
     private ThemeResolverInterface $themeResolver;
     private PreviewResolverInterface $previewResolver;
+    private ManagerRegistry $managerRegistry;
 
     /**
      * @param KernelInterface $kernel
      * @param RequestStack $requestStack
-     * @param EntityManagerInterface|null $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param Stopwatch $stopwatch
      * @param ThemeResolverInterface $themeResolver
      * @param PreviewResolverInterface $previewResolver
@@ -41,17 +39,17 @@ final class TranslatorFactory implements TranslatorFactoryInterface
     public function __construct(
         KernelInterface $kernel,
         RequestStack $requestStack,
-        ?EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         Stopwatch $stopwatch,
         ThemeResolverInterface $themeResolver,
         PreviewResolverInterface $previewResolver
     ) {
         $this->kernel = $kernel;
         $this->requestStack = $requestStack;
-        $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
         $this->previewResolver = $previewResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -136,36 +134,47 @@ final class TranslatorFactory implements TranslatorFactoryInterface
         );
 
         /*
-         * Add install theme translations
+         * TODO: remove reverse-dependency on Install theme
          */
-        $this->addTranslatorResource(
-            $translator,
-            InstallApp::getTranslationsFolder(),
-            'xlf',
-            $locale
-        );
+        if (class_exists('\\Themes\\Install\\InstallApp')) {
+            /*
+             * Add install theme translations
+             */
+            $this->addTranslatorResource(
+                $translator,
+                \Themes\Install\InstallApp::getTranslationsFolder(),
+                'xlf',
+                $locale
+            );
+        }
+
         /*
-         * Add backoffice theme additional translations
+         * TODO: remove reverse-dependency on Rozier theme
          */
-        $this->addTranslatorResource(
-            $translator,
-            RozierApp::getTranslationsFolder(),
-            'xlf',
-            $locale,
-            null,
-            'helps'
-        );
-        $this->addTranslatorResource(
-            $translator,
-            RozierApp::getTranslationsFolder(),
-            'xlf',
-            $locale,
-            null,
-            'settings'
-        );
+        if (class_exists('\\Themes\\Rozier\\RozierApp')) {
+            /*
+             * Add backoffice theme additional translations
+             */
+            $this->addTranslatorResource(
+                $translator,
+                \Themes\Rozier\RozierApp::getTranslationsFolder(),
+                'xlf',
+                $locale,
+                null,
+                'helps'
+            );
+            $this->addTranslatorResource(
+                $translator,
+                \Themes\Rozier\RozierApp::getTranslationsFolder(),
+                'xlf',
+                $locale,
+                null,
+                'settings'
+            );
+        }
 
         foreach ($classes as $theme) {
-            if (null !== $theme) {
+            if (null !== $theme && class_exists($theme->getClassName())) {
                 $resourcesFolder = call_user_func([$theme->getClassName(), 'getResourcesFolder']);
                 $this->addTranslatorResource(
                     $translator,
@@ -244,31 +253,35 @@ final class TranslatorFactory implements TranslatorFactoryInterface
      */
     protected function getAvailableLocales(): array
     {
-        // Add Rozier backend languages
-        $locales = array_values(RozierApp::$backendLanguages);
+        /*
+         * TODO: remove reverse-dependency on Rozier theme
+         */
+        if (class_exists('\\Themes\\Rozier\\RozierApp')) {
+            // Add Rozier backend languages
+            $locales = array_values(\Themes\Rozier\RozierApp::$backendLanguages);
+        }
+
         // Add default translation
         $locales[] = $this->getCurrentLocale();
 
-        if (null !== $this->entityManager) {
-            try {
-                if ($this->kernel->getEnvironment() !== 'install') {
-                    /** @var TranslationRepository $translationRepository */
-                    $translationRepository = $this->entityManager->getRepository(Translation::class);
-                    if ($this->previewResolver->isPreview()) {
-                        $availableTranslations = $translationRepository->findAll();
-                    } else {
-                        $availableTranslations = $translationRepository->findAllAvailable();
-                    }
-                    /** @var Translation $availableTranslation */
-                    foreach ($availableTranslations as $availableTranslation) {
-                        $locales[] = $availableTranslation->getLocale();
-                    }
+        try {
+            if ($this->kernel->getEnvironment() !== 'install') {
+                /** @var TranslationRepository $translationRepository */
+                $translationRepository = $this->managerRegistry->getRepository(Translation::class);
+                if ($this->previewResolver->isPreview()) {
+                    $availableTranslations = $translationRepository->findAll();
+                } else {
+                    $availableTranslations = $translationRepository->findAllAvailable();
                 }
-            } catch (Exception $e) {
-            } catch (\PDOException $e) {
-                // Trying to use translator without DB
-                // in CI or CLI environments
+                /** @var Translation $availableTranslation */
+                foreach ($availableTranslations as $availableTranslation) {
+                    $locales[] = $availableTranslation->getLocale();
+                }
             }
+        } catch (Exception $e) {
+        } catch (\PDOException $e) {
+            // Trying to use translator without DB
+            // in CI or CLI environments
         }
 
         return array_unique(array_filter($locales));

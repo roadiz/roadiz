@@ -8,6 +8,9 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Console as Console;
 use Symfony\Bridge\Twig\Command\DebugCommand;
 use Symfony\Bridge\Twig\Command\LintCommand;
+use Symfony\Bundle\FrameworkBundle\Command\EventDispatcherDebugCommand;
+use Symfony\Bundle\FrameworkBundle\Command\RouterDebugCommand;
+use Symfony\Bundle\FrameworkBundle\Command\RouterMatchCommand;
 use Symfony\Component\Translation\Command\XliffLintCommand;
 
 class ConsoleServiceProvider implements ServiceProviderInterface
@@ -16,7 +19,6 @@ class ConsoleServiceProvider implements ServiceProviderInterface
     {
         $container['console.commands'] = function (Container $c) {
             return [
-                new Console\DispatcherDebugCommand(),
                 new Console\ConfigurationDebugCommand(),
                 new Console\TranslationsCommand(),
                 new Console\TranslationsCreationCommand(),
@@ -66,6 +68,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\DocumentFilesizeCommand(),
                 new Console\DocumentAverageColorCommand(),
                 new Console\DocumentPruneCommand(),
+                new Console\DocumentPruneOrphansCommand(),
                 new Console\ThemeMigrateCommand(),
                 new Console\VersionsPurgeCommand(),
                 new Console\GeneratePrivateKeyCommand(),
@@ -74,10 +77,13 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\DocumentClearFolderCommand(),
                 new Console\NodeClearTagCommand(),
                 new Console\NodesEmptyTrashCommand(),
-
+                // Symfony commands
                 new LintCommand($c['twig.environment']),
                 new XliffLintCommand(),
                 new DebugCommand($c['twig.environment']),
+                new EventDispatcherDebugCommand($c['dispatcher']),
+                new RouterMatchCommand($c['router']),
+                new RouterDebugCommand($c['router']),
             ];
         };
     }

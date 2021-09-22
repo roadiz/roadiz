@@ -1,0 +1,52 @@
+---
+appNamespace: "mariadb_travis_test"
+timezone: "Europe/Paris"
+doctrine:
+    driver: "pdo_mysql"
+    host: "localhost"
+    user: "root"
+    password: 'travis'
+    dbname: "roadiz_tests"
+    server_version: 'mariadb-10.5.2'
+    # Do not use utf8mb4 before MySQL 5.7
+    charset: utf8mb4
+    default_table_options:
+        charset: utf8mb4
+        collate: utf8mb4_unicode_ci
+security:
+    secret: "mariadb_travis_test"
+cacheDriver:
+    type: array
+    host: ~
+    port: ~
+mailer:
+    type: ~
+    host: "localhost"
+    port: 25
+    encryption: ~
+    username: ""
+    password: ""
+themes:
+    - classname: \Themes\DefaultTheme\DefaultThemeApp
+      hostname: '*'
+      routePrefix: ''
+# Lifetime of remember-me cookie in seconds (30 days)
+rememberMeLifetime: 2592000
+additionalServiceProviders:
+    - \Themes\DefaultTheme\Services\DefaultThemeServiceProvider
+additionalCommands:
+    - \Themes\DefaultTheme\Commands\DefaultThemeCommand
+assetsProcessing:
+    driver: gd
+    defaultQuality: 90
+    # pixel size limit () after roadiz
+    # should create a smaller copy.
+    maxPixelSize: 1920
+    jpegoptimPath: ~
+    pngquantPath: ~
+# Choose a Doctrine strategy for NodesSources
+# inheritance classes. BE CAREFUL, if you change this
+# setting after creating content in your website, all
+# node-sources data will be lost.
+inheritance:
+    type: single_table

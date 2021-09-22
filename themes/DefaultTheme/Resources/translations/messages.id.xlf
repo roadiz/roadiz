@@ -78,6 +78,10 @@
         <source>error404.message</source>
         <target state="translated">pesan.kesalahan404</target>
       </trans-unit>
+      <trans-unit id=" email.successfully.sent">
+        <source>email.successfully.sent</source>
+        <target state="translated">email.berhasil.dikirimkan</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

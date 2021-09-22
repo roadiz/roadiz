@@ -5,6 +5,7 @@ namespace Themes\Install;
 
 use Exception;
 use Locale;
+use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Config\Configuration;
 use RZ\Roadiz\Console\RoadizApplication;
@@ -13,6 +14,8 @@ use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -33,11 +36,11 @@ use Themes\Rozier\RozierApp;
  */
 class InstallApp extends AppController
 {
-    protected static $themeName = 'Install theme';
-    protected static $themeAuthor = 'Ambroise Maupate';
-    protected static $themeCopyright = 'REZO ZERO';
-    protected static $themeDir = 'Install';
-    protected static $backendTheme = false;
+    protected static string $themeName = 'Install theme';
+    protected static string $themeAuthor = 'Ambroise Maupate';
+    protected static string $themeCopyright = 'REZO ZERO';
+    protected static string $themeDir = 'Install';
+    protected static bool $backendTheme = false;
 
     /**
      * @return $this
@@ -57,7 +60,6 @@ class InstallApp extends AppController
                 'filesUrl' => $this->getRequest()->getBaseUrl() . $this->get('kernel')->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
-                'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ]
         ];
 
@@ -249,7 +251,7 @@ class InstallApp extends AppController
      * @param bool $debug
      * @param bool $preview
      */
-    protected function callClearCacheCommands($env = 'prod', $debug = false, $preview = false)
+    protected function callClearCacheCommands(string $env = 'prod', bool $debug = false, bool $preview = false)
     {
         /*
          * Very important, when using standard-edition,
@@ -353,5 +355,17 @@ class InstallApp extends AppController
             $kernel->isDebug(),
             $request
         );
+    }
+
+    public static function setupDependencyInjection(Container $container)
+    {
+        parent::setupDependencyInjection($container);
+        static::addThemeTemplatesPath($container);
+
+        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
+            'themes/' . static::getThemeDir() . '/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
     }
 }

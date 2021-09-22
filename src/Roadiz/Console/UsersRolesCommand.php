@@ -46,7 +46,7 @@ class UsersRolesCommand extends UsersCommand
         $io = new SymfonyStyle($input, $output);
         /** @var RolesBagHelper $rolesBag */
         $rolesBag = $this->getHelper('rolesBag');
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
         $name = $input->getArgument('username');
 
         if ($name) {

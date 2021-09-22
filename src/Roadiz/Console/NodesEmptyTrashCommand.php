@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
@@ -27,8 +27,8 @@ class NodesEmptyTrashCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        /** @var EntityManager $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        /** @var ObjectManager $em */
+        $em = $this->getHelper('doctrine')->getEntityManager();
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
 
@@ -80,7 +80,7 @@ class NodesEmptyTrashCommand extends Command
         return 0;
     }
 
-    protected function createNodeQueryBuilder(EntityManager $em): QueryBuilder
+    protected function createNodeQueryBuilder(ObjectManager $em): QueryBuilder
     {
         return $em
             ->getRepository(Node::class)

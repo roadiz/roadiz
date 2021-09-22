@@ -11,13 +11,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 abstract class AbstractXlsxSerializer implements SerializerInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private TranslatorInterface $translator;
 
     /**
-     * AbstractXlsxSerializer constructor.
      * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
@@ -31,6 +27,8 @@ abstract class AbstractXlsxSerializer implements SerializerInterface
      * @param mixed $obj
      *
      * @return string
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function serialize($obj)
     {

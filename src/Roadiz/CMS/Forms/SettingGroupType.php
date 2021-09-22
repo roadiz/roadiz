@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -17,17 +17,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SettingGroupType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -45,7 +42,8 @@ class SettingGroupType extends AbstractType
             },
             function ($id) {
                 if (null !== $id) {
-                    return $this->entityManager->find(SettingGroup::class, $id);
+                    $manager = $this->managerRegistry->getManagerForClass(SettingGroup::class);
+                    return $manager->find(SettingGroup::class, $id);
                 }
                 return null;
             }
@@ -66,7 +64,7 @@ class SettingGroupType extends AbstractType
          * Use normalizer to populate choices from ChoiceType
          */
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
-            $groups = $this->entityManager->getRepository(SettingGroup::class)->findAll();
+            $groups = $this->managerRegistry->getRepository(SettingGroup::class)->findAll();
             /** @var SettingGroup $group */
             foreach ($groups as $group) {
                 $choices[$group->getName()] = $group->getId();

@@ -54,11 +54,3 @@ sitemap:
     path: /sitemap.xml
     defaults:
         _controller: Themes\DefaultTheme\Controllers\SitemapController::sitemapAction
-
-defaultRemoveTrailingSlash:
-    path: /{url}
-    defaults:
-        _controller: Themes\DefaultTheme\DefaultThemeApp::removeTrailingSlashAction
-    requirements:
-        url: .*/$
-    methods: [GET]

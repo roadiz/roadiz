@@ -4,28 +4,21 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Utils;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Pimple\Container;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * Class AbstractApi.
- *
  * @package RZ\Roadiz\CMS\Utils
  */
 abstract class AbstractApi
 {
-    /**
-     * DI container
-     *
-     * @var Container $container
-     */
-    protected $container;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param Container $container
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(Container $container)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->container = $container;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**

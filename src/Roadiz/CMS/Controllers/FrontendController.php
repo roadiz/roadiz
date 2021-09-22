@@ -11,6 +11,8 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,27 +26,27 @@ abstract class FrontendController extends AppController
     /**
      * {@inheritdoc}
      */
-    public static $priority = 10;
+    public static int $priority = 10;
     /**
      * {@inheritdoc}
      */
-    protected static $themeName = 'Default theme';
+    protected static string $themeName = 'Default theme';
     /**
      * {@inheritdoc}
      */
-    protected static $themeAuthor = 'Ambroise Maupate';
+    protected static string $themeAuthor = 'Ambroise Maupate';
     /**
      * {@inheritdoc}
      */
-    protected static $themeCopyright = 'REZO ZERO';
+    protected static string $themeCopyright = 'REZO ZERO';
     /**
      * {@inheritdoc}
      */
-    protected static $themeDir = 'DefaultTheme';
+    protected static string $themeDir = 'DefaultTheme';
     /**
      * {@inheritdoc}
      */
-    protected static $backendTheme = false;
+    protected static bool $backendTheme = false;
     /**
      * Put here your node which need a specific controller
      * instead of a node-type controller.
@@ -61,6 +63,16 @@ abstract class FrontendController extends AppController
     protected ?Container $themeContainer = null;
 
     /**
+     * Compatibility method for Next Roadiz…
+     *
+     * @return array<string, string>
+     */
+    public static function getSubscribedServices()
+    {
+        return [];
+    }
+
+    /**
      * Append objects to global container.
      *
      * Add a request matcher on frontend to make securityTokenStorage
@@ -71,6 +83,13 @@ abstract class FrontendController extends AppController
     public static function setupDependencyInjection(Container $container)
     {
         parent::setupDependencyInjection($container);
+        static::addThemeTemplatesPath($container);
+
+        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
+            'themes/' . static::getThemeDir() . '/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
 
         /**
          * You can override default frontend firewall
@@ -394,13 +413,7 @@ abstract class FrontendController extends AppController
         parent::prepareBaseAssignation();
 
         $translation = $this->get('defaultTranslation');
-
         $this->assignation['_default_locale'] = $translation->getLocale();
-        $this->assignation['meta'] = [
-            'siteName' => $this->get('settingsBag')->get('site_name'),
-            'siteCopyright' => $this->get('settingsBag')->get('site_copyright'),
-            'siteDescription' => $this->get('settingsBag')->get('seo_description'),
-        ];
 
         return $this;
     }

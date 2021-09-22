@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Serializers\ObjectConstructor;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use JMS\Serializer\Construction\ObjectConstructorInterface;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Metadata\ClassMetadata;
@@ -12,14 +12,14 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorInterface
 {
-    protected EntityManagerInterface $entityManager;
+    protected ObjectManager $entityManager;
     protected ObjectConstructorInterface $fallbackConstructor;
 
     /**
-     * @param EntityManagerInterface     $entityManager
+     * @param ObjectManager $entityManager
      * @param ObjectConstructorInterface $fallbackConstructor
      */
-    public function __construct(EntityManagerInterface $entityManager, ObjectConstructorInterface $fallbackConstructor)
+    public function __construct(ObjectManager $entityManager, ObjectConstructorInterface $fallbackConstructor)
     {
         $this->entityManager = $entityManager;
         $this->fallbackConstructor = $fallbackConstructor;

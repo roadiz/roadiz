@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -22,21 +23,21 @@ class SolariumFactory implements SolariumFactoryInterface
     protected HandlerFactoryInterface $handlerFactory;
 
     /**
-     * @param Client|null              $solr
-     * @param LoggerInterface          $logger
-     * @param MarkdownInterface        $markdown
+     * @param Client|null $solr
+     * @param LoggerInterface|null $logger
+     * @param MarkdownInterface $markdown
      * @param EventDispatcherInterface $dispatcher
-     * @param HandlerFactoryInterface  $handlerFactory
+     * @param HandlerFactoryInterface $handlerFactory
      */
     public function __construct(
         ?Client $solr,
-        LoggerInterface $logger,
+        ?LoggerInterface $logger,
         MarkdownInterface $markdown,
         EventDispatcherInterface $dispatcher,
         HandlerFactoryInterface $handlerFactory
     ) {
         $this->solr = $solr;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->markdown = $markdown;
         $this->dispatcher = $dispatcher;
         $this->handlerFactory = $handlerFactory;

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="zh-CN">
+    <body>
+      <trans-unit xml:space="preserve" id="webhooks">
+                <source>webhooks</source>
+                <target state="translated">Webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.webhooks">
+                <source>manage.webhooks</source>
+                <target state="translated">Webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.webhook">
+                <source>add.a.webhook</source>
+                <target state="translated">添加 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.webhooks">
+                <source>back_to.webhooks</source>
+                <target state="translated">回到 webhook 列表</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.webhook.%name%">
+                <source>delete.webhook.%name%</source>
+                <target state="translated">删除此 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.webhook.%name%">
+                <source>edit.webhook.%name%</source>
+                <target state="translated">编辑此 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
+                <source>are_you_sure.delete.webhook</source>
+                <target state="translated">您确定要删除此 webhook 吗？</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.messageType">
+                <source>webhooks.messageType</source>
+                <target state="translated">Webhook 类型</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.uri">
+                <source>webhooks.uri</source>
+                <target state="translated">URI</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
+                <source>webhooks.lastTriggeredAt</source>
+                <target state="translated">最后触发于</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.payload">
+                <source>webhooks.payload</source>
+                <target state="translated">Payload</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
+                <source>webhooks.throttleSeconds</source>
+                <target state="translated">节流 (Throttle)（以秒为单位）</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="never">
+                <source>never</source>
+                <target state="translated">从不</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.gitlab_pipeline">
+                <source>webhook.type.gitlab_pipeline</source>
+                <target state="translated">Gitlab CI Pipeline</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
+                <source>webhook.type.netlify_build_hook</source>
+                <target state="translated">Netlify Build hook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.trigger">
+                <source>webhook.trigger</source>
+                <target state="translated">触发 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.trigger.webhook">
+                <source>are_you_sure.trigger.webhook</source>
+                <target state="translated">您确定要手动触发此 webhook 吗？</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="trigger.webhook.%name%">
+                <source>trigger.webhook.%name%</source>
+                <target state="translated">手动触发 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.automatic">
+                <source>webhooks.automatic</source>
+                <target state="translated">自动触发器</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
+                <source>webhook.too_many_triggered_in_period</source>
+                <target state="translated">在再次触发此 webhook 前，请等待至少30秒。</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

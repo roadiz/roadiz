@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TagTranslationDocumentsTransformer;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\TagTranslationDocuments;
@@ -19,17 +19,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TagTranslationDocumentType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -43,7 +40,7 @@ class TagTranslationDocumentType extends AbstractType
             [$this, 'onPostSubmit']
         );
         $builder->addModelTransformer(new TagTranslationDocumentsTransformer(
-            $this->entityManager,
+            $this->managerRegistry->getManagerForClass(TagTranslationDocuments::class),
             $options['tagTranslation']
         ));
     }
@@ -88,7 +85,7 @@ class TagTranslationDocumentType extends AbstractType
     public function onPostSubmit(FormEvent $event)
     {
         if ($event->getForm()->getConfig()->getOption('tagTranslation') instanceof TagTranslation) {
-            $qb = $this->entityManager
+            $qb = $this->managerRegistry
                 ->getRepository(TagTranslationDocuments::class)
                 ->createQueryBuilder('ttd');
             $qb->delete()

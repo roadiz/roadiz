@@ -18,38 +18,20 @@ use Twig\TwigFilter;
  */
 class UrlExtension extends AbstractExtension
 {
-    /**
-     * @var bool
-     */
-    protected $forceLocale;
-    /**
-     * @var CacheProvider|null
-     */
-    protected $cacheProvider;
-    /**
-     * @var DocumentUrlGeneratorInterface
-     */
-    protected $documentUrlGenerator;
-    /**
-     * @var bool
-     */
-    private $throwExceptions;
+    protected ?CacheProvider $cacheProvider;
+    protected DocumentUrlGeneratorInterface $documentUrlGenerator;
+    private bool $throwExceptions;
 
     /**
-     * UrlExtension constructor.
-     *
      * @param DocumentUrlGeneratorInterface $documentUrlGenerator
      * @param CacheProvider|null            $cacheProvider
-     * @param bool                          $forceLocale
      * @param bool                          $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
     public function __construct(
         DocumentUrlGeneratorInterface $documentUrlGenerator,
         CacheProvider $cacheProvider = null,
-        $forceLocale = false,
-        $throwExceptions = false
+        bool $throwExceptions = false
     ) {
-        $this->forceLocale = $forceLocale;
         $this->cacheProvider = $cacheProvider;
         $this->throwExceptions = $throwExceptions;
         $this->documentUrlGenerator = $documentUrlGenerator;
@@ -72,7 +54,7 @@ class UrlExtension extends AbstractExtension
      * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
-    public function getCacheKey(NodesSources $ns, $absolute = false, $canonicalScheme = '')
+    public function getCacheKey(NodesSources $ns, bool $absolute = false, string $canonicalScheme = '')
     {
         return ($ns->getId() . "_" . (int) $absolute . "_" . $canonicalScheme);
     }

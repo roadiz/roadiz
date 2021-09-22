@@ -83,7 +83,7 @@ class EmailManager
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function renderHtmlEmailBody()
+    public function renderHtmlEmailBody(): string
     {
         return $this->templating->render($this->getEmailTemplate(), $this->assignation);
     }
@@ -94,7 +94,7 @@ class EmailManager
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function renderHtmlEmailBodyWithCss()
+    public function renderHtmlEmailBodyWithCss(): string
     {
         if (null !== $this->getEmailStylesheet()) {
             $htmldoc = new InlineStyle($this->renderHtmlEmailBody());
@@ -111,7 +111,7 @@ class EmailManager
     /**
      * @return string
      */
-    public function renderPlainTextEmailBody()
+    public function renderPlainTextEmailBody(): string
     {
         return $this->templating->render($this->getEmailPlainTextTemplate(), $this->assignation);
     }
@@ -144,7 +144,7 @@ class EmailManager
     /**
      * @return Swift_Message
      */
-    public function createMessage()
+    public function createMessage(): Swift_Message
     {
         $this->appendWebsiteIcon();
 
@@ -196,7 +196,7 @@ class EmailManager
     /**
      * @return null|string
      */
-    public function getSubject()
+    public function getSubject(): ?string
     {
         return null !== $this->subject ? trim(strip_tags($this->subject)) : null;
     }
@@ -205,7 +205,7 @@ class EmailManager
      * @param null|string $subject
      * @return EmailManager
      */
-    public function setSubject($subject)
+    public function setSubject(?string $subject)
     {
         $this->subject = $subject;
         return $this;
@@ -214,7 +214,7 @@ class EmailManager
     /**
      * @return null|string
      */
-    public function getEmailTitle()
+    public function getEmailTitle(): ?string
     {
         return null !== $this->emailTitle ? trim(strip_tags($this->emailTitle)) : null;
     }
@@ -223,7 +223,7 @@ class EmailManager
      * @param null|string $emailTitle
      * @return EmailManager
      */
-    public function setEmailTitle($emailTitle)
+    public function setEmailTitle(?string $emailTitle)
     {
         $this->emailTitle = $emailTitle;
         return $this;
@@ -244,7 +244,7 @@ class EmailManager
      *
      * @return null|string
      */
-    public function getReceiverEmail()
+    public function getReceiverEmail(): ?string
     {
         if (is_array($this->receiver) && count($this->receiver) > 0) {
             $emails = array_keys($this->receiver);
@@ -291,7 +291,7 @@ class EmailManager
      *
      * This email will be used as ReplyTo: and ReturnPath:
      *
-     * @return null|string
+     * @return null|string|array
      */
     public function getSender()
     {
@@ -303,7 +303,7 @@ class EmailManager
      *
      * @return null|string
      */
-    public function getSenderEmail()
+    public function getSenderEmail(): ?string
     {
         if (is_array($this->sender) && count($this->sender) > 0) {
             $emails = array_keys($this->sender);
@@ -342,7 +342,7 @@ class EmailManager
     /**
      * @return string
      */
-    public function getSuccessMessage()
+    public function getSuccessMessage(): string
     {
         return $this->successMessage;
     }
@@ -351,7 +351,7 @@ class EmailManager
      * @param string $successMessage
      * @return EmailManager
      */
-    public function setSuccessMessage($successMessage)
+    public function setSuccessMessage(string $successMessage)
     {
         $this->successMessage = $successMessage;
         return $this;
@@ -360,7 +360,7 @@ class EmailManager
     /**
      * @return string
      */
-    public function getFailMessage()
+    public function getFailMessage(): string
     {
         return $this->failMessage;
     }
@@ -369,7 +369,7 @@ class EmailManager
      * @param string $failMessage
      * @return EmailManager
      */
-    public function setFailMessage($failMessage)
+    public function setFailMessage(string $failMessage)
     {
         $this->failMessage = $failMessage;
         return $this;
@@ -378,7 +378,7 @@ class EmailManager
     /**
      * @return TranslatorInterface
      */
-    public function getTranslator()
+    public function getTranslator(): TranslatorInterface
     {
         return $this->translator;
     }
@@ -387,7 +387,7 @@ class EmailManager
      * @param TranslatorInterface $translator
      * @return EmailManager
      */
-    public function setTranslator($translator)
+    public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
         return $this;
@@ -396,7 +396,7 @@ class EmailManager
     /**
      * @return Environment
      */
-    public function getTemplating()
+    public function getTemplating(): Environment
     {
         return $this->templating;
     }
@@ -414,7 +414,7 @@ class EmailManager
     /**
      * @return Swift_Mailer
      */
-    public function getMailer()
+    public function getMailer(): Swift_Mailer
     {
         return $this->mailer;
     }
@@ -423,7 +423,7 @@ class EmailManager
      * @param Swift_Mailer $mailer
      * @return EmailManager
      */
-    public function setMailer($mailer)
+    public function setMailer(Swift_Mailer $mailer)
     {
         $this->mailer = $mailer;
         return $this;
@@ -432,7 +432,7 @@ class EmailManager
     /**
      * @return string|null
      */
-    public function getEmailTemplate()
+    public function getEmailTemplate(): ?string
     {
         return $this->emailTemplate;
     }
@@ -441,7 +441,7 @@ class EmailManager
      * @param string|null $emailTemplate
      * @return EmailManager
      */
-    public function setEmailTemplate($emailTemplate = null)
+    public function setEmailTemplate(?string $emailTemplate = null)
     {
         $this->emailTemplate = $emailTemplate;
         return $this;
@@ -450,7 +450,7 @@ class EmailManager
     /**
      * @return string|null
      */
-    public function getEmailPlainTextTemplate()
+    public function getEmailPlainTextTemplate(): ?string
     {
         return $this->emailPlainTextTemplate;
     }
@@ -459,7 +459,7 @@ class EmailManager
      * @param string|null $emailPlainTextTemplate
      * @return EmailManager
      */
-    public function setEmailPlainTextTemplate($emailPlainTextTemplate = null)
+    public function setEmailPlainTextTemplate(?string $emailPlainTextTemplate = null)
     {
         $this->emailPlainTextTemplate = $emailPlainTextTemplate;
         return $this;
@@ -468,7 +468,7 @@ class EmailManager
     /**
      * @return string|null
      */
-    public function getEmailStylesheet()
+    public function getEmailStylesheet(): ?string
     {
         return $this->emailStylesheet;
     }
@@ -477,7 +477,7 @@ class EmailManager
      * @param string|null $emailStylesheet
      * @return EmailManager
      */
-    public function setEmailStylesheet($emailStylesheet = null)
+    public function setEmailStylesheet(?string $emailStylesheet = null)
     {
         $this->emailStylesheet = $emailStylesheet;
         return $this;
@@ -486,7 +486,7 @@ class EmailManager
     /**
      * @return Request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }
@@ -495,21 +495,21 @@ class EmailManager
      * @param Request $request
      * @return EmailManager
      */
-    public function setRequest($request)
+    public function setRequest(Request $request)
     {
         $this->request = $request;
         return $this;
     }
 
     /**
-     * Origin is the real From enveloppe.
+     * Origin is the real From envelop.
      *
      * This must be an email address with a know
      * domain name to be validated on your SMTP server.
      *
      * @return null|string
      */
-    public function getOrigin()
+    public function getOrigin(): ?string
     {
         $defaultSender = 'origin@roadiz.io';
         if (null !== $this->settingsBag && $this->settingsBag->get('email_sender')) {
@@ -522,7 +522,7 @@ class EmailManager
      * @param string $origin
      * @return EmailManager
      */
-    public function setOrigin($origin)
+    public function setOrigin(string $origin)
     {
         if (false === filter_var($origin, FILTER_VALIDATE_EMAIL)) {
             throw new \InvalidArgumentException("Origin must be a valid email address.", 1);
@@ -535,7 +535,7 @@ class EmailManager
     /**
      * @return array
      */
-    public function getAssignation()
+    public function getAssignation(): array
     {
         return $this->assignation;
     }
@@ -544,7 +544,7 @@ class EmailManager
      * @param array $assignation
      * @return EmailManager
      */
-    public function setAssignation($assignation)
+    public function setAssignation(array $assignation)
     {
         $this->assignation = $assignation;
         return $this;
@@ -553,7 +553,7 @@ class EmailManager
     /**
      * @return null|string
      */
-    public function getEmailType()
+    public function getEmailType(): ?string
     {
         return $this->emailType;
     }
@@ -563,7 +563,7 @@ class EmailManager
      *
      * @return EmailManager
      */
-    public function setEmailType($emailType)
+    public function setEmailType(?string $emailType)
     {
         $this->emailType = $emailType;
         return $this;

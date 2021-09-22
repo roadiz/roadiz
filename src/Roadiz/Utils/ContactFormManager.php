@@ -136,7 +136,7 @@ class ContactFormManager extends EmailManager
     /**
      * @return FormInterface
      */
-    public function getForm()
+    public function getForm(): FormInterface
     {
         return $this->form;
     }
@@ -165,12 +165,12 @@ class ContactFormManager extends EmailManager
     }
 
     /**
-     * Adds a email, name and message fields with their constraints.
+     * Adds email, name and message fields with their constraints.
      *
      * @param bool $useHoneypot
      * @return ContactFormManager $this
      */
-    public function withDefaultFields($useHoneypot = true)
+    public function withDefaultFields(bool $useHoneypot = true)
     {
         $this->getFormBuilder()->add('email', EmailType::class, [
                 'label' => 'your.email',
@@ -212,7 +212,7 @@ class ContactFormManager extends EmailManager
      * @param string $honeypotName
      * @return $this
      */
-    public function withHoneypot($honeypotName = 'eml')
+    public function withHoneypot(string $honeypotName = 'eml')
     {
         $this->getFormBuilder()->add($honeypotName, HoneypotType::class);
         return $this;
@@ -224,7 +224,7 @@ class ContactFormManager extends EmailManager
      * @param string $consentDescription
      * @return $this
      */
-    public function withUserConsent($consentDescription = 'contact_form.user_consent')
+    public function withUserConsent(string $consentDescription = 'contact_form.user_consent')
     {
         $this->getFormBuilder()->add('consent', CheckboxType::class, [
             'label' => $consentDescription,
@@ -241,7 +241,7 @@ class ContactFormManager extends EmailManager
     /**
      * @return FormBuilderInterface
      */
-    public function getFormBuilder()
+    public function getFormBuilder(): FormBuilderInterface
     {
         if (null === $this->formBuilder) {
             $this->formBuilder = $this->formFactory
@@ -300,8 +300,9 @@ class ContactFormManager extends EmailManager
      * Handle custom form validation and send it as an email.
      *
      * @return Response|null
+     * @throws \Exception
      */
-    public function handle()
+    public function handle(): ?Response
     {
         $this->form = $this->getFormBuilder()->getForm();
         $this->form->handleRequest($this->request);
@@ -472,14 +473,14 @@ class ContactFormManager extends EmailManager
             ];
         }
         /*
-         *  Date
+         * Date
          */
         $fields[] = [
             'name' => $this->translator->trans('date'),
             'value' => (new \DateTime())->format('Y-m-d H:i:s'),
         ];
         /*
-         *  IP
+         * IP
          */
         $fields[] = [
             'name' => $this->translator->trans('ip.address'),
@@ -582,9 +583,9 @@ class ContactFormManager extends EmailManager
     /**
      * Gets the value of redirectUrl.
      *
-     * @return string
+     * @return string|null
      */
-    public function getRedirectUrl()
+    public function getRedirectUrl(): ?string
     {
         return $this->redirectUrl;
     }
@@ -592,11 +593,11 @@ class ContactFormManager extends EmailManager
     /**
      * Sets the value of redirectUrl.
      *
-     * @param string $redirectUrl the redirect url
+     * @param string|null $redirectUrl Redirect url
      *
      * @return self
      */
-    public function setRedirectUrl($redirectUrl)
+    public function setRedirectUrl(?string $redirectUrl)
     {
         $this->redirectUrl = $redirectUrl;
 

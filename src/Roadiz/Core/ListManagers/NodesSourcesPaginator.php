@@ -13,7 +13,7 @@ class NodesSourcesPaginator extends Paginator
     /**
      * {@inheritdoc}
      */
-    public function getTotalCount()
+    public function getTotalCount(): int
     {
         if (null === $this->totalCount) {
             if (null !== $this->searchPattern) {
@@ -34,7 +34,7 @@ class NodesSourcesPaginator extends Paginator
      *
      * @return array
      */
-    public function findByAtPage(array $order = [], $page = 1)
+    public function findByAtPage(array $order = [], int $page = 1)
     {
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);

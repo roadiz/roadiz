@@ -5,6 +5,7 @@ namespace Themes\Install\Controllers;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Config\DotEnvConfigurationHandler;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
@@ -226,7 +227,7 @@ class DatabaseController extends InstallApp
      */
     public function clearDoctrineCacheAction(Request $request)
     {
-        $doctrineClearer = new DoctrineCacheClearer($this->get('em'), $this->get('kernel'));
+        $doctrineClearer = new DoctrineCacheClearer($this->get(ManagerRegistry::class), $this->get('kernel'));
         $doctrineClearer->clear();
 
         return new JsonResponse(['status' => true]);

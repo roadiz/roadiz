@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Event\AttributeValueIndexingSubscriber;
@@ -33,10 +34,10 @@ class AttributesServiceProvider implements ServiceProviderInterface
             return new AttributeDocumentType($c['em']);
         };
         $container[AttributeTranslationType::class] = function (Container $c) {
-            return new AttributeTranslationType($c['em']);
+            return new AttributeTranslationType($c[ManagerRegistry::class]);
         };
         $container[AttributeGroupTranslationType::class] = function (Container $c) {
-            return new AttributeGroupTranslationType($c['em']);
+            return new AttributeGroupTranslationType($c[ManagerRegistry::class]);
         };
         $container[AttributeGroupsType::class] = function (Container $c) {
             return new AttributeGroupsType($c['em']);

@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * @package RZ\Roadiz\Core\SearchEngine
@@ -117,14 +117,14 @@ class NodeSourceSearchHandler extends AbstractSearchHandler implements NodeSourc
             if (is_array($nodeType) || $nodeType instanceof Collection) {
                 $orQuery = [];
                 foreach ($nodeType as $nodeType) {
-                    if ($nodeType instanceof NodeType) {
+                    if ($nodeType instanceof NodeTypeInterface) {
                         $orQuery[] = $nodeType->getName();
                     } else {
                         $orQuery[] = $nodeType;
                     }
                 }
                 $args["fq"][] = "node_type_s:(" . implode(' OR ', $orQuery) . ')';
-            } elseif ($nodeType instanceof NodeType) {
+            } elseif ($nodeType instanceof NodeTypeInterface) {
                 $args["fq"][] = "node_type_s:" . $nodeType->getName();
             } else {
                 $args["fq"][] = "node_type_s:" . $nodeType;
@@ -201,7 +201,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler implements NodeSourc
         /*
          * Filter by translation or locale
          */
-        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
+        if (isset($args['translation']) && $args['translation'] instanceof TranslationInterface) {
             $args["fq"][] = "locale_s:" . $args['translation']->getLocale();
         }
         if (isset($args['locale']) && is_string($args['locale'])) {

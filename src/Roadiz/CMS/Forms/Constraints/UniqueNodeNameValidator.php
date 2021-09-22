@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -13,17 +13,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueNodeNameValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -56,7 +53,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
      */
     protected function urlAliasExists($name)
     {
-        return (boolean) $this->entityManager->getRepository(UrlAlias::class)->exists($name);
+        return (boolean) $this->managerRegistry->getRepository(UrlAlias::class)->exists($name);
     }
 
     /**
@@ -68,7 +65,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
     protected function nodeNameExists($name)
     {
         /** @var NodeRepository $nodeRepo */
-        $nodeRepo = $this->entityManager->getRepository(Node::class);
+        $nodeRepo = $this->managerRegistry->getRepository(Node::class);
         $nodeRepo->setDisplayingNotPublishedNodes(true);
         return (boolean) $nodeRepo->exists($name);
     }

@@ -14,13 +14,9 @@ class Configuration implements ConfigurationInterface
     const INHERITANCE_TYPE_JOINED = 'joined';
     const INHERITANCE_TYPE_SINGLE_TABLE = 'single_table';
 
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
+    protected KernelInterface $kernel;
 
     /**
-     * Configuration constructor.
      * @param KernelInterface $kernel
      */
     public function __construct(KernelInterface $kernel)
@@ -37,6 +33,9 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('appNamespace')
                 ->defaultValue('roadiz_app')
+            ->end()
+            ->scalarNode('staticDomainName')
+                ->defaultValue(null)
             ->end()
             ->scalarNode('timezone')
                 ->defaultValue('Europe/Paris')
@@ -194,6 +193,7 @@ EOD
             ->append($this->addReverseProxyCacheNode())
             ->append($this->addThemesNode())
             ->append($this->addInheritanceNode())
+            ->append($this->addMessengerNode())
         ;
         return $builder;
     }
@@ -366,21 +366,60 @@ EOD
                 ->arrayNode('cloudflare')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('version')
-                            ->defaultValue('v4')
-                        ->end()
-                        ->scalarNode('zone')
-                            ->isRequired()
-                        ->end()
-                        ->scalarNode('bearer')->end()
-                        ->scalarNode('email')->end()
-                        ->scalarNode('key')->end()
-                        ->scalarNode('timeout')
-                            ->defaultValue(3)
-                        ->end()
+                        ->scalarNode('version')->defaultValue('v4')->end()
+                        ->scalarNode('zone')->defaultNull()->end()
+                        ->scalarNode('bearer')->defaultNull()->end()
+                        ->scalarNode('email')->defaultNull()->end()
+                        ->scalarNode('key')->defaultNull()->end()
+                        ->scalarNode('timeout')->defaultValue(3)->end()
                     ->end()
                 ->end()
             ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addMessengerNode()
+    {
+        $builder = new TreeBuilder('messenger');
+        $node = $builder->getRootNode()->addDefaultsIfNotSet();
+
+        $node->children()
+            ->scalarNode('failure_transport')
+                ->defaultValue('failed_default')
+            ->end()
+            ->arrayNode('transports')
+                ->useAttributeAsKey('name')
+                ->defaultValue([
+                    'default' => [
+                        'dsn' => 'sync://',
+                        'options' => []
+                    ],
+                    'failed_default' => [
+                        'dsn' => 'doctrine://default?queue_name=failed_default',
+                        'options' => []
+                    ]
+                ])
+                ->prototype('array')
+                ->children()
+                    ->scalarNode('dsn')
+                        ->isRequired()
+                    ->end()
+                    ->arrayNode('options')
+                    ->end()
+                ->end()
+            ->end()->end()
+            ->arrayNode('routing')
+                ->useAttributeAsKey('name')
+                ->prototype('scalar')
+                    ->cannotBeEmpty()
+                    ->info('Map message names to a transport')
+                ->end()
+            ->end()
+        ->end();
 
         return $node;
     }

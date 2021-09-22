@@ -34,12 +34,12 @@ class ImportController extends AppController
     /**
      * @param string  $classImporter
      * @param Request $request
-     * @param int|null    $themeId
+     * @param int|null $themeId
      *
      * @return Response
      * @throws \ReflectionException
      */
-    protected function genericImportAction(string $classImporter, Request $request, $themeId = null)
+    protected function genericImportAction(string $classImporter, Request $request, ?int $themeId = null)
     {
         $this->validateAccess();
 
@@ -80,7 +80,7 @@ class ImportController extends AppController
      * @return Response
      * @throws \ReflectionException
      */
-    public function importSettingsAction(Request $request, $themeId = null)
+    public function importSettingsAction(Request $request, ?int $themeId = null)
     {
         return $this->genericImportAction(
             SettingsImporter::class,
@@ -97,7 +97,7 @@ class ImportController extends AppController
      *
      * @return Response
      */
-    public function importRolesAction(Request $request, $themeId = null)
+    public function importRolesAction(Request $request, ?int $themeId = null)
     {
         return $this->genericImportAction(
             RolesImporter::class,
@@ -114,7 +114,7 @@ class ImportController extends AppController
      *
      * @return Response
      */
-    public function importGroupsAction(Request $request, $themeId = null)
+    public function importGroupsAction(Request $request, ?int $themeId = null)
     {
         return $this->genericImportAction(
             GroupsImporter::class,
@@ -131,7 +131,7 @@ class ImportController extends AppController
      *
      * @return Response
      */
-    public function importNodeTypesAction(Request $request, $themeId = null)
+    public function importNodeTypesAction(Request $request, ?int $themeId = null)
     {
         return $this->genericImportAction(
             NodeTypesImporter::class,
@@ -148,7 +148,7 @@ class ImportController extends AppController
      *
      * @return Response
      */
-    public function importTagsAction(Request $request, $themeId = null)
+    public function importTagsAction(Request $request, ?int $themeId = null)
     {
         return $this->genericImportAction(
             TagsImporter::class,
@@ -161,11 +161,11 @@ class ImportController extends AppController
      * Import Attributes file.
      *
      * @param Request $request
-     * @param int|null     $themeId
+     * @param int|null $themeId
      *
      * @return Response
      */
-    public function importAttributesAction(Request $request, $themeId = null)
+    public function importAttributesAction(Request $request, ?int $themeId = null)
     {
         return $this->genericImportAction(
             AttributeImporter::class,
@@ -178,11 +178,11 @@ class ImportController extends AppController
      * Import Nodes file.
      *
      * @param Request $request
-     * @param int|null     $themeId
+     * @param int|null $themeId
      *
      * @return Response
      */
-    public function importNodesAction(Request $request, $themeId = null)
+    public function importNodesAction(Request $request, ?int $themeId = null)
     {
         return $this->genericImportAction(
             NodesImporter::class,
@@ -196,11 +196,11 @@ class ImportController extends AppController
      *
      * @param string $pathFile
      * @param string $classImporter
-     * @param int|null    $themeId
+     * @param int|null $themeId
      *
      * @return Response
      */
-    protected function importContent(string $pathFile, string $classImporter, $themeId)
+    protected function importContent(string $pathFile, string $classImporter, ?int $themeId)
     {
         $data = [];
         $data['status'] = false;

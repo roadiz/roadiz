@@ -1,6 +1,7 @@
 ---
 appNamespace: '%env(string:APP_NAMESPACE)%'
 timezone: '%env(string:APP_TIMEZONE)%'
+staticDomainName: '%env(string:APP_STATIC_DOMAIN_NAME)%'
 doctrine:
     driver: "pdo_mysql"
     host: '%env(string:MYSQL_HOST)%'
@@ -106,3 +107,23 @@ assetsProcessing:
 #            type: sentry
 #            level: WARNING
 #            url: '%env(string:APP_SENTRY_DSN)%'
+
+#
+# Messenger non-default configuration
+#
+#messenger:
+#    failure_transport: 'failed_default'
+#    transports:
+#        default:
+#            dsn: '%env(string:APP_MESSENGER_DEFAULT_TRANSPORT_DSN)%'
+#            dsn: sync://
+#            dsn: doctrine://default
+#            options: []
+#        async:
+#            dsn: 'doctrine://default?queue_name=async'
+#            options: []
+#        failed_default:
+#            dsn: 'doctrine://default?queue_name=failed_default'
+#            options: []
+#    routing:
+#        RZ\Roadiz\Message\AsyncMessage: async

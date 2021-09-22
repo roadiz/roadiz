@@ -25,7 +25,7 @@ use RZ\Roadiz\Core\Serializers\ObjectConstructor\SettingGroupObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\SettingObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TagObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TranslationObjectConstructor;
-use RZ\Roadiz\Utils\CustomForm\CustormFormAnswerSerializer;
+use RZ\Roadiz\Utils\CustomForm\CustomFormAnswerSerializer;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class SerializationServiceProvider implements ServiceProviderInterface
@@ -120,8 +120,8 @@ class SerializationServiceProvider implements ServiceProviderInterface
             return $c[SerializerBuilder::class]->build();
         };
 
-        $container[CustormFormAnswerSerializer::class] = function (Container $c) {
-            return new CustormFormAnswerSerializer($c['router']);
+        $container[CustomFormAnswerSerializer::class] = function (Container $c) {
+            return new CustomFormAnswerSerializer($c['router']);
         };
     }
 }

@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Traits;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\FormInterface;
 
 trait LoginResetTrait
 {
     /**
-     * @param EntityManager $entityManager
+     * @param ObjectManager $entityManager
      * @param string $token
      * @return null|User
      */
-    public function getUserByToken(EntityManager $entityManager, string $token)
+    public function getUserByToken(ObjectManager $entityManager, string $token)
     {
         /** @var User $user */
         return $entityManager->getRepository(User::class)
@@ -24,13 +24,11 @@ trait LoginResetTrait
     /**
      * @param FormInterface $form
      * @param User          $user
-     * @param EntityManager $entityManager
+     * @param ObjectManager $entityManager
      *
      * @return bool
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function updateUserPassword(FormInterface $form, User $user, EntityManager $entityManager)
+    public function updateUserPassword(FormInterface $form, User $user, ObjectManager $entityManager)
     {
         $user->setConfirmationToken(null);
         $user->setPasswordRequestedAt(null);

@@ -29,10 +29,13 @@ ngrok:
 test:
 	php -d "memory_limit=-1" bin/phpcs --report=full --report-file=./report.txt -p ./
 	php -d "memory_limit=-1" bin/phpstan analyse -c phpstan.neon -l 4 src
-	php -d "memory_limit=-1" bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install themes/DefaultTheme
+	php -d "memory_limit=-1" bin/phpstan analyse -c phpstan.neon -l 3 themes/Install themes/DefaultTheme
 	php -d "memory_limit=-1" bin/roadiz lint:twig
 	php -d "memory_limit=-1" bin/roadiz lint:twig themes/Install/Resources/views
-	php -d "memory_limit=-1" bin/roadiz lint:twig themes/Rozier/Resources/views
+	php -d "memory_limit=-1" bin/roadiz lint:twig vendor/roadiz/rozier/src/Resources/views
+
+test-rozier:
+	php -d "memory_limit=-1" bin/roadiz lint:twig vendor/roadiz/rozier/src/Resources/views
 
 unit:
 	php -d "memory_limit=-1" bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src tests/

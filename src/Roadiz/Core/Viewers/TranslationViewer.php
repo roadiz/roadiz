@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ManagerRegistry;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -14,33 +15,33 @@ use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 final class TranslationViewer
 {
     private ParameterBag $settingsBag;
-    private EntityManager $entityManager;
+    private ManagerRegistry $managerRegistry;
     private RouterInterface $router;
     private PreviewResolverInterface $previewResolver;
-    private ?Translation $translation = null;
+    private ?TranslationInterface $translation = null;
 
     /**
-     * @param EntityManager $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param ParameterBag $settingsBag
      * @param RouterInterface $router
      * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
-        EntityManager $entityManager,
+        ManagerRegistry $managerRegistry,
         ParameterBag $settingsBag,
         RouterInterface $router,
         PreviewResolverInterface $previewResolver
     ) {
         $this->settingsBag = $settingsBag;
-        $this->entityManager = $entityManager;
         $this->router = $router;
         $this->previewResolver = $previewResolver;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -48,7 +49,7 @@ final class TranslationViewer
      */
     public function getRepository(): TranslationRepository
     {
-        return $this->entityManager->getRepository(Translation::class);
+        return $this->managerRegistry->getRepository(Translation::class);
     }
 
     /**
@@ -84,12 +85,12 @@ final class TranslationViewer
      *             'translation' => string 'Spanish'
      *
      * @param Request $request
-     * @param boolean $absolute Generate absolute url or relative paths
+     * @param bool $absolute Generate absolute url or relative paths
      *
      * @return array
      * @throws ORMException
      */
-    public function getTranslationMenuAssignation(Request $request, $absolute = false): array
+    public function getTranslationMenuAssignation(Request $request, bool $absolute = false): array
     {
         $attr = $request->attributes->all();
         $query = $request->query->all();
@@ -102,11 +103,11 @@ final class TranslationViewer
         /*
          * Fix absolute boolean to Int constant.
          */
-        $absolute = $absolute ? Router::ABSOLUTE_URL : Router::ABSOLUTE_PATH;
+        $absolute = $absolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
 
         if (key_exists('node', $attr) && $attr['node'] instanceof Node) {
             $node = $attr["node"];
-            $this->entityManager->refresh($node);
+            $this->managerRegistry->getManagerForClass(Node::class)->refresh($node);
         } else {
             $node = null;
         }
@@ -204,7 +205,7 @@ final class TranslationViewer
                 }
             } elseif ($node) {
                 $nodesSources = $node->getNodeSourcesByTranslation($translation)->first() ?: null;
-                if (null !== $nodesSources && $nodesSources instanceof NodesSources) {
+                if ($nodesSources instanceof NodesSources) {
                     $url = $this->router->generate(
                         RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
                         array_merge($query, [
@@ -220,7 +221,7 @@ final class TranslationViewer
                     'name' => $name,
                     'url' => $url,
                     'locale' => $translation->getPreferredLocale(),
-                    'active' => $this->translation->getPreferredLocale() == $translation->getPreferredLocale(),
+                    'active' => $this->translation->getPreferredLocale() === $translation->getPreferredLocale(),
                     'translation' => $translation->getName(),
                 ];
             }
@@ -229,18 +230,18 @@ final class TranslationViewer
     }
 
     /**
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
-    public function getTranslation(): ?Translation
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }
 
     /**
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @return TranslationViewer
      */
-    public function setTranslation(?Translation $translation)
+    public function setTranslation(?TranslationInterface $translation)
     {
         $this->translation = $translation;
         return $this;

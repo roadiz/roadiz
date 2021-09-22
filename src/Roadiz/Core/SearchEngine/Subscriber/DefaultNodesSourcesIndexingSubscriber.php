@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\SearchEngine\Subscriber;
 
 use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
@@ -84,7 +85,9 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
          * Do not index locale and tags if this is a sub-resource
          */
         if (!$subResource) {
-            $collection[] = $title;
+            if ($this->canIndexTitleInCollection($nodeSource)) {
+                $collection[] = $title;
+            }
             /*
              * Index parent node ID and name to filter on it
              */
@@ -153,5 +156,24 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
         // Compile all text content into a single localized text field.
         $assoc['collection_txt_'.$lang] = implode(PHP_EOL, $collection);
         $event->setAssociations($assoc);
+    }
+
+    /**
+     * @param NodesSources $source
+     * @return bool
+     */
+    protected function canIndexTitleInCollection(NodesSources $source): bool
+    {
+        if (method_exists($source, 'getHideTitle')) {
+            return !((bool) $source->getHideTitle());
+        }
+        if (method_exists($source, 'getShowTitle')) {
+            return ((bool) $source->getShowTitle());
+        }
+
+        if (null !== $source->getNode() && null !== $source->getNode()->getNodeType()) {
+            return $source->getNode()->getNodeType()->isSearchable();
+        }
+        return true;
     }
 }

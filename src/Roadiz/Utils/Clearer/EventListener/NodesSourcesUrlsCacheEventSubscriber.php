@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Clearer\EventListener;
 
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -24,8 +25,14 @@ class NodesSourcesUrlsCacheEventSubscriber implements EventSubscriberInterface
      */
     public function onPurgeRequest(CachePurgeRequestEvent $event)
     {
+        $kernel = $event->getKernel();
+        if (!$kernel instanceof Kernel) {
+            return;
+        }
         try {
-            $clearer = new NodesSourcesUrlsCacheClearer($event->getKernel()->get('nodesSourcesUrlCacheProvider'));
+            $clearer = new NodesSourcesUrlsCacheClearer(
+                $kernel->get('nodesSourcesUrlCacheProvider')
+            );
             if (false !== $clearer->clear()) {
                 $event->addMessage($clearer->getOutput(), static::class, 'NodesSources URL cache');
             }

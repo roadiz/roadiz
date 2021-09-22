@@ -4,407 +4,435 @@
     <body>
       <trans-unit id="1">
         <source>Node name</source>
-        <target state="translated">Nama simpul</target>
+        <target state="translated">Nama</target>
       </trans-unit>
       <trans-unit id="2">
         <source>See tree</source>
-        <target state="translated">Melihat dasar</target>
+        <target state="translated">Lihat bagan pohon</target>
       </trans-unit>
       <trans-unit id="3">
         <source>_username</source>
-        <target state="translated">_nama pengguna</target>
+        <target state="translated">Nama Pengguna</target>
       </trans-unit>
       <trans-unit id="4">
         <source>_password</source>
-        <target state="translated">_kata sandi</target>
+        <target state="translated">Kata sandi</target>
       </trans-unit>
       <trans-unit id="password.verify">
         <source>password.verify</source>
-        <target state="translated">memeriksa kata sandi</target>
+        <target state="translated">Verifikasi kata sandi</target>
       </trans-unit>
       <trans-unit id="delete">
         <source>delete</source>
-        <target state="translated">hapus</target>
+        <target state="translated">Hapus</target>
       </trans-unit>
       <trans-unit id="status">
         <source>status</source>
-        <target state="translated">keadaan</target>
+        <target state="translated">Status</target>
       </trans-unit>
       <!-- Welcome -->
       <trans-unit id="welcome.title">
         <source>welcome.title</source>
-        <target state="translated">judul selamat datang</target>
+        <target state="translated">Pemasangan Roadiz</target>
       </trans-unit>
       <trans-unit id="welcome.subtitle">
         <source>welcome.subtitle</source>
-        <target state="translated">Selamat datang.judul tambahan</target>
+        <target state="translated">Wilujeng Sumping di Roadiz CMS!</target>
       </trans-unit>
       <trans-unit id="welcome.message">
         <source>welcome.message</source>
-        <target state="translated">selamat datang.pesan</target>
+        <target state="translated">&lt;p&gt;Berikut ini hanya sedikit konfigurasi sebelum membiarkan Anda mulai bermain. Kakak, ayo mulai!&lt;/p&gt;</target>
       </trans-unit>
       <!-- Requirements -->
       <trans-unit id="requirements.title">
         <source>requirements.title</source>
-        <target state="translated">judul persyaratan</target>
+        <target state="translated">Persyaratan</target>
       </trans-unit>
       <trans-unit id="requirements.message">
         <source>requirements.message</source>
-        <target state="translated">pesan persyaratan</target>
+        <target state="translated">&lt;p&gt;Untuk menggunakan Roadiz, server Anda membutuhkan beberapa persyaratan, terutama dengan PHP. Jika Anda memiliki akses ke berkas konfigurasi Anda (php.ini), Anda dapat memodifikasi beberapa pengaturannya.&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="requirements.spec">
         <source>requirements.spec</source>
-        <target state="translated">spesifik persyaratan</target>
+        <target state="translated">Spesifikasi</target>
       </trans-unit>
       <trans-unit id="requirements.requirement">
         <source>requirements.requirement</source>
-        <target state="translated">persyaratan.kebutuhan</target>
+        <target state="translated">Persyaratan</target>
       </trans-unit>
       <trans-unit id="requirements.actual_value">
         <source>requirements.actual_value</source>
-        <target state="translated">nilai rata-rata persyaratan</target>
+        <target state="translated">Nilai aktual</target>
       </trans-unit>
       <!-- Database -->
       <trans-unit id="database.title">
         <source>database.title</source>
-        <target state="translated">judul database</target>
+        <target state="translated">Database</target>
       </trans-unit>
       <trans-unit id="database.message">
         <source>database.message</source>
-        <target state="translated">pesan database</target>
+        <target state="translated">&lt;p&gt;Roadiz memerlukan database untuk menyimpan semua konten Anda. Anda dapat memilih driver database favorit Anda dan mengkonfigurasinya.&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="database.cannot_connect">
         <source>database.cannot_connect</source>
-        <target state="translated">database tidak bisa terhubung</target>
+        <target state="translated">Tidak dapat terhubung ke database</target>
       </trans-unit>
       <trans-unit id="database.build">
         <source>database.build</source>
-        <target state="translated">membangun database</target>
+        <target state="translated">Bangun database</target>
       </trans-unit>
       <!-- Database done -->
       <trans-unit id="database_done.title">
         <source>database_done.title</source>
-        <target state="translated">judul database selesai</target>
+        <target state="translated">Database dipasang</target>
       </trans-unit>
       <trans-unit id="database_done.message">
         <source>database_done.message</source>
-        <target state="translated">pesan database selesai</target>
+        <target state="translated">&lt;p&gt;Database Anda telah berhasil dipasang. Kami akan mengimpor konten dasar dan parameter untuk situs web Anda.&lt;/p&gt;</target>
       </trans-unit>
       <!-- Database fail -->
       <trans-unit id="database_fail.title">
         <source>database_fail.title</source>
-        <target state="translated">judul database gagal</target>
+        <target state="translated">Database tidak dapat dipasang</target>
       </trans-unit>
       <trans-unit id="database_fail.message">
         <source>database_fail.message</source>
-        <target state="translated">pesan database gagal</target>
+        <target state="translated">&lt;p&gt;Database Anda tidak dapat dipasang dikarenakan kesalahan berikut. Verifikasi kredensialase database Anda atau jika database telah diinstal sebelumnya.&lt;/p&gt;</target>
       </trans-unit>
       <!-- Import -->
       <trans-unit id="import.title">
         <source>import.title</source>
-        <target state="translated">judul masukan</target>
+        <target state="translated">Impor data bawaan</target>
       </trans-unit>
       <trans-unit id="import.message">
         <source>import.message</source>
-        <target state="translated">pesan masukan</target>
+        <target state="translated">&lt;p&gt;Mengimpor data bawaan untuk pengaturan, peran dan grup&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="import.step_name">
         <source>import.step_name</source>
-        <target state="translated">masukan nama langkah</target>
+        <target state="translated">Langkah</target>
       </trans-unit>
       <!-- User -->
       <trans-unit id="user.title">
         <source>user.title</source>
-        <target state="translated">judul pengguna</target>
+        <target state="translated">Buat pengguna</target>
       </trans-unit>
       <trans-unit id="user.message">
         <source>user.message</source>
-        <target state="translated">pesan pengguna</target>
+        <target state="translated">&lt;p&gt;Buat pengguna untuk mengakses ke kantor belakang.&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="user.create">
         <source>user.create</source>
-        <target state="translated">pengguna dibuat</target>
+        <target state="translated">Buat pengguna</target>
       </trans-unit>
       <trans-unit id="user.name">
         <source>user.name</source>
-        <target state="translated">nama pengguna</target>
+        <target state="translated">Nama pengguna</target>
       </trans-unit>
       <trans-unit id="user.email">
         <source>user.email</source>
-        <target state="translated">surel pengguna</target>
+        <target state="translated">Surel</target>
       </trans-unit>
       <trans-unit id="user.create_another">
         <source>user.create_another</source>
-        <target state="translated">membuat pengguna lain</target>
+        <target state="translated">Buat pengguna lain</target>
       </trans-unit>
       <!-- User summary -->
       <trans-unit id="user_summary.title">
         <source>user_summary.title</source>
-        <target state="translated">judul ringkasan pengguna</target>
+        <target state="translated">Pengguna dibuat</target>
       </trans-unit>
       <!-- Themes -->
       <trans-unit id="themes.title">
         <source>themes.title</source>
-        <target state="translated">tema judul</target>
+        <target state="translated">Informasi</target>
       </trans-unit>
       <trans-unit id="themes.message">
         <source>themes.message</source>
-        <target state="translated">tema pesan</target>
+        <target state="translated">&lt;p&gt;Masukkan informasi dasar tentang situs Anda&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="themes.save_informations">
         <source>themes.save_informations</source>
-        <target state="translated">menyimpan informasi tema</target>
+        <target state="translated">Simpan informasi</target>
       </trans-unit>
       <trans-unit id="themes.frontend.description">
         <source>themes.frontend.description</source>
-        <target state="translated">tema deskripsi paling depan</target>
+        <target state="translated">Anda dapat memasang beberapa tema bawaan dan konten ke situs Anda</target>
       </trans-unit>
       <!-- Import node type -->
       <trans-unit id="import_node_type.title">
         <source>import_node_type.title</source>
-        <target state="translated">masukkan jenis node judul</target>
+        <target state="translated">Mengimpor jenis node</target>
       </trans-unit>
       <trans-unit id="import_node_type.message">
         <source>import_node_type.message</source>
-        <target state="translated">masukkan jenis node pesan</target>
+        <target state="translated">Jenis node</target>
       </trans-unit>
       <trans-unit id="import_node_type.node_type">
         <source>import_node_type.node_type</source>
-        <target state="translated">masukkan jenis node</target>
+        <target state="translated">Mengimpor jenis node</target>
       </trans-unit>
       <trans-unit id="import_node_type.node">
         <source>import_node_type.node</source>
-        <target state="translated">masukkan jenis node</target>
+        <target state="translated">Jenis Node</target>
       </trans-unit>
       <trans-unit id="import_tags">
         <source>import_tags</source>
-        <target state="translated">masukkan penandaan</target>
+        <target state="translated">Tag</target>
       </trans-unit>
       <!-- Success -->
       <trans-unit id="success.title">
         <source>success.title</source>
-        <target state="translated">judul sukses</target>
+        <target state="translated">Berhasil</target>
       </trans-unit>
       <trans-unit id="success.message">
         <source>success.message</source>
-        <target state="translated">pesan sukses</target>
+        <target state="translated">&lt;p&gt;Roadiz telah berhasil dipasang ya Kakak!&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="success.quit_install">
         <source>success.quit_install</source>
-        <target state="translated">sukses berhenti memasang</target>
+        <target state="translated">Keluar dari pemasangan</target>
       </trans-unit>
       <!-- Goto -->
       <trans-unit id="goto.requirements">
         <source>goto.requirements</source>
-        <target state="translated">pergi ke persyaratan</target>
+        <target state="translated">Persyaratan</target>
       </trans-unit>
       <trans-unit id="goto.welcome">
         <source>goto.welcome</source>
-        <target state="translated">pergi ke selamat datang</target>
+        <target state="translated">Kembali ke Beranda</target>
       </trans-unit>
       <trans-unit id="goto.database">
         <source>goto.database</source>
-        <target state="translated">pergi ke database</target>
+        <target state="translated">Database</target>
       </trans-unit>
       <trans-unit id="goto.import">
         <source>goto.import</source>
-        <target state="translated">pergi ke masukkan</target>
+        <target state="translated">Impor</target>
       </trans-unit>
       <trans-unit id="goto.user">
         <source>goto.user</source>
-        <target state="translated">pergi ke pengguna</target>
+        <target state="translated">Pengguna</target>
       </trans-unit>
       <trans-unit id="goto.theme">
         <source>goto.theme</source>
-        <target state="translated">pergi ke tema</target>
+        <target state="translated">Tema</target>
       </trans-unit>
       <trans-unit id="goto.informations">
         <source>goto.informations</source>
-        <target state="translated">pergi ke informasi</target>
+        <target state="translated">Informasi</target>
       </trans-unit>
       <trans-unit id="skip.user.goto.theme">
         <source>skip.user.goto.theme</source>
-        <target state="translated">lewat pengguna pergi ke tema</target>
+        <target state="translated">Lewati</target>
       </trans-unit>
       <trans-unit id="skip.user.goto.done">
         <source>skip.user.goto.done</source>
-        <target state="translated">lewati pengguna untuk selesai</target>
+        <target state="translated">Ringkasan pengguna</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.import">
         <source>skip.database.goto.import</source>
-        <target state="translated">lewati database untuk ke masukan</target>
+        <target state="translated">Lewati</target>
       </trans-unit>
       <trans-unit id="choose.language">
         <source>choose.language</source>
-        <target state="translated">pilih bahasa</target>
+        <target state="translated">Pilih bahasa</target>
       </trans-unit>
       <trans-unit id="choose.a.language">
         <source>choose.a.language</source>
-        <target state="translated">pilih bahasa</target>
+        <target state="translated">Pilih bahasa utama Anda</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.theme">
         <source>skip.database.goto.theme</source>
-        <target state="translated">lewati database buka halaman tema</target>
+        <target state="translated">Lewati</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="theme.summary.title">
                 <source>theme.summary.title</source>
-                <target state="translated">judul ringkasan tema</target>
+                <target state="translated">Ringkasan Pengaturan Tema</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.version">
                 <source>check.version</source>
-                <target state="translated">periksa versi</target>
+                <target state="translated">Versi</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.name">
                 <source>theme.name</source>
-                <target state="translated">nama tema</target>
+                <target state="translated">Nama</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.version">
                 <source>theme.version</source>
-                <target state="translated">versi tema</target>
+                <target state="translated">Versi</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.version">
                 <source>cms.version</source>
-                <target state="translated">versi cms</target>
+                <target state="translated">Versi CMS</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.supportedLocale">
                 <source>theme.supportedLocale</source>
-                <target state="translated">tema yang didukung lokal</target>
+                <target state="translated">Lokal (bahasa) yang didukung</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.locale">
                 <source>cms.locale</source>
-                <target state="translated">lokal cms</target>
+                <target state="translated">Lokal (bahasa) CMS</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="name">
                 <source>name</source>
-                <target state="translated">nama</target>
+                <target state="translated">Nama</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="filename">
                 <source>filename</source>
-                <target state="translated">nama berkas</target>
+                <target state="translated">Nama berkas</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodetypes">
                 <source>nodetypes</source>
-                <target state="translated">tipe node</target>
+                <target state="translated">Jenis-node</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodes">
                 <source>nodes</source>
-                <target state="translated">node</target>
+                <target state="translated">Node</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install.theme">
                 <source>install.theme</source>
-                <target state="translated">memasang tema</target>
+                <target state="translated">Lakukan pemasangan tema</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import.theme.content.title">
                 <source>import.theme.content.title</source>
-                <target state="translated">masukkan konten judul tema</target>
+                <target state="translated">Impor tema konten</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="step.name">
                 <source>step.name</source>
-                <target state="translated">nama langkah</target>
+                <target state="translated">Langkah</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="goto.done">
                 <source>goto.done</source>
-                <target state="translated">pergi ke selesai</target>
+                <target state="translated">Selesai</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_roles">
                 <source>import_roles</source>
-                <target state="translated">peran impor</target>
+                <target state="translated">Peran</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_groups">
                 <source>import_groups</source>
-                <target state="translated">kelompok impor</target>
+                <target state="translated">Grup peran</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_settings">
                 <source>import_settings</source>
-                <target state="translated">pengaturan impor</target>
+                <target state="translated">Pengaturan</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.selector">
                 <source>theme.selector</source>
-                <target state="translated">pemilih tema</target>
+                <target state="translated">Tema yang tersedia</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.locale">
                 <source>check.locale</source>
-                <target state="translated">periksa lokal</target>
+                <target state="translated">Lokal (bahasa)</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.import.files">
                 <source>check.import.files</source>
-                <target state="translated">periksa berkas impor</target>
+                <target state="translated">Berkas untuk diimpor</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password.must_match">
                 <source>password.must_match</source>
-                <target state="translated">kata sandi harus sama dengan</target>
+                <target state="translated">Sandi harus sesuai</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="site_name">
                 <source>site_name</source>
-                <target state="translated">nama situs</target>
+                <target state="translated">Nama situs web Anda</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender">
                 <source>email_sender</source>
-                <target state="translated">pengirim surel</target>
+                <target state="translated">Email utama</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender_name">
                 <source>email_sender_name</source>
-                <target state="translated">nama pengirim surel</target>
+                <target state="translated">Nama akun email utama</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="meta_description">
                 <source>meta_description</source>
-                <target state="translated">deskripsi meta</target>
+                <target state="translated">Deskripsi SEO</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="timezone">
                 <source>timezone</source>
-                <target state="translated">zona waktu</target>
+                <target state="translated">Zona waktu</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install_theme">
                 <source>install_theme</source>
-                <target state="translated">memasang tema</target>
+                <target state="translated">Pasang sebuah tema?</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="driver">
                 <source>driver</source>
-                <target state="translated">menarik</target>
+                <target state="translated">Driver</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="host">
                 <source>host</source>
-                <target state="translated">tuan rumah</target>
+                <target state="translated">Host</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="port">
+                <source>port</source>
+                <target state="translated">Port</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="unix_socket">
                 <source>unix_socket</source>
-                <target state="translated">soket unix</target>
+                <target state="translated">Soket UNIX</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="path">
                 <source>path</source>
-                <target state="translated">garis edar</target>
+                <target state="translated">Path</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="user">
                 <source>user</source>
-                <target state="translated">pengguna</target>
+                <target state="translated">Nama pengguna</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password">
                 <source>password</source>
-                <target state="translated">kata sandi</target>
+                <target state="translated">Kata sandi</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="dbname">
                 <source>dbname</source>
-                <target state="translated">dbnama</target>
+                <target state="translated">Nama database</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.locale.message">
                 <source>error.locale.message</source>
-                <target state="translated">kesalahan pesan lokal</target>
+                <target state="translated">Lokal (bahasa) tema tidak ada di sistem Anda.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.modal.title">
                 <source>error.modal.title</source>
-                <target state="translated">kesalahan judul modal</target>
+                <target state="translated">Harap perbaiki masalah berikut sebelum memasang tema.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.version.message">
                 <source>error.version.message</source>
-                <target state="translated">kesalahan pesan versi</target>
+                <target state="translated">Tema ini membutuhkan sebuah versi Roadiz yang lebih baru.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="warning.theme.continue">
                 <source>warning.theme.continue</source>
-                <target state="translated">tema peringatan berlanjut</target>
+                <target state="translated">Anda dapat mengabaikan pesan ini dan tetap melanjutkan saja.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz">
                 <source>now_you_can_delete_install_file_and_use_roadiz</source>
-                <target state="translated">sekarang anda bisa menghapus berkasi dan menggunakan roadiz</target>
+                <target state="translated">Sekarang pemasangan Roadiz telah selesai. Anda dapat menghapus skrip install.php dari folder Roadiz dan akses ke situs web baru Anda tanpa berkas tersebut.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="import_attribute">
+                <source>import_attribute</source>
+                <target state="translated">Atribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="import_node">
+                <source>import_node</source>
+                <target state="translated">Node</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type">
+                <source>inheritance_type</source>
+                <target state="translated">Strategi Pemetaan Data Warisan</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type.joined">
+                <source>inheritance_type.joined</source>
+                <target state="translated">warisan Tabel Kelas Gabungan (Table Class)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type.single_table">
+                <source>inheritance_type.single_table</source>
+                <target state="translated">Warisan Tabel Tunggal (Table Class)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type.help">
+                <source>inheritance_type.help</source>
+                <target state="translated">Pilih strategi untuk menyimpan konten Anda di seluruh jenis node. *Tabel Kelas Gabungan (Table Class)* adalah strategi bawaan Roadiz yang cocok untuk jenis node yang lebih sedikit menggunakan konten yang sangat berbeda. *Tabel Tunggal* lebih berguna jika Anda membutuhkan banyak jenis node dengan bidang serupa. **Perhatian: Jika Anda mengubah strategi semua konten node Anda akan hilang.**</target>
             </trans-unit>
     </body>
   </file>

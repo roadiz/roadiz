@@ -38,7 +38,7 @@ final class KernelPreviewRevolver implements PreviewResolverInterface
     public function isPreview(): bool
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (null !== $request && $request instanceof PreviewAwareInterface) {
+        if ($request instanceof PreviewAwareInterface) {
             return $request->isPreview() || $this->kernel->isPreview();
         }
         return $this->kernel->isPreview();

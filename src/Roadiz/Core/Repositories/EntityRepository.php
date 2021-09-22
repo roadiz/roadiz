@@ -26,8 +26,8 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * @template T of object
- * @extends \Doctrine\ORM\EntityRepository<T>
+ * @template TEntityClass of object
+ * @extends \Doctrine\ORM\EntityRepository<TEntityClass>
  */
 class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface
 {
@@ -315,6 +315,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param string $alias
      *
      * @return array|Paginator
+     * @psalm-return array<TEntityClass>|Paginator<TEntityClass>
      */
     public function searchBy(
         $pattern,

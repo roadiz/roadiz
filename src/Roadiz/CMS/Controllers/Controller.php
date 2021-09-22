@@ -5,6 +5,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -22,6 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +38,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -112,6 +115,14 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
+     * @return Settings
+     */
+    public function getSettingsBag(): Settings
+    {
+        return $this->get('settingsBag');
+    }
+
+    /**
      * @return Environment
      */
     public function getTwig()
@@ -123,34 +134,46 @@ abstract class Controller implements ContainerAwareInterface
      * Wrap `$this->container['urlGenerator']->generate`
      *
      * @param string|NodesSources $route
-     * @param mixed  $parameters
+     * @param array $parameters
      * @param int $referenceType
      *
      * @return string
      */
-    public function generateUrl($route, $parameters = [], $referenceType = Router::ABSOLUTE_PATH)
+    public function generateUrl($route, array $parameters = [], int $referenceType = Router::ABSOLUTE_PATH): string
     {
         if ($route instanceof NodesSources) {
-            return $this->get('urlGenerator')->generate(
+            return $this->get('router')->generate(
                 RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
                 array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $route]),
                 $referenceType
             );
         }
-        return $this->get('urlGenerator')->generate($route, $parameters, $referenceType);
+        return $this->get('router')->generate($route, $parameters, $referenceType);
     }
 
     /**
      * Returns a RedirectResponse to the given URL.
-     *
-     * @param  string $url
-     * @param  integer $status
-     *
-     * @return RedirectResponse
      */
-    public function redirect($url, $status = Response::HTTP_FOUND)
+    protected function redirect(string $url, int $status = 302): RedirectResponse
     {
         return new RedirectResponse($url, $status);
+    }
+
+    /**
+     * Returns a RedirectResponse to the given route with the given parameters.
+     */
+    protected function redirectToRoute($route, array $parameters = [], int $status = 302): RedirectResponse
+    {
+        return $this->redirect($this->generateUrl($route, $parameters), $status);
+    }
+
+    /**
+     * @param object $event
+     * @return object The passed $event MUST be returned
+     */
+    protected function dispatchEvent($event)
+    {
+        return $this->get('dispatcher')->dispatch($event);
     }
 
     /**
@@ -224,7 +247,7 @@ abstract class Controller implements ContainerAwareInterface
      *
      * @return TranslationInterface
      */
-    protected function findTranslationForLocale($_locale = null): TranslationInterface
+    protected function findTranslationForLocale(string $_locale = null): TranslationInterface
     {
         if (null === $_locale) {
             return $this->get('defaultTranslation');
@@ -391,12 +414,12 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Creates and returns a Form instance from the type of the form.
      *
-     * @param string $type    The built type of the form
-     * @param mixed $data    The initial data for the form
+     * @param class-string $type The built type of the form
+     * @param mixed|null $data    The initial data for the form
      * @param array $options Options for the form
-     * @return Form
+     * @return FormInterface
      */
-    protected function createForm($type = FormType::class, $data = null, array $options = [])
+    protected function createForm(string $type, $data = null, array $options = []): FormInterface
     {
         return $this->get('formFactory')->create($type, $data, $options);
     }
@@ -517,6 +540,21 @@ abstract class Controller implements ContainerAwareInterface
         /** @var AuthorizationCheckerInterface $checker */
         $checker = $this->get('securityAuthorizationChecker');
         return $checker->isGranted($attributes, $object);
+    }
+
+    /**
+     * Checks the validity of a CSRF token.
+     *
+     * @param string      $id    The id used when generating the token
+     * @param string|null $token The actual token sent with the request that should be validated
+     */
+    protected function isCsrfTokenValid(string $id, ?string $token): bool
+    {
+        if (!$this->has('csrfTokenManager')) {
+            throw new \LogicException('CSRF protection is not enabled in your application.');
+        }
+
+        return $this->get('csrfTokenManager')->isTokenValid(new CsrfToken($id, $token));
     }
 
     /**

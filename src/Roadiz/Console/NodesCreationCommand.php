@@ -47,7 +47,7 @@ class NodesCreationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
         $this->nodeFactory = $this->getHelper('kernel')->getKernel()->get(NodeFactory::class);
         $nodeName = $input->getArgument('node-name');
         $typeName = $input->getArgument('node-type');

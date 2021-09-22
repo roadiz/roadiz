@@ -11,7 +11,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigTest;
 
-class TranslationExtension extends AbstractExtension
+final class TranslationExtension extends AbstractExtension
 {
     public function getFilters()
     {

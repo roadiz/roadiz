@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,19 +24,19 @@ class DocumentPruneCommand extends Command
     }
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ObjectManager $entityManager
      *
      * @return Document[]
      */
-    protected function getDocuments(EntityManagerInterface $entityManager): array
+    protected function getDocuments(ObjectManager $entityManager): array
     {
         return $entityManager->getRepository(Document::class)->findAllUnused();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityManager $em */
-        $em = $this->getHelper('entityManager')->getEntityManager();
+        /** @var ObjectManager $em */
+        $em = $this->getHelper('doctrine')->getEntityManager();
         $this->io = new SymfonyStyle($input, $output);
 
         $batchSize = 20;

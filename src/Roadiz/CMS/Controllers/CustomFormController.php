@@ -5,8 +5,6 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\Entities\CustomForm;
@@ -23,16 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
-class CustomFormController extends CmsController
+final class CustomFormController extends CmsController
 {
-    /**
-     * @return string
-     */
-    public function getStaticResourcesUrl()
-    {
-        return $this->get('assetPackages')->getUrl('themes/Rozier/static/');
-    }
-
     /**
      * @param Request $request
      * @param int $customFormId
@@ -43,7 +33,7 @@ class CustomFormController extends CmsController
     public function addAction(Request $request, int $customFormId)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->get('em')->find(CustomForm::class, $customFormId);
+        $customForm = $this->em()->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
@@ -79,7 +69,7 @@ class CustomFormController extends CmsController
      */
     public function sentAction(Request $request, int $customFormId)
     {
-        $customForm = $this->get('em')
+        $customForm = $this->em()
             ->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm) {
@@ -100,9 +90,9 @@ class CustomFormController extends CmsController
      * @throws Exception
      */
     public function sendAnswer(
-        $assignation,
+        array $assignation,
         $receiver
-    ) {
+    ): bool {
         /** @var EmailManager $emailManager */
         $emailManager = $this->get('emailManager');
         $emailManager->setAssignation($assignation);
@@ -110,10 +100,10 @@ class CustomFormController extends CmsController
         $emailManager->setEmailPlainTextTemplate('forms/answerForm.txt.twig');
         $emailManager->setSubject($assignation['title']);
         $emailManager->setEmailTitle($assignation['title']);
-        $emailManager->setSender($this->get('settingsBag')->get('email_sender'));
+        $emailManager->setSender($this->getSettingsBag()->get('email_sender'));
 
-        if (null === $receiver || empty($receiver)) {
-            $emailManager->setReceiver($this->get('settingsBag')->get('email_sender'));
+        if (empty($receiver)) {
+            $emailManager->setReceiver($this->getSettingsBag()->get('email_sender'));
         } else {
             $emailManager->setReceiver($receiver);
         }
@@ -130,8 +120,6 @@ class CustomFormController extends CmsController
      * @param EntityManagerInterface $em
      *
      * @return array $fieldsData
-     * @throws ORMException
-     * @throws OptimisticLockException
      * @deprecated Use \RZ\Roadiz\Utils\CustomForm\CustomFormHelper to transform Form to CustomFormAnswer.
      */
     public function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManagerInterface $em)
@@ -192,12 +180,12 @@ class CustomFormController extends CmsController
     public function buildForm(
         Request $request,
         CustomForm $customForm,
-        $forceExpanded = false
+        bool $forceExpanded = false
     ) {
         $defaults = $request->query->all();
         return $this->createForm(CustomFormsType::class, $defaults, [
-            'recaptcha_public_key' => $this->get('settingsBag')->get('recaptcha_public_key'),
-            'recaptcha_private_key' => $this->get('settingsBag')->get('recaptcha_private_key'),
+            'recaptcha_public_key' => $this->getSettingsBag()->get('recaptcha_public_key'),
+            'recaptcha_private_key' => $this->getSettingsBag()->get('recaptcha_private_key'),
             'request' => $request,
             'customForm' => $customForm,
             'forceExpanded' => $forceExpanded,
@@ -226,14 +214,14 @@ class CustomFormController extends CmsController
         Request $request,
         CustomForm $customFormsEntity,
         RedirectResponse $redirection,
-        $forceExpanded = false,
-        $emailSender = null
+        bool $forceExpanded = false,
+        ?string $emailSender = null
     ) {
         $assignation = [];
         $assignation['customForm'] = $customFormsEntity;
         $assignation['fields'] = $customFormsEntity->getFields();
         $helper = new CustomFormHelper(
-            $this->get('em'),
+            $this->em(),
             $customFormsEntity,
             $this->get(PrivateDocumentFactory::class)
         );
@@ -276,7 +264,7 @@ class CustomFormController extends CmsController
                     false !== filter_var($emailSender, FILTER_VALIDATE_EMAIL)) {
                     $assignation['mailContact'] = $emailSender;
                 } else {
-                    $assignation['mailContact'] = $this->get('settingsBag')->get('email_sender');
+                    $assignation['mailContact'] = $this->getSettingsBag()->get('email_sender');
                 }
 
                 /*

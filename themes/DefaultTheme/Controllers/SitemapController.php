@@ -15,13 +15,13 @@ class SitemapController extends DefaultThemeApp
 {
     /**
      * @param Request $request
-     * @param string  $_locale
+     * @param string $_locale
      *
      * @return Response
      */
     public function sitemapAction(
         Request $request,
-        $_locale = 'fr'
+        string $_locale = 'fr'
     ) {
         $this->prepareThemeAssignation(null, $this->bindLocaleFromRoute($request, $_locale));
 

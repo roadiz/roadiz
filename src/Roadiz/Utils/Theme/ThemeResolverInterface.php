@@ -13,7 +13,7 @@ interface ThemeResolverInterface
     public function getBackendTheme(): Theme;
 
     /**
-     * @return string
+     * @return class-string
      */
     public function getBackendClassName(): string;
 

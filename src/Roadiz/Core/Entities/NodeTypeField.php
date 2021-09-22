@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Contracts\NodeType\NodeTypeFieldInterface;
+use RZ\Roadiz\Contracts\NodeType\SerializableInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
 /**
@@ -27,7 +28,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractField;
  * )
  * @ORM\HasLifecycleCallbacks
  */
-class NodeTypeField extends AbstractField implements NodeTypeFieldInterface
+class NodeTypeField extends AbstractField implements NodeTypeFieldInterface, SerializableInterface
 {
     /**
      * If current field data should be the same over translations or not.
@@ -56,6 +57,38 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface
      * @Serializer\Exclude()
      */
     private $nodeType = null;
+
+    /**
+     * @var string|null
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("string")
+     * @ORM\Column(name="serialization_exclusion_expression", type="text", nullable=true)
+     */
+    private ?string $serializationExclusionExpression = null;
+
+    /**
+     * @var array|null
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("array<string>")
+     * @ORM\Column(name="serialization_groups", type="json", nullable=true)
+     */
+    private ?array $serializationGroups = null;
+
+    /**
+     * @var int|null
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("int")
+     * @ORM\Column(name="serialization_max_depth", type="integer", nullable=true)
+     */
+    private ?int $serializationMaxDepth = null;
+
+    /**
+     * @var bool
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("bool")
+     * @ORM\Column(name="excluded_from_serialization", type="boolean", nullable=false, options={"default" = false})
+     */
+    private bool $excludedFromSerialization = false;
 
     /**
      * @return NodeType|null
@@ -282,6 +315,84 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface
     {
         $this->excludeFromSearch = $excludeFromSearch;
 
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSerializationExclusionExpression(): ?string
+    {
+        return $this->serializationExclusionExpression;
+    }
+
+    /**
+     * @param string|null $serializationExclusionExpression
+     * @return NodeTypeField
+     */
+    public function setSerializationExclusionExpression(?string $serializationExclusionExpression): NodeTypeField
+    {
+        $this->serializationExclusionExpression = $serializationExclusionExpression;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSerializationGroups(): array
+    {
+        return array_filter($this->serializationGroups ?? []);
+    }
+
+    /**
+     * @param array|null $serializationGroups
+     * @return NodeTypeField
+     */
+    public function setSerializationGroups(?array $serializationGroups): NodeTypeField
+    {
+        $this->serializationGroups = $serializationGroups;
+        if (null !== $this->serializationGroups) {
+            $this->serializationGroups = array_filter($this->serializationGroups);
+        }
+        if (empty($this->serializationGroups)) {
+            $this->serializationGroups = null;
+        }
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSerializationMaxDepth(): ?int
+    {
+        return $this->serializationMaxDepth;
+    }
+
+    /**
+     * @param int|null $serializationMaxDepth
+     * @return NodeTypeField
+     */
+    public function setSerializationMaxDepth(?int $serializationMaxDepth): NodeTypeField
+    {
+        $this->serializationMaxDepth = $serializationMaxDepth;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExcludedFromSerialization(): bool
+    {
+        return $this->excludedFromSerialization;
+    }
+
+    /**
+     * @param bool $excludedFromSerialization
+     * @return NodeTypeField
+     */
+    public function setExcludedFromSerialization(bool $excludedFromSerialization): NodeTypeField
+    {
+        $this->excludedFromSerialization = $excludedFromSerialization;
         return $this;
     }
 }

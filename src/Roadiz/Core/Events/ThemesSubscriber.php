@@ -18,12 +18,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Event dispatched to setup theme configuration at kernel request.
+ * Event dispatched to set up theme configuration at kernel request.
  */
 class ThemesSubscriber implements EventSubscriberInterface
 {
-    private $kernel;
-    private $stopwatch;
+    private Kernel $kernel;
+    private Stopwatch $stopwatch;
 
     /**
      * @param Kernel $kernel
@@ -65,8 +65,9 @@ class ThemesSubscriber implements EventSubscriberInterface
                 /** @var ThemeResolverInterface $themeResolver */
                 $themeResolver = $this->kernel->get('themeResolver');
 
-                call_user_func([$themeResolver->getBackendClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
-                /** @var Theme $theme */
+                if (class_exists($themeResolver->getBackendClassName())) {
+                    call_user_func([$themeResolver->getBackendClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
+                }
                 foreach ($themeResolver->getFrontendThemes() as $theme) {
                     $feClass = $theme->getClassName();
                     call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
@@ -98,7 +99,7 @@ class ThemesSubscriber implements EventSubscriberInterface
             /*
              * Register Themes dependency injection
              */
-            if (!$this->kernel->isInstallMode()) {
+            if (!$this->kernel->isInstallMode() && class_exists($themeResolver->getBackendClassName())) {
                 $this->stopwatch->start('backendDependencyInjection');
                 // Register back-end security scheme
                 call_user_func([$themeResolver->getBackendClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());

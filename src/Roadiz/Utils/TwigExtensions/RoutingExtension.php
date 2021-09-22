@@ -19,7 +19,7 @@ use Twig\TwigFunction;
  */
 class RoutingExtension extends AbstractExtension
 {
-    private $generator;
+    private UrlGeneratorInterface $generator;
 
     public function __construct(UrlGeneratorInterface $generator)
     {
@@ -40,13 +40,13 @@ class RoutingExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed  $name
+     * @param string|object|null $name
      * @param array  $parameters
      * @param bool   $relative
      *
      * @return string
      */
-    public function getPath($name, $parameters = [], $relative = false)
+    public function getPath($name, array $parameters = [], bool $relative = false)
     {
         if (is_string($name)) {
             return $this->generator->generate(
@@ -66,13 +66,13 @@ class RoutingExtension extends AbstractExtension
     }
 
     /**
-     * @param mixed  $name
+     * @param string|object|null $name
      * @param array  $parameters
      * @param bool   $schemeRelative
      *
      * @return string
      */
-    public function getUrl($name, $parameters = [], $schemeRelative = false)
+    public function getUrl($name, array $parameters = [], bool $schemeRelative = false)
     {
         if (is_string($name)) {
             return $this->generator->generate(

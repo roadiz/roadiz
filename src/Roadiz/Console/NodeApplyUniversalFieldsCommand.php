@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
@@ -16,9 +16,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class NodeApplyUniversalFieldsCommand extends Command
 {
-    /** @var  EntityManager*/
-    private $entityManager;
-
     protected function configure()
     {
         $this->setName('nodes:force-universal')
@@ -28,14 +25,17 @@ class NodeApplyUniversalFieldsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-
-        $translation = $this->entityManager->getRepository(Translation::class)
-                            ->findDefault();
-
+        /** @var ManagerRegistry $managerRegistry */
+        $managerRegistry = $this->getHelper('doctrine')->getManagerRegistry();
+        $translation = $managerRegistry->getRepository(Translation::class)->findDefault();
         $io = new SymfonyStyle($input, $output);
 
-        $qb = $this->entityManager->createQueryBuilder();
+        $manager = $managerRegistry->getManagerForClass(NodesSources::class);
+        if (null === $manager) {
+            throw new \RuntimeException('No manager found for ' . NodesSources::class);
+        }
+
+        $qb = $manager->createQueryBuilder();
         $qb->select('ns')
             ->distinct(true)
             ->from(NodesSources::class, 'ns')
@@ -56,7 +56,7 @@ class NodeApplyUniversalFieldsCommand extends Command
             if ($io->askQuestion(
                 $question
             )) {
-                $duplicator = new UniversalDataDuplicator($this->entityManager);
+                $duplicator = new UniversalDataDuplicator($managerRegistry);
                 $io->progressStart(count($sources));
 
                 /** @var NodesSources $source */
@@ -64,7 +64,7 @@ class NodeApplyUniversalFieldsCommand extends Command
                     $duplicator->duplicateUniversalContents($source);
                     $io->progressAdvance();
                 }
-                $this->entityManager->flush();
+                $manager->flush();
                 $io->progressFinish();
             }
         } catch (NoResultException $e) {

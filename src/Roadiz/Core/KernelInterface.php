@@ -6,7 +6,7 @@ namespace RZ\Roadiz\Core;
 use Pimple\Container;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-interface KernelInterface extends HttpKernelInterface, \Serializable
+interface KernelInterface extends \Symfony\Component\HttpKernel\KernelInterface, \Serializable
 {
     /**
      * Boots the current kernel.

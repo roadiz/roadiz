@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\DataTransformer;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -12,16 +12,16 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class TranslationTransformer implements DataTransformerInterface
 {
     /**
-     * @var EntityManagerInterface
+     * @var ManagerRegistry $managerRegistry
      */
-    private $manager;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $manager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->manager = $manager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -47,7 +47,7 @@ class TranslationTransformer implements DataTransformerInterface
         }
 
         /** @var Translation|null $translation */
-        $translation = $this->manager
+        $translation = $this->managerRegistry
             ->getRepository(Translation::class)
             ->find($translationId)
         ;

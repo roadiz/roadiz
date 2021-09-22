@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Group;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -19,26 +19,19 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class GroupsType extends AbstractType
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authorizationChecker;
+    protected AuthorizationCheckerInterface $authorizationChecker;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
+     * @param ManagerRegistry $managerRegistry
      * @param AuthorizationCheckerInterface $authorizationChecker
-     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
-        AuthorizationCheckerInterface $authorizationChecker,
-        EntityManagerInterface $entityManager
+        ManagerRegistry $managerRegistry,
+        AuthorizationCheckerInterface $authorizationChecker
     ) {
         $this->authorizationChecker = $authorizationChecker;
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -60,7 +53,7 @@ class GroupsType extends AbstractType
             if (null === $formToModels || (is_array($formToModels) && count($formToModels) === 0)) {
                 return [];
             }
-            return $this->entityManager->getRepository(Group::class)->findBy([
+            return $this->managerRegistry->getRepository(Group::class)->findBy([
                 'id' => $formToModels
             ]);
         }));
@@ -78,7 +71,7 @@ class GroupsType extends AbstractType
          * Use normalizer to populate choices from ChoiceType
          */
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
-            $groups = $this->entityManager->getRepository(Group::class)->findAll();
+            $groups = $this->managerRegistry->getRepository(Group::class)->findAll();
 
             /** @var Group $group */
             foreach ($groups as $group) {

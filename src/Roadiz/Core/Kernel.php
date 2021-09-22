@@ -6,7 +6,7 @@ namespace RZ\Roadiz\Core;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
-use RZ\Roadiz\CMS\Controllers\AssetsController;
+use RZ\Roadiz\CMS\Controllers\InterventionRequestController;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
@@ -37,24 +37,30 @@ use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Documentation\DocumentationServiceProvider;
 use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
+use RZ\Roadiz\Message\Services\MessengerServiceProvider;
 use RZ\Roadiz\OpenId\OpenIdServiceProvider;
 use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Translation\Services\TranslationServiceProvider;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
+use RZ\Roadiz\Webhook\WebhookServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
-use Themes\Rozier\Services\RozierServiceProvider;
 
 /**
+ * Roadiz main Kernel class.
+ * Do not use it directly, extend it to add your own service providers.
+ *
  * @package RZ\Roadiz\Core
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
@@ -65,7 +71,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static ?string $cmsBuild = null;
-    public static string $cmsVersion = "1.6.30";
+    public static string $cmsVersion = "1.7.0";
     protected string $environment;
     protected bool $debug;
     /**
@@ -179,59 +185,60 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * Register every services needed by Roadiz CMS.
      *
-     * @param Container $container
+     * @param Container $pimple
      */
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
-        $container['stopwatch'] = function () {
+        $pimple['stopwatch'] = function () {
             if ($this->isDebug()) {
                 return new Stopwatch();
             }
             return new NullStopwatch();
         };
 
-        $container['kernel'] = $this;
+        $pimple['kernel'] = $this;
         /** @var Stopwatch $stopWatch */
-        $stopWatch = $container['stopwatch'];
+        $stopWatch = $pimple['stopwatch'];
         $stopWatch->openSection();
         $stopWatch->start('kernel.registerServices');
 
-        $container->register(new EventDispatcherServiceProvider());
-        $container->register(new YamlConfigurationServiceProvider());
-        $container->register(new ConsoleServiceProvider());
-        $container->register(new AssetsServiceProvider());
-        $container->register(new BackofficeServiceProvider());
-        $container->register(new DoctrineServiceProvider());
-        $container->register(new DoctrineFiltersServiceProvider());
-        $container->register(new EmbedDocumentsServiceProvider());
-        $container->register(new EntityApiServiceProvider());
-        $container->register(new FormServiceProvider());
-        $container->register(new MailerServiceProvider());
-        $container->register(new RoutingServiceProvider());
-        $container->register(new SecurityServiceProvider());
-        $container->register(new SolrServiceProvider());
-        $container->register(new ThemeServiceProvider());
-        $container->register(new TranslationServiceProvider());
-        $container->register(new TwigServiceProvider());
-        $container->register(new LoggerServiceProvider());
-        $container->register(new BagsServiceProvider());
-        $container->register(new FactoryServiceProvider());
-        $container->register(new ImporterServiceProvider());
-        $container->register(new WorkflowServiceProvider());
-        $container->register(new SerializationServiceProvider());
-        $container->register(new UtilsServiceProvider());
-        $container->register(new AttributesServiceProvider());
-        $container->register(new CryptoServiceProvider());
-        $container->register(new NodeServiceProvider());
-        $container->register(new MarkdownServiceProvider());
-        $container->register(new OpenIdServiceProvider());
-        $container->register(new RozierServiceProvider());
-        $container->register(new PreviewServiceProvider());
-        $container->register(new EntityGeneratorServiceProvider());
-        $container->register(new DocumentationServiceProvider());
+        $pimple->register(new EventDispatcherServiceProvider());
+        $pimple->register(new YamlConfigurationServiceProvider());
+        $pimple->register(new ConsoleServiceProvider());
+        $pimple->register(new AssetsServiceProvider());
+        $pimple->register(new BackofficeServiceProvider());
+        $pimple->register(new DoctrineServiceProvider());
+        $pimple->register(new DoctrineFiltersServiceProvider());
+        $pimple->register(new MessengerServiceProvider());
+        $pimple->register(new EmbedDocumentsServiceProvider());
+        $pimple->register(new EntityApiServiceProvider());
+        $pimple->register(new FormServiceProvider());
+        $pimple->register(new MailerServiceProvider());
+        $pimple->register(new RoutingServiceProvider());
+        $pimple->register(new SecurityServiceProvider());
+        $pimple->register(new ThemeServiceProvider());
+        $pimple->register(new TranslationServiceProvider());
+        $pimple->register(new TwigServiceProvider());
+        $pimple->register(new LoggerServiceProvider());
+        $pimple->register(new SolrServiceProvider());
+        $pimple->register(new BagsServiceProvider());
+        $pimple->register(new FactoryServiceProvider());
+        $pimple->register(new ImporterServiceProvider());
+        $pimple->register(new WorkflowServiceProvider());
+        $pimple->register(new SerializationServiceProvider());
+        $pimple->register(new UtilsServiceProvider());
+        $pimple->register(new AttributesServiceProvider());
+        $pimple->register(new CryptoServiceProvider());
+        $pimple->register(new NodeServiceProvider());
+        $pimple->register(new MarkdownServiceProvider());
+        $pimple->register(new OpenIdServiceProvider());
+        $pimple->register(new PreviewServiceProvider());
+        $pimple->register(new EntityGeneratorServiceProvider());
+        $pimple->register(new DocumentationServiceProvider());
+        $pimple->register(new WebhookServiceProvider());
 
         if ($this->isDebug()) {
-            $container->register(new DebugServiceProvider());
+            $pimple->register(new DebugServiceProvider());
         }
 
         /**
@@ -241,9 +248,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             /*
              * Load additional service providers
              */
-            if (isset($container['config']['additionalServiceProviders'])) {
-                foreach ($container['config']['additionalServiceProviders'] as $providerClass) {
-                    $container->register(new $providerClass());
+            if (isset($pimple['config']['additionalServiceProviders'])) {
+                foreach ($pimple['config']['additionalServiceProviders'] as $providerClass) {
+                    $pimple->register(new $providerClass());
                 }
             }
         } catch (NoConfigurationFoundException $e) {
@@ -282,7 +289,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             if (0 === strpos($request->getPathInfo(), '/assets') &&
                 preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
             ) {
-                $ctrl = $this->get(AssetsController::class);
+                $ctrl = $this->get(InterventionRequestController::class);
                 $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
                 $response->headers->add(['X-ByPass-Kernel' => true]);
                 $response->prepare($request);
@@ -527,7 +534,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * @inheritDoc
      */
-    public function getPublicCachePath()
+    public function getPublicCachePath(): string
     {
         return $this->getPublicDir() . $this->getPublicCacheBasePath();
     }
@@ -535,13 +542,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * @inheritDoc
      */
-    public function getPublicCacheBasePath()
+    public function getPublicCacheBasePath(): string
     {
         return '/assets';
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getPrivateFilesPath(): string
     {
@@ -549,7 +556,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getPrivateFilesBasePath(): string
     {
@@ -570,5 +577,30 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public function getFontsFilesBasePath(): string
     {
         return '/files/fonts';
+    }
+
+    public function registerBundles()
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function getBundles()
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function getBundle($name)
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function locateResource($name)
+    {
+        throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
     }
 }

@@ -36,7 +36,7 @@ class TranslationsDeleteCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
         $locale = $input->getArgument('locale');
 
         $translation = $this->entityManager

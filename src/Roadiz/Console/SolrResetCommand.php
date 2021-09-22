@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\SearchEngine\Indexer\NodesSourcesIndexer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -21,7 +22,6 @@ class SolrResetCommand extends SolrCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
         $this->io = new SymfonyStyle($input, $output);
 
@@ -32,7 +32,10 @@ class SolrResetCommand extends SolrCommand
                     false
                 );
                 if ($this->io->askQuestion($confirmation)) {
-                    $this->emptySolr();
+                    /** @var NodesSourcesIndexer $nodesSourcesIndexer */
+                    $nodesSourcesIndexer = $this->getHelper('kernel')->getKernel()->get(NodesSourcesIndexer::class);
+                    $nodesSourcesIndexer->setIo($this->io);
+                    $nodesSourcesIndexer->emptySolr();
                     $this->io->success('Solr index resetted.');
                 }
             } else {

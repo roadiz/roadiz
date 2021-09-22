@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Repositories\LogRepository;
 use Symfony\Component\Console\Command\Command;
@@ -33,10 +33,11 @@ class LogsCleanupCommand extends Command
         $now->add(\DateInterval::createFromDateString('-6 months'));
         $io = new SymfonyStyle($input, $output);
 
-        /** @var EntityManager $em */
-        $em = $this->getHelper('em')->getEntityManager();
+        /** @var ManagerRegistry $managerRegistry */
+        $managerRegistry = $this->getHelper('doctrine')->getManagerRegistry();
+
         /** @var LogRepository $logRepository */
-        $logRepository = $em->getRepository(Log::class);
+        $logRepository = $managerRegistry->getRepository(Log::class);
         $qb = $logRepository->createQueryBuilder('l');
         $qb->select($qb->expr()->count('l'))
             ->andWhere($qb->expr()->lte('l.datetime', ':date'))

@@ -37,7 +37,7 @@ class DocumentDownscaleCommand extends Command
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();
         $this->configuration = $this->getHelper('configuration')->getConfiguration();
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
         $io = new SymfonyStyle($input, $output);
 
         if (!empty($this->configuration['assetsProcessing']['maxPixelSize']) &&

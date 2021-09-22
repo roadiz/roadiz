@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -17,17 +17,17 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class UniqueNodeGenerator
 {
-    protected EntityManagerInterface $entityManager;
     protected NodeNamePolicyInterface $nodeNamePolicy;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param NodeNamePolicyInterface $nodeNamePolicy
      */
-    public function __construct(EntityManagerInterface $entityManager, NodeNamePolicyInterface $nodeNamePolicy)
+    public function __construct(ManagerRegistry $managerRegistry, NodeNamePolicyInterface $nodeNamePolicy)
     {
-        $this->entityManager = $entityManager;
         $this->nodeNamePolicy = $nodeNamePolicy;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -78,9 +78,12 @@ class UniqueNodeGenerator
         $source->setPublishedAt(new \DateTime());
         $node->setNodeName($this->nodeNamePolicy->getCanonicalNodeName($source));
 
-        $this->entityManager->persist($node);
-        $this->entityManager->persist($source);
-        $this->entityManager->flush();
+        $manager = $this->managerRegistry->getManagerForClass(Node::class);
+        if (null !== $manager) {
+            $manager->persist($node);
+            $manager->persist($source);
+            $manager->flush();
+        }
 
         return $source;
     }
@@ -103,40 +106,36 @@ class UniqueNodeGenerator
         }
 
         if ($request->get('tagId') > 0) {
-            $tag = $this->entityManager
-                        ->find(Tag::class, (int) $request->get('tagId'));
+            $tag = $this->managerRegistry
+                        ->getRepository(Tag::class)
+                        ->find((int) $request->get('tagId'));
         } else {
             $tag = null;
         }
 
         if ($request->get('parentNodeId') > 0) {
-            $parent = $this->entityManager->find(
-                Node::class,
-                (int) $request->get('parentNodeId')
-            );
+            $parent = $this->managerRegistry
+                ->getRepository(Node::class)
+                ->find((int) $request->get('parentNodeId'));
         } else {
             $parent = null;
         }
 
         if ($request->get('nodeTypeId') > 0) {
             /** @var NodeType|null $nodeType */
-            $nodeType = $this->entityManager->find(
-                NodeType::class,
-                (int) $request->get('nodeTypeId')
-            );
+            $nodeType = $this->managerRegistry
+                ->getRepository(NodeType::class)
+                ->find((int) $request->get('nodeTypeId'));
 
             if (null !== $nodeType) {
-                $translation = null;
-
                 if ($request->get('translationId') > 0) {
                     /** @var Translation $translation */
-                    $translation = $this->entityManager->find(
-                        Translation::class,
-                        (int) $request->get('translationId')
-                    );
+                    $translation = $this->managerRegistry
+                        ->getRepository(Translation::class)
+                        ->find((int) $request->get('translationId'));
                 } else {
                     /** @var Translation $translation */
-                    $translation = $this->entityManager
+                    $translation = $this->managerRegistry
                                         ->getRepository(Translation::class)
                                         ->findDefault();
                 }

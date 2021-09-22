@@ -39,7 +39,7 @@ class CentralTruncateExtension extends AbstractExtension
         $unicodeEllipsis = u($ellipsis);
         if ($unicode->length() > $length + $unicodeEllipsis->length()) {
             $str1 = $unicode->slice(0, (int)(floor($length / 2) + floor($offset / 2)));
-            $str2 = $unicode->slice(0, (int)((floor($length / 2) * -1) + floor($offset / 2)));
+            $str2 = $unicode->slice((int)((floor($length / 2) * -1) + floor($offset / 2)));
             return $str1 . $ellipsis . $str2;
         }
 

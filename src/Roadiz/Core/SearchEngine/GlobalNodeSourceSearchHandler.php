@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
@@ -14,13 +14,13 @@ use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
  */
 class GlobalNodeSourceSearchHandler
 {
-    private EntityManagerInterface $em;
+    private ObjectManager $em;
     private NodesSourcesRepository $repository;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param ObjectManager $em
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ObjectManager $em)
     {
         $this->em = $em;
         $this->repository = $this->em->getRepository(NodesSources::class);
@@ -43,7 +43,7 @@ class GlobalNodeSourceSearchHandler
      * @param Translation|null $translation
      * @return NodesSources[]
      */
-    public function getNodeSourcesBySearchTerm(string $searchTerm, $resultCount, ?Translation $translation = null)
+    public function getNodeSourcesBySearchTerm(string $searchTerm, int $resultCount, ?Translation $translation = null)
     {
         $safeSearchTerms = strip_tags($searchTerm);
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
@@ -22,7 +23,7 @@ class UtilsServiceProvider implements ServiceProviderInterface
          */
         $pimple[NodeNamePolicyInterface::class] = function (Container $c) {
             return new NodeNameChecker(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 (bool) $c['settingsBag']->get('use_typed_node_names', true)
             );
         };
@@ -40,7 +41,7 @@ class UtilsServiceProvider implements ServiceProviderInterface
          */
         $pimple['utils.uniqueNodeGenerator'] = function (Container $c) {
             return new UniqueNodeGenerator(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c[NodeNamePolicyInterface::class]
             );
         };
@@ -48,7 +49,7 @@ class UtilsServiceProvider implements ServiceProviderInterface
          * @return UniversalDataDuplicator
          */
         $pimple['utils.universalDataDuplicator'] = function (Container $c) {
-            return new UniversalDataDuplicator($c['em']);
+            return new UniversalDataDuplicator($c[ManagerRegistry::class]);
         };
     }
 }

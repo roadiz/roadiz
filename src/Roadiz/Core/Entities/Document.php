@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\Models\AbstractDocument;
 use RZ\Roadiz\Core\Models\AdvancedDocumentInterface;
+use RZ\Roadiz\Core\Models\DisplayableInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Core\Models\HasThumbnailInterface;
@@ -32,7 +33,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
-class Document extends AbstractDocument implements AdvancedDocumentInterface, HasThumbnailInterface, SizeableInterface, TimeableInterface
+class Document extends AbstractDocument implements AdvancedDocumentInterface, HasThumbnailInterface, SizeableInterface, TimeableInterface, DisplayableInterface
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")

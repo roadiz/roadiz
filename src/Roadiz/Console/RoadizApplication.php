@@ -5,20 +5,12 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-use Doctrine\Migrations\Configuration\Connection\ExistingConnection;
-use Doctrine\Migrations\Configuration\EntityManager\EntityManagerLoader;
-use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
-use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\Migrations\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Console\Command\InfoCommand;
-use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
-use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
-use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
-use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
@@ -31,6 +23,7 @@ use RZ\Roadiz\Utils\Console\Helper\HandlerFactoryHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
 use RZ\Roadiz\Utils\Console\Helper\LoggerHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
+use RZ\Roadiz\Utils\Console\Helper\ManagerRegistryHelper;
 use RZ\Roadiz\Utils\Console\Helper\RolesBagHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
 use RZ\Roadiz\Utils\Console\Helper\ThemeResolverHelper;
@@ -112,8 +105,6 @@ class RoadizApplication extends Application
     protected function addDoctrineCommands()
     {
         try {
-            /** @var EntityManagerInterface $entityManager */
-            $entityManager = $this->kernel->get('em');
             \Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($this);
             ConsoleRunner::addCommands($this, $this->kernel->get(DependencyFactory::class));
         } catch (ConnectionException $exception) {
@@ -188,20 +179,14 @@ class RoadizApplication extends Application
         /*
          * Entity manager dependent helpers.
          */
-        /** @var EntityManager $em */
-        $em = $this->kernel->get('em');
-        if (null !== $em) {
-            try {
-                $helperSet->set(new ConnectionHelper($em->getConnection()));
-                // We need to set «em» alias as Doctrine misnamed its Helper :-(
-                $helperSet->set(new EntityManagerHelper($em), 'em');
-                $helperSet->set(new SolrHelper($this->kernel->get('solr')));
-                $helperSet->set(new HandlerFactoryHelper($this->kernel->get('factory.handler')));
-                $helperSet->set(new RolesBagHelper($this->kernel->get('rolesBag')));
-            } catch (ConnectionException $exception) {
-            } catch (\PDOException $exception) {
-            }
-        }
+        $managerRegistryHelper = new ManagerRegistryHelper($this->kernel->get(ManagerRegistry::class));
+        // We need to set «em» alias as Doctrine misnamed its Helper :-(
+        $helperSet->set($managerRegistryHelper, 'em');
+        $helperSet->set($managerRegistryHelper, 'entityManager');
+        $helperSet->set($managerRegistryHelper, 'doctrine');
+        $helperSet->set(new SolrHelper($this->kernel->get('solr')));
+        $helperSet->set(new HandlerFactoryHelper($this->kernel->get('factory.handler')));
+        $helperSet->set(new RolesBagHelper($this->kernel->get('rolesBag')));
 
         return $helperSet;
     }

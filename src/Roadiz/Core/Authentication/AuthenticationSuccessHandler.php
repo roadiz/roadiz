@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Authentication;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,27 +15,27 @@ use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler implements LoginAttemptAwareInterface
 {
-    protected EntityManagerInterface $em;
     protected ?RememberMeServicesInterface $rememberMeServices;
     protected ?LoginAttemptManager $loginAttemptManager = null;
+    private ManagerRegistry $managerRegistry;
 
     /**
      * @param HttpUtils $httpUtils
-     * @param EntityManagerInterface $em
+     * @param ManagerRegistry $managerRegistry
      * @param ?RememberMeServicesInterface $rememberMeServices
      * @param array $options Options for processing a successful authentication attempt.
      * @param string $providerKey
      */
     public function __construct(
         HttpUtils $httpUtils,
-        EntityManagerInterface $em,
+        ManagerRegistry $managerRegistry,
         RememberMeServicesInterface $rememberMeServices = null,
         array $options = [],
         string $providerKey = 'roadiz_domain'
     ) {
         parent::__construct($httpUtils, $options);
-        $this->em = $em;
         $this->rememberMeServices = $rememberMeServices;
+        $this->managerRegistry = $managerRegistry;
 
         /*
          * Enable session based _target_url
@@ -53,8 +53,11 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler i
             $this->getLoginAttemptManager()->onSuccessLoginAttempt($user->getUsername());
             if ($user instanceof User) {
                 $user->setLastLogin(new \DateTime('now'));
+                $manager = $this->managerRegistry->getManagerForClass(User::class);
+                if (null !== $manager) {
+                    $manager->flush();
+                }
             }
-            $this->em->flush();
         }
 
         $response = parent::onAuthenticationSuccess($request, $token);

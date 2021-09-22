@@ -11,7 +11,6 @@ stages:
     - "PHP lint tests"
     - "PHP unit tests"
     - "Install assets tests"
-    - "Backoffice assets tests"
     - "Default theme assets tests"
 branches:
     except:
@@ -48,19 +47,6 @@ jobs:
             node_js: "10"
             script: sh .travis/install_assets.sh
 
-        -   stage: "Backoffice assets tests"
-            language: node_js
-            node_js: "lts/*"
-            script: sh .travis/backoffice_assets.sh
-        -   stage: "Backoffice assets tests"
-            language: node_js
-            node_js: "12"
-            script: sh .travis/backoffice_assets.sh
-        -   stage: "Backoffice assets tests"
-            language: node_js
-            node_js: "10"
-            script: sh .travis/backoffice_assets.sh
-
         -   stage: "PHP lint tests"
             language: php
             sudo: required
@@ -69,6 +55,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             php: 7.4
             install: sh .travis/composer_install.sh
             script: sh .travis/php_lint.sh
@@ -80,6 +67,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             php: 8.0
             install: sh .travis/composer_install.sh
             script: sh .travis/php_lint.sh
@@ -91,6 +79,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             php: nightly
             install: sh .travis/composer_install.sh
             script: sh .travis/php_lint.sh
@@ -105,6 +94,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -117,7 +107,8 @@ jobs:
             php: 7.4
             env:
                 - DB=mariadb
-                - MYSQL_VERSION=10.5.2
+                - MYSQL_VERSION=mariadb-10.5.2
+                - MYSQL_PASSWORD=travis
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -141,6 +132,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -153,7 +145,8 @@ jobs:
             php: 8.0
             env:
                 - DB=mariadb
-                - MYSQL_VERSION=10.5.2
+                - MYSQL_VERSION=mariadb-10.5.2
+                - MYSQL_PASSWORD=travis
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -177,6 +170,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -189,7 +183,8 @@ jobs:
             php: nightly
             env:
                 - DB=mariadb
-                - MYSQL_VERSION=10.5.2
+                - MYSQL_VERSION=mariadb-10.5.2
+                - MYSQL_PASSWORD=travis
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"

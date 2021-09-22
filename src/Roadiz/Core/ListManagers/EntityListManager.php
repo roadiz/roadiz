@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -19,52 +20,31 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class EntityListManager extends AbstractEntityListManager
 {
+    protected ?ObjectManager $entityManager = null;
     /**
-     * @var EntityManagerInterface|null
+     * @var class-string|string
      */
-    protected $entityManager = null;
-    /**
-     * @var string
-     */
-    protected $entityName;
-    /**
-     * @var Paginator
-     */
-    protected $paginator = null;
-    /**
-     * @var array|null
-     */
-    protected $orderingArray = null;
-    /**
-     * @var array|null
-     */
-    protected $filteringArray = null;
-    /**
-     * @var string|null
-     */
-    protected $searchPattern = null;
-    /**
-     * @var array|null
-     */
-    protected $assignation = null;
-    /**
-     * @var Translation|null
-     */
-    protected $translation = null;
+    protected string $entityName;
+    protected ?Paginator $paginator = null;
+    protected ?array $orderingArray = null;
+    protected ?array $filteringArray = null;
+    protected ?string $searchPattern = null;
+    protected ?array $assignation = null;
+    protected ?TranslationInterface $translation = null;
 
     /**
      * @param Request|null  $request
-     * @param EntityManagerInterface $entityManager
+     * @param ObjectManager $entityManager
      * @param string        $entityName
      * @param array         $preFilters
      * @param array         $preOrdering
      */
     public function __construct(
         ?Request $request,
-        EntityManagerInterface $entityManager,
+        ObjectManager $entityManager,
         string $entityName,
-        $preFilters = [],
-        $preOrdering = []
+        array $preFilters = [],
+        array $preOrdering = []
     ) {
         parent::__construct($request);
         $this->entityName = $entityName;
@@ -75,18 +55,18 @@ class EntityListManager extends AbstractEntityListManager
     }
 
     /**
-     * @return Translation
+     * @return TranslationInterface|null
      */
-    public function getTranslation()
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }
 
     /**
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @return $this
      */
-    public function setTranslation(Translation $translation = null)
+    public function setTranslation(TranslationInterface $translation = null)
     {
         $this->translation = $translation;
 
@@ -154,12 +134,12 @@ class EntityListManager extends AbstractEntityListManager
 
             if ($this->request->query->has('item_per_page') &&
                 $this->request->query->get('item_per_page') > 0) {
-                $this->setItemPerPage($this->request->query->get('item_per_page'));
+                $this->setItemPerPage((int) $this->request->query->get('item_per_page'));
             }
 
             if ($this->request->query->has('page') &&
                 $this->request->query->get('page') > 1) {
-                $this->setPage($this->request->query->get('page'));
+                $this->setPage((int) $this->request->query->get('page'));
             } else {
                 $this->setPage(1);
             }
@@ -219,7 +199,7 @@ class EntityListManager extends AbstractEntityListManager
     /**
      * @return array
      */
-    public function getAssignation()
+    public function getAssignation(): array
     {
         return array_merge(parent::getAssignation(), [
             'search' => $this->searchPattern,
@@ -229,7 +209,7 @@ class EntityListManager extends AbstractEntityListManager
     /**
      * @return int
      */
-    public function getItemCount()
+    public function getItemCount(): int
     {
         if ($this->pagination === true &&
             null !== $this->paginator) {
@@ -242,7 +222,7 @@ class EntityListManager extends AbstractEntityListManager
     /**
      * @return int
      */
-    public function getPageCount()
+    public function getPageCount(): int
     {
         if ($this->pagination === true &&
             null !== $this->paginator) {

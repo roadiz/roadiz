@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use JMS\Serializer\Annotation as JMS;
@@ -22,7 +22,7 @@ class SolrSearchResults implements SearchResultsInterface
     /**
      * @JMS\Exclude()
      */
-    protected EntityManagerInterface $entityManager;
+    protected ObjectManager $entityManager;
     /**
      * @JMS\Exclude()
      */
@@ -34,9 +34,9 @@ class SolrSearchResults implements SearchResultsInterface
 
     /**
      * @param array $response
-     * @param EntityManagerInterface $entityManager
+     * @param ObjectManager $entityManager
      */
-    public function __construct(array $response, EntityManagerInterface $entityManager)
+    public function __construct(array $response, ObjectManager $entityManager)
     {
         $this->response = $response;
         $this->entityManager = $entityManager;

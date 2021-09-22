@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -13,14 +13,14 @@ use RZ\Roadiz\Core\Repositories\TranslationRepository;
 
 final class UniversalDataDuplicator
 {
-    private EntityManagerInterface $em;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->em = $em;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -41,11 +41,11 @@ final class UniversalDataDuplicator
          * Non-default translation source should not contain universal fields.
          */
         if ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source)) {
-            $nodeTypeFieldRepository = $this->em->getRepository(NodeTypeField::class);
+            $nodeTypeFieldRepository = $this->managerRegistry->getRepository(NodeTypeField::class);
             $universalFields = $nodeTypeFieldRepository->findAllUniversal($source->getNode()->getNodeType());
 
             if (count($universalFields) > 0) {
-                $repository = $this->em->getRepository(NodesSources::class);
+                $repository = $this->managerRegistry->getRepository(NodesSources::class);
                 $repository->setDisplayingAllNodesStatuses(true)
                     ->setDisplayingNotPublishedNodes(true)
                 ;
@@ -90,12 +90,12 @@ final class UniversalDataDuplicator
     private function hasDefaultTranslation(NodesSources $source): bool
     {
         /** @var TranslationRepository $translationRepository */
-        $translationRepository = $this->em->getRepository(Translation::class);
+        $translationRepository = $this->managerRegistry->getRepository(Translation::class);
         /** @var Translation $defaultTranslation */
         $defaultTranslation = $translationRepository->findDefault();
 
         /** @var NodesSourcesRepository $repository */
-        $repository = $this->em->getRepository(NodesSources::class);
+        $repository = $this->managerRegistry->getRepository(NodesSources::class);
         $sourceCount = $repository->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
             ->countBy([
@@ -132,18 +132,23 @@ final class UniversalDataDuplicator
         NodesSources $destSource,
         NodeTypeField $field
     ): void {
-        $newDocuments = $this->em
+        $newDocuments = $this->managerRegistry
             ->getRepository(NodesSourcesDocuments::class)
             ->findBy(['nodeSource' => $universalSource, 'field' => $field]);
 
-        $formerDocuments = $this->em
+        $formerDocuments = $this->managerRegistry
             ->getRepository(NodesSourcesDocuments::class)
             ->findBy(['nodeSource' => $destSource, 'field' => $field]);
+
+        $manager = $this->managerRegistry->getManagerForClass(NodesSourcesDocuments::class);
+        if (null === $manager) {
+            return;
+        }
 
         /* Delete former documents */
         if (count($formerDocuments) > 0) {
             foreach ($formerDocuments as $formerDocument) {
-                $this->em->remove($formerDocument);
+                $manager->remove($formerDocument);
             }
         }
         /* Add new documents */
@@ -155,7 +160,7 @@ final class UniversalDataDuplicator
                 $nsDoc->setPosition($position);
                 $position++;
 
-                $this->em->persist($nsDoc);
+                $manager->persist($nsDoc);
             }
         }
     }

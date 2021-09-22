@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Document;
 
+use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Create documents from UploadedFile.
@@ -13,8 +17,25 @@ use RZ\Roadiz\Core\Models\DocumentInterface;
  *
  * @package RZ\Roadiz\Utils\Document
  */
-class DocumentFactory extends AbstractDocumentFactory
+final class DocumentFactory extends AbstractDocumentFactory
 {
+    private ManagerRegistry $managerRegistry;
+
+    public function __construct(
+        ManagerRegistry $managerRegistry,
+        EventDispatcherInterface $dispatcher,
+        Packages $packages,
+        ?LoggerInterface $logger = null
+    ) {
+        parent::__construct($dispatcher, $packages, $logger);
+        $this->managerRegistry = $managerRegistry;
+    }
+
+    protected function persistDocument(DocumentInterface $document): void
+    {
+        $this->managerRegistry->getManagerForClass(Document::class)->persist($document);
+    }
+
     /**
      * @inheritDoc
      */

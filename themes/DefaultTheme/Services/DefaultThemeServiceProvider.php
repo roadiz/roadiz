@@ -17,19 +17,19 @@ class DefaultThemeServiceProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
-        $container->extend('twig.extensions', function (ArrayCollection $extensions) {
+        $pimple->extend('twig.extensions', function (ArrayCollection $extensions) {
             $extensions->add(new ImageFormatsExtension());
             return $extensions;
         });
 
-        $container->extend('serializer.subscribers', function ($subscribers, Container $c) {
+        $pimple->extend('serializer.subscribers', function ($subscribers, Container $c) {
             $subscribers[] = new DocumentUriSubscriber($c);
             return $subscribers;
         });
 
-        $container->extend('backoffice.entries', function (array $entries, Container $c) {
+        $pimple->extend('backoffice.entries', function (array $entries, Container $c) {
             /*
              * Add a test entry in your Backoffice
              * Remove this in your theme if you don’t
@@ -50,7 +50,7 @@ class DefaultThemeServiceProvider implements ServiceProviderInterface
          * Example:
          * Alter Solr indexing with custom data.
          */
-        $container->extend('dispatcher', function (EventDispatcherInterface $dispatcher) {
+        $pimple->extend('dispatcher', function (EventDispatcherInterface $dispatcher) {
             $dispatcher->addSubscriber(new LinkPathSubscriber());
             $dispatcher->addListener(
                 NodesSourcesIndexingEvent::class,

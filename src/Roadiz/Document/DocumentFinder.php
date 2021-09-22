@@ -3,21 +3,21 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Document;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Repositories\DocumentRepository;
 
 final class DocumentFinder implements DocumentFinderInterface
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -47,6 +47,6 @@ final class DocumentFinder implements DocumentFinderInterface
      */
     protected function getRepository(): DocumentRepository
     {
-        return $this->entityManager->getRepository(Document::class);
+        return $this->managerRegistry->getRepository(Document::class);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
@@ -57,7 +58,7 @@ abstract class AbstractSolarium
     protected ?Client $client = null;
     protected bool $indexed = false;
     protected ?DocumentInterface $document = null;
-    protected ?LoggerInterface $logger = null;
+    protected LoggerInterface $logger;
     protected ?MarkdownInterface $markdown = null;
 
     /**
@@ -65,13 +66,16 @@ abstract class AbstractSolarium
      * @param LoggerInterface|null   $logger
      * @param MarkdownInterface|null $markdown
      */
-    public function __construct(?Client $client, ?LoggerInterface $logger = null, ?MarkdownInterface $markdown = null)
-    {
+    public function __construct(
+        ?Client $client,
+        ?LoggerInterface $logger = null,
+        ?MarkdownInterface $markdown = null
+    ) {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
         }
         $this->client = $client;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->markdown = $markdown;
     }
 
@@ -111,11 +115,9 @@ abstract class AbstractSolarium
     {
         $update = $this->client->createUpdate();
         $this->update($update);
-        $update->addCommit();
+        $update->addCommit(true, true, false);
 
-        if (null !== $this->logger) {
-            $this->logger->debug('[Solr] Document updated.');
-        }
+        $this->logger->debug('[Solr] Document updated.');
         return $this->client->update($update);
     }
 
@@ -165,7 +167,7 @@ abstract class AbstractSolarium
         $update = $this->client->createUpdate();
 
         if (true === $this->remove($update)) {
-            $update->addCommit();
+            $update->addCommit(true, true, false);
             $this->client->update($update);
         }
     }
@@ -179,7 +181,7 @@ abstract class AbstractSolarium
         $update = $this->client->createUpdate();
 
         if (true === $this->clean($update)) {
-            $update->addCommit();
+            $update->addCommit(true, true, false);
             $this->client->update($update);
         }
     }

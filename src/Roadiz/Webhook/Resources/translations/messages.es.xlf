@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="es-ES">
+    <body>
+      <trans-unit xml:space="preserve" id="webhooks">
+                <source>webhooks</source>
+                <target state="translated">webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.webhooks">
+                <source>manage.webhooks</source>
+                <target state="translated">Andministrar webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.webhook">
+                <source>add.a.webhook</source>
+                <target state="translated">Añadir un webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.webhooks">
+                <source>back_to.webhooks</source>
+                <target state="translated">Volver a webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.webhook.%name%">
+                <source>delete.webhook.%name%</source>
+                <target state="translated">Eliminar webhook %name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.webhook.%name%">
+                <source>edit.webhook.%name%</source>
+                <target state="translated">Editar webhook %name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
+                <source>are_you_sure.delete.webhook</source>
+                <target state="translated">¿Estás seguro de querer eliminar este webhook?</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.messageType">
+                <source>webhooks.messageType</source>
+                <target state="translated">Tipo de mensaje del webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.uri">
+                <source>webhooks.uri</source>
+                <target state="translated">URI del webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="never">
+                <source>never</source>
+                <target state="translated">Nunca</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.description">
+                <source>webhooks.description</source>
+                <target state="translated">Descripción del webhook</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

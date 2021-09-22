@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
@@ -16,19 +19,28 @@ use RZ\Roadiz\Core\Entities\UrlAlias;
 
 final class NodeTranstyper
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private LoggerInterface $logger;
 
     /**
-     * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface        $logger
+     * @param ManagerRegistry $managerRegistry
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        ManagerRegistry $managerRegistry,
+        ?LoggerInterface $logger = null
     ) {
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
+        $this->managerRegistry = $managerRegistry;
+    }
+
+    private function getManager(): ObjectManager
+    {
+        $manager = $this->managerRegistry->getManagerForClass(NodesSources::class);
+        if (null === $manager) {
+            throw new \RuntimeException('No manager was found during transtyping.');
+        }
+        return $manager;
     }
 
     /**
@@ -113,10 +125,10 @@ final class NodeTranstyper
         foreach ($sources as $existingSource) {
             // First plan old source deletion.
             $node->removeNodeSources($existingSource);
-            $this->entityManager->remove($existingSource);
+            $this->getManager()->remove($existingSource);
         }
         // Flush once
-        $this->entityManager->flush();
+        $this->getManager()->flush();
         $this->logger->debug('Removed old sources');
     }
 
@@ -138,7 +150,7 @@ final class NodeTranstyper
     ): NodesSources {
         /** @var NodesSources $source */
         $source = new $sourceClass($node, $existingSource->getTranslation());
-        $this->entityManager->persist($source);
+        $this->getManager()->persist($source);
         $source->setTitle($existingSource->getTitle());
 
         foreach ($fieldAssociations as $fields) {
@@ -154,14 +166,14 @@ final class NodeTranstyper
                 $setter = $oldField->getSetterName();
                 $getter = $oldField->getGetterName();
                 $source->$setter($existingSource->$getter());
-            } elseif ($oldField->getType() === NodeTypeField::DOCUMENTS_T) {
+            } elseif ($oldField->getType() === AbstractField::DOCUMENTS_T) {
                 /*
                  * Copy documents.
                  */
                 $documents = $existingSource->getDocumentsByFieldsWithName($oldField->getName());
                 foreach ($documents as $document) {
                     $nsDoc = new NodesSourcesDocuments($source, $document, $matchingField);
-                    $this->entityManager->persist($nsDoc);
+                    $this->getManager()->persist($nsDoc);
                     $source->getDocumentsByFields()->add($nsDoc);
                 }
             }
@@ -176,7 +188,7 @@ final class NodeTranstyper
             $newUrlAlias = new UrlAlias($source);
             $newUrlAlias->setAlias($urlAlias->getAlias());
             $source->addUrlAlias($newUrlAlias);
-            $this->entityManager->persist($newUrlAlias);
+            $this->getManager()->persist($newUrlAlias);
         }
         $this->logger->debug('Recreate aliases');
 
@@ -203,24 +215,24 @@ final class NodeTranstyper
          */
         $node = new Node();
         $node->setNodeName('testing_before_transtype' . $uniqueId);
-        $this->entityManager->persist($node);
+        $this->getManager()->persist($node);
 
         $translation = new Translation();
         $translation->setAvailable(true);
         $translation->setLocale(substr($uniqueId, 0, 10));
         $translation->setName('test' . $uniqueId);
-        $this->entityManager->persist($translation);
+        $this->getManager()->persist($translation);
 
         /** @var NodesSources $testSource */
         $testSource = new $sourceClass($node, $translation);
         $testSource->setTitle('testing_before_transtype' . $uniqueId);
-        $this->entityManager->persist($testSource);
-        $this->entityManager->flush();
+        $this->getManager()->persist($testSource);
+        $this->getManager()->flush();
 
         // then remove it if OK
-        $this->entityManager->remove($testSource);
-        $this->entityManager->remove($node);
-        $this->entityManager->remove($translation);
-        $this->entityManager->flush();
+        $this->getManager()->remove($testSource);
+        $this->getManager()->remove($node);
+        $this->getManager()->remove($translation);
+        $this->getManager()->flush();
     }
 }

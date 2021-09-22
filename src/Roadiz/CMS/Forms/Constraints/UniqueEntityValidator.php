@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -19,17 +20,14 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
  */
 class UniqueEntityValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManager $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -53,15 +51,20 @@ class UniqueEntityValidator extends ConstraintValidator
             throw new ConstraintDefinitionException('At least one field has to be specified.');
         }
 
-        $class = $this->entityManager->getClassMetadata(get_class($entity));
+        $class = $this->managerRegistry
+            ->getManagerForClass(get_class($entity))
+            ->getClassMetadata(get_class($entity));
 
         $criteria = [];
         $hasNullValue = false;
         foreach ($fields as $fieldName) {
+            if (!$class instanceof ClassMetadataInfo) {
+                throw new ConstraintDefinitionException(sprintf('The class "%s" is not mapped by Doctrine, so it cannot be validated for uniqueness.', get_class($entity)));
+            }
             if (!$class->hasField($fieldName) && !$class->hasAssociation($fieldName)) {
                 throw new ConstraintDefinitionException(sprintf('The field "%s" is not mapped by Doctrine, so it cannot be validated for uniqueness.', $fieldName));
             }
-            $fieldValue = $class->reflFields[$fieldName]->getValue($entity);
+            $fieldValue = $class->getReflectionProperty($fieldName)->getValue($entity);
 
             if (null === $fieldValue) {
                 $hasNullValue = true;
@@ -75,7 +78,9 @@ class UniqueEntityValidator extends ConstraintValidator
                  * read its identifiers. This is necessary because the wrapped
                  * getter methods in the Proxy are being bypassed.
                  */
-                $this->entityManager->initializeObject($criteria[$fieldName]);
+                $this->managerRegistry
+                    ->getManagerForClass(get_class($entity))
+                    ->initializeObject($criteria[$fieldName]);
             }
         }
         // validation doesn't fail if one of the fields is null and if null values should be ignored
@@ -92,13 +97,13 @@ class UniqueEntityValidator extends ConstraintValidator
              * We ensure the retrieved repository can handle the entity
              * by checking the entity is the same, or subclass of the supported entity.
              */
-            $repository = $this->entityManager->getRepository($constraint->entityClass);
+            $repository = $this->managerRegistry->getRepository($constraint->entityClass);
             $supportedClass = $repository->getClassName();
             if (!$entity instanceof $supportedClass) {
                 throw new ConstraintDefinitionException(sprintf('The "%s" entity repository does not support the "%s" entity. The entity should be an instance of or extend "%s".', $constraint->entityClass, $class->getName(), $supportedClass));
             }
         } else {
-            $repository = $this->entityManager->getRepository(get_class($entity));
+            $repository = $this->managerRegistry->getRepository(get_class($entity));
         }
         $result = $repository->{$constraint->repositoryMethod}($criteria);
         if ($result instanceof \IteratorAggregate) {
@@ -139,8 +144,11 @@ class UniqueEntityValidator extends ConstraintValidator
         }
         if ($class->getName() !== $idClass = get_class($value)) {
             // non unique value might be a composite PK that consists of other entity objects
-            if ($this->entityManager->getMetadataFactory()->hasMetadataFor($idClass)) {
-                $identifiers = $this->entityManager->getClassMetadata($idClass)->getIdentifierValues($value);
+            if ($this->managerRegistry->getManagerForClass($idClass)->getMetadataFactory()->hasMetadataFor($idClass)) {
+                $identifiers = $this->managerRegistry
+                    ->getManagerForClass($idClass)
+                    ->getClassMetadata($idClass)
+                    ->getIdentifierValues($value);
             } else {
                 // this case might happen if the non unique column has a custom doctrine type and its value is an object
                 // in which case we cannot get any identifiers for it

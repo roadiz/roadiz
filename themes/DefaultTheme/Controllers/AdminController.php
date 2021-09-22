@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Themes\DefaultTheme\Controllers;
 
+use Pimple\Psr11\Container;
 use RZ\Roadiz\CMS\Forms\ExplorerProviderItemType;
 use RZ\Roadiz\Core\Entities\Setting;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +28,7 @@ class AdminController extends RozierApp
          * or create your own!
          */
         $explorerProvider = new SettingsProvider();
-        $explorerProvider->setContainer($this->getContainer());
+        $explorerProvider->setContainer(new Container($this->getContainer()));
 
         /*
          * Create a form with ExplorerProviderItemType

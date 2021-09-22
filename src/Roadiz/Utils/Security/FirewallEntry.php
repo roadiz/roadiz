@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Security;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
@@ -52,7 +53,13 @@ class FirewallEntry
     protected array $listeners;
     protected RequestMatcher $requestMatcher;
     protected bool $useReferer = false;
+    /**
+     * @var class-string<AuthenticationSuccessHandler>
+     */
     protected string $authenticationSuccessHandlerClass;
+    /**
+     * @var class-string<AuthenticationFailureHandler>
+     */
     protected string $authenticationFailureHandlerClass;
     protected ?AccessDeniedHandlerInterface $accessDeniedHandler = null;
     protected bool $locked = false;
@@ -269,7 +276,7 @@ class FirewallEntry
         if (null === $this->authenticationSuccessHandler) {
             $this->authenticationSuccessHandler = new $this->authenticationSuccessHandlerClass(
                 $this->container['httpUtils'],
-                $this->container['em'],
+                $this->container[ManagerRegistry::class],
                 $this->container['tokenBasedRememberMeServices'],
                 [
                     'always_use_default_target_path' => false,

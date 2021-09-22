@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Translation;
 use Solarium\Core\Client\Client;
 use Solarium\Core\Query\Helper;
@@ -13,30 +14,30 @@ use Solarium\QueryType\Select\Query\Query;
 abstract class AbstractSearchHandler implements SearchHandlerInterface
 {
     protected ?Client $client = null;
-    protected ?EntityManagerInterface $em = null;
-    protected ?LoggerInterface $logger = null;
+    protected ?ObjectManager $em = null;
+    protected LoggerInterface $logger;
     protected int $highlightingFragmentSize = 150;
 
     /**
      * @param Client $client
-     * @param EntityManagerInterface $em
+     * @param ObjectManager $em
      * @param LoggerInterface|null $logger
      */
     public function __construct(
         Client $client,
-        EntityManagerInterface $em,
-        LoggerInterface $logger = null
+        ObjectManager $em,
+        ?LoggerInterface $logger = null
     ) {
         $this->client = $client;
         $this->em = $em;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
      * Search on Solr with pre-filled argument for highlighting
      *
      * * $q is the search criteria.
-     * * $args is a array with solr query argument.
+     * * $args is an array with solr query argument.
      * The common argument can be found [here](https://cwiki.apache.org/confluence/display/solr/Common+Query+Parameters)
      *  and for highlighting argument is [here](https://cwiki.apache.org/confluence/display/solr/Standard+Highlighter).
      *

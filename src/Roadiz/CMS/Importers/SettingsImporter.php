@@ -4,34 +4,30 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
-use Pimple\Container;
-use RZ\Roadiz\Core\ContainerAwareInterface;
-use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 /**
- * Class SettingsImporter
- *
  * @package RZ\Roadiz\CMS\Importers
  */
-class SettingsImporter implements EntityImporterInterface, ContainerAwareInterface
+class SettingsImporter implements EntityImporterInterface
 {
-    use ContainerAwareTrait;
+    private ManagerRegistry $managerRegistry;
+    private Serializer $serializer;
 
     /**
-     * NodesImporter constructor.
-     *
-     * @param Container $container
+     * @param ManagerRegistry $managerRegistry
+     * @param Serializer $serializer
      */
-    public function __construct(Container $container)
+    public function __construct(ManagerRegistry $managerRegistry, Serializer $serializer)
     {
-        $this->container = $container;
+        $this->managerRegistry = $managerRegistry;
+        $this->serializer = $serializer;
     }
-
 
     /**
      * @inheritDoc
@@ -46,11 +42,7 @@ class SettingsImporter implements EntityImporterInterface, ContainerAwareInterfa
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
-        /** @var Serializer $serializer */
-        $serializer = $this->get('serializer');
-        $serializer->deserialize(
+        $this->serializer->deserialize(
             $serializedData,
             'array<' . Setting::class . '>',
             'json',
@@ -59,10 +51,13 @@ class SettingsImporter implements EntityImporterInterface, ContainerAwareInterfa
                 ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
         );
 
-        // Clear result cache
-        $cacheDriver = $em->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null && $cacheDriver instanceof CacheProvider) {
-            $cacheDriver->deleteAll();
+        $manager = $this->managerRegistry->getManagerForClass(Setting::class);
+        if ($manager instanceof EntityManagerInterface) {
+            // Clear result cache
+            $cacheDriver = $manager->getConfiguration()->getResultCacheImpl();
+            if ($cacheDriver instanceof CacheProvider) {
+                $cacheDriver->deleteAll();
+            }
         }
 
         return true;

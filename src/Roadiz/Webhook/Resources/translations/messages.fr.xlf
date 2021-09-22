@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="fr">
+    <body>
+      <trans-unit xml:space="preserve" id="webhooks">
+                <source>webhooks</source>
+                <target state="translated">Webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.webhooks">
+                <source>manage.webhooks</source>
+                <target state="translated">Webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.webhook">
+                <source>add.a.webhook</source>
+                <target state="translated">Ajouter un webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.webhooks">
+                <source>back_to.webhooks</source>
+                <target state="translated">Retour à la liste des webhooks</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.webhook.%name%">
+                <source>delete.webhook.%name%</source>
+                <target state="translated">Supprimer le webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.webhook.%name%">
+                <source>edit.webhook.%name%</source>
+                <target state="translated">Éditer le webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
+                <source>are_you_sure.delete.webhook</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir supprimer ce webhook ?</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.messageType">
+                <source>webhooks.messageType</source>
+                <target state="translated">Type de webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.uri">
+                <source>webhooks.uri</source>
+                <target state="translated">URI</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
+                <source>webhooks.lastTriggeredAt</source>
+                <target state="translated">Dernier déclenchement</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.payload">
+                <source>webhooks.payload</source>
+                <target state="translated">Payload</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
+                <source>webhooks.throttleSeconds</source>
+                <target state="translated">Temporisation (en secondes)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.rootNode">
+                <source>webhooks.rootNode</source>
+                <target state="translated">Nœud racine</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.rootNode.help">
+                <source>webhooks.rootNode.help</source>
+                <target state="translated">Limite le déclenchement des webhooks à ce nœud-racine et à sa descendance pour toutes les modifications liée aux nœuds.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="never">
+                <source>never</source>
+                <target state="translated">Jamais</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.gitlab_pipeline">
+                <source>webhook.type.gitlab_pipeline</source>
+                <target state="translated">Gitlab CI Pipeline</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
+                <source>webhook.type.netlify_build_hook</source>
+                <target state="translated">Netlify Build hook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.generic_json_post">
+                <source>webhook.type.generic_json_post</source>
+                <target state="translated">POST JSON générique</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.trigger">
+                <source>webhook.trigger</source>
+                <target state="translated">Déclencher le webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.%item%.will_be_triggered_in.%seconds%">
+                <source>webhook.%item%.will_be_triggered_in.%seconds%</source>
+                <target state="translated">Le webhook %item% sera déclenché dans %seconds% secondes.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.trigger.webhook">
+                <source>are_you_sure.trigger.webhook</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir déclencher manuellement ce webhook ?</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="trigger.webhook.%name%">
+                <source>trigger.webhook.%name%</source>
+                <target state="translated">Déclencher manuellement le webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.automatic">
+                <source>webhooks.automatic</source>
+                <target state="translated">Déclenchement automatique</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.automatic.help">
+                <source>webhooks.automatic.help</source>
+                <target state="translated">Le webhook sera déclenché à chaque édition d'un contenu (nœud, étiquette)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
+                <source>webhook.too_many_triggered_in_period</source>
+                <target state="translated">Veuillez patienter jusqu'à %time% avant de déclencher à nouveau ce webhook.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.description">
+                <source>webhooks.description</source>
+                <target state="translated">Description</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

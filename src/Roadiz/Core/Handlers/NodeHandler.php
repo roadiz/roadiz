@@ -451,7 +451,6 @@ class NodeHandler extends AbstractHandler
     {
         $parentsArray = [];
         $parent = $this->getNode()->getParent();
-        $user = null;
         $chroot = null;
 
         if ($tokenStorage !== null) {

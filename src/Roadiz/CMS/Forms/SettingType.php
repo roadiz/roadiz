@@ -21,6 +21,16 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class SettingType extends AbstractType
 {
+    protected SettingTypeResolver $settingTypeResolver;
+
+    /**
+     * @param SettingTypeResolver $settingTypeResolver
+     */
+    public function __construct(SettingTypeResolver $settingTypeResolver)
+    {
+        $this->settingTypeResolver = $settingTypeResolver;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -71,7 +81,7 @@ class SettingType extends AbstractType
             $setting = $event->getData();
             $form = $event->getForm();
 
-            if (null !== $setting && $setting instanceof Setting) {
+            if ($setting instanceof Setting) {
                 if ($setting->getType() === AbstractField::DOCUMENTS_T) {
                     $form->add(
                         'value',
@@ -84,7 +94,7 @@ class SettingType extends AbstractType
                 } else {
                     $form->add(
                         'value',
-                        Setting::$typeToForm[$setting->getType()],
+                        $this->settingTypeResolver->getSettingType($setting),
                         $this->getFormOptionsForSetting($setting, $options['shortEdit'])
                     );
                 }

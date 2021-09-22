@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Form\AbstractType;
@@ -20,17 +20,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NodesType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -45,7 +42,7 @@ class NodesType extends AbstractType
             return $mixedEntities;
         }, function ($mixedIds) use ($options) {
             /** @var NodeRepository $repository */
-            $repository = $this->entityManager
+            $repository = $this->managerRegistry
                 ->getRepository(Node::class)
                 ->setDisplayingAllNodesStatuses(true);
             if (is_array($mixedIds) && count($mixedIds) === 0) {

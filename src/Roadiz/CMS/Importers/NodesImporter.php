@@ -4,10 +4,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\EntityManager;
-use Pimple\Container;
-use RZ\Roadiz\Core\ContainerAwareInterface;
-use RZ\Roadiz\Core\ContainerAwareTrait;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -17,24 +15,19 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 
 /**
- * Class NodesImporter
- *
  * @package RZ\Roadiz\CMS\Importers
  */
-class NodesImporter implements ImporterInterface, EntityImporterInterface, ContainerAwareInterface
+class NodesImporter implements ImporterInterface, EntityImporterInterface
 {
-    use ContainerAwareTrait;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * NodesImporter constructor.
-     *
-     * @param Container $container
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(Container $container)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->container = $container;
+        $this->managerRegistry = $managerRegistry;
     }
-
 
     /**
      * @inheritDoc
@@ -49,18 +42,19 @@ class NodesImporter implements ImporterInterface, EntityImporterInterface, Conta
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
-
         static::$usedTranslations = [];
-        $serializer = new NodeJsonSerializer($em);
+        $objectManager = $this->managerRegistry->getManagerForClass(Node::class);
+        if (null === $objectManager) {
+            throw new \RuntimeException('No manager found for ' . Node::class);
+        }
+        $serializer = new NodeJsonSerializer($objectManager);
         $nodes = $serializer->deserialize($serializedData);
 
         try {
             foreach ($nodes as $node) {
-                static::browseTree($node, $em);
+                static::browseTree($node, $objectManager);
             }
-            $em->flush();
+            $objectManager->flush();
         } catch (UniqueConstraintViolationException $e) {
             throw new EntityAlreadyExistsException($e->getMessage());
         }
@@ -75,22 +69,22 @@ class NodesImporter implements ImporterInterface, EntityImporterInterface, Conta
      * Import a Json file (.rzt) containing node and node source.
      *
      * @param string $serializedData
-     * @param EntityManager $em
+     * @param ObjectManager $objectManager
      * @param HandlerFactoryInterface $handlerFactory
      * @return bool
      * @deprecated
      */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
+    public static function importJsonFile($serializedData, ObjectManager $objectManager, HandlerFactoryInterface $handlerFactory)
     {
         static::$usedTranslations = [];
-        $serializer = new NodeJsonSerializer($em);
+        $serializer = new NodeJsonSerializer($objectManager);
         $nodes = $serializer->deserialize($serializedData);
 
         try {
             foreach ($nodes as $node) {
-                static::browseTree($node, $em);
+                static::browseTree($node, $objectManager);
             }
-            $em->flush();
+            $objectManager->flush();
         } catch (UniqueConstraintViolationException $e) {
             throw new EntityAlreadyExistsException($e->getMessage());
         }
@@ -100,17 +94,17 @@ class NodesImporter implements ImporterInterface, EntityImporterInterface, Conta
 
     /**
      * @param Node $node
-     * @param EntityManager $em
+     * @param ObjectManager $objectManager
      * @return null|Node
      * @throws EntityAlreadyExistsException
      */
-    protected static function browseTree(Node $node, EntityManager $em)
+    protected static function browseTree(Node $node, ObjectManager $objectManager)
     {
         /*
          * Test if node already exists against its nodeName
          */
         /** @var NodeRepository $nodeRepo */
-        $nodeRepo = $em->getRepository(Node::class)
+        $nodeRepo = $objectManager->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true);
         $existing = $nodeRepo->findOneByNodeName($node->getNodeName());
         if (null !== $existing) {
@@ -119,14 +113,14 @@ class NodesImporter implements ImporterInterface, EntityImporterInterface, Conta
 
         /** @var Node $child */
         foreach ($node->getChildren() as $child) {
-            static::browseTree($child, $em);
+            static::browseTree($child, $objectManager);
         }
-        $em->persist($node);
+        $objectManager->persist($node);
 
         /** @var NodesSources $nodeSource */
         foreach ($node->getNodeSources() as $nodeSource) {
             /** @var Translation|null $trans */
-            $trans = $em->getRepository(Translation::class)
+            $trans = $objectManager->getRepository(Translation::class)
                         ->findOneByLocale($nodeSource->getTranslation()->getLocale());
 
             if (null === $trans &&
@@ -138,16 +132,16 @@ class NodesImporter implements ImporterInterface, EntityImporterInterface, Conta
                 $trans = new Translation();
                 $trans->setLocale($nodeSource->getTranslation()->getLocale());
                 $trans->setName(Translation::$availableLocales[$nodeSource->getTranslation()->getLocale()]);
-                $em->persist($trans);
+                $objectManager->persist($trans);
 
                 static::$usedTranslations[$nodeSource->getTranslation()->getLocale()] = $trans;
             }
             $nodeSource->setTranslation($trans);
             foreach ($nodeSource->getUrlAliases() as $alias) {
-                $em->persist($alias);
+                $objectManager->persist($alias);
             }
 
-            $em->persist($nodeSource);
+            $objectManager->persist($nodeSource);
         }
 
         return $node;

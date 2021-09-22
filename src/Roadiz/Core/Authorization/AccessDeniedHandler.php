@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Authorization;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,17 +26,17 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 
     /**
      * @param UrlGeneratorInterface $urlGenerator
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      * @param string $redirectRoute Route to redirect if access denied is thrown
      * @param array $redirectParameters
      */
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
-        LoggerInterface $logger,
-        $redirectRoute = '',
-        $redirectParameters = []
+        ?LoggerInterface $logger = null,
+        string $redirectRoute = '',
+        array $redirectParameters = []
     ) {
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->urlGenerator = $urlGenerator;
         $this->redirectRoute = $redirectRoute;
         $this->redirectParameters = $redirectParameters;

@@ -13,11 +13,11 @@ use Themes\DefaultTheme\Services\NodeServiceProvider;
  */
 class DefaultThemeApp extends FrontendController
 {
-    protected static $themeName = 'Default theme';
-    protected static $themeAuthor = 'Ambroise Maupate';
-    protected static $themeCopyright = 'REZO ZERO';
-    protected static $themeDir = 'DefaultTheme';
-    protected static $backendTheme = false;
+    protected static string $themeName = 'Default theme';
+    protected static string $themeAuthor = 'Ambroise Maupate';
+    protected static string $themeCopyright = 'REZO ZERO';
+    protected static string $themeDir = 'DefaultTheme';
+    protected static bool $backendTheme = false;
 
     /**
      * @param Request $request
@@ -53,7 +53,12 @@ class DefaultThemeApp extends FrontendController
         /*
          * Register services
          */
-        $this->themeContainer->register(new NodeServiceProvider($this->getContainer(), $this->translation));
+        $this->themeContainer->register(new NodeServiceProvider(
+            $this->get('nodeApi'),
+            $this->get('nodeSourceApi'),
+            $this->get('nodeTypesBag'),
+            $this->translation
+        ));
 
         $this->assignation['themeServices'] = $this->themeContainer;
         $this->assignation['head']['themeName'] = static::$themeName;

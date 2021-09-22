@@ -105,6 +105,7 @@ class PreviewModeSubscriber implements EventSubscriberInterface
         if ($this->supports()) {
             $response = $event->getResponse();
             $response->expire();
+            $response->headers->addCacheControlDirective('no-store');
             $response->headers->add(['X-Roadiz-Preview' => true]);
             $event->setResponse($response);
         }

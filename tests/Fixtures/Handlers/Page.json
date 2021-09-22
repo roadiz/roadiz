@@ -19,7 +19,9 @@
             "virtual": false,
             "defaultValues": null,
             "expanded": false,
-            "nodeTypeName": "Page"
+            "nodeTypeName": "Page",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "header_image",
@@ -31,7 +33,10 @@
             "virtual": true,
             "defaultValues": null,
             "expanded": false,
-            "nodeTypeName": "Page"
+            "nodeTypeName": "Page",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         }
-    ]
+    ],
+    "searchable": true
 }

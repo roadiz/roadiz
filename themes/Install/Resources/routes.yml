@@ -121,10 +121,6 @@ installAfterDonePage:
     path:     /install/done/end
     defaults:
         _controller: Themes\Install\InstallApp::afterDoneAction
-installFailedPage:
-    path:     /install/failed
-    defaults:
-        _controller: Themes\Install\InstallApp::failedAction
 installClearCacheSchema:
     path:     /install/clear-cache
     defaults:

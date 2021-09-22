@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,17 +15,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NodeTypesType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -42,7 +39,7 @@ class NodeTypesType extends AbstractType
             if ($options['showInvisible'] === false) {
                 $criteria['visible'] = true;
             }
-            $nodeTypes = $this->entityManager->getRepository(NodeType::class)->findBy($criteria);
+            $nodeTypes = $this->managerRegistry->getRepository(NodeType::class)->findBy($criteria);
 
             /** @var NodeType $nodeType */
             foreach ($nodeTypes as $nodeType) {

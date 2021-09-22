@@ -35,8 +35,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     @ORM\Index(columns={"hide_children"}),
  *     @ORM\Index(columns={"node_name", "status"}),
  *     @ORM\Index(columns={"visible", "status"}),
- *     @ORM\Index(columns={"visible", "status", "parent_node_id"}),
- *     @ORM\Index(columns={"visible", "parent_node_id"}),
+ *     @ORM\Index(columns={"visible", "status", "parent_node_id"}, name="node_visible_status_parent"),
+ *     @ORM\Index(columns={"status", "parent_node_id"}, name="node_status_parent"),
+ *     @ORM\Index(columns={"nodeType_id", "status", "parent_node_id"}, name="node_nodetype_status_parent"),
+ *     @ORM\Index(columns={"nodeType_id", "status", "parent_node_id", "position"}, name="node_nodetype_status_parent_position"),
+ *     @ORM\Index(columns={"visible", "parent_node_id"}, name="node_visible_parent"),
+ *     @ORM\Index(columns={"visible", "parent_node_id", "position"}, name="node_visible_parent_position"),
+ *     @ORM\Index(columns={"status", "visible", "parent_node_id", "position"}, name="node_status_visible_parent_position"),
  *     @ORM\Index(columns={"home"})
  * })
  * @ORM\HasLifecycleCallbacks

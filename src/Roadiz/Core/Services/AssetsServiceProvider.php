@@ -5,14 +5,25 @@ namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
 use AM\InterventionRequest\InterventionRequest;
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\CMS\Controllers\AssetsController;
+use RZ\Roadiz\CMS\Controllers\FontFaceController;
+use RZ\Roadiz\CMS\Controllers\InterventionRequestController;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Document\EventSubscriber\DocumentFilesizeSubscriber;
+use RZ\Roadiz\Document\EventSubscriber\DocumentSizeSubscriber;
+use RZ\Roadiz\Document\EventSubscriber\DocumentSvgSizeSubscriber;
+use RZ\Roadiz\Document\EventSubscriber\ExifDocumentSubscriber;
+use RZ\Roadiz\Document\EventSubscriber\ImageColorDocumentSubscriber;
+use RZ\Roadiz\Document\EventSubscriber\RawDocumentsSubscriber;
+use RZ\Roadiz\Document\EventSubscriber\SvgDocumentSubscriber;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use RZ\Roadiz\Utils\Log\LoggerFactory;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Register assets services for dependency injection container.
@@ -25,14 +36,30 @@ class AssetsServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container[AssetsController::class] = function (Container $c) {
-            return new AssetsController(
-                $c['kernel'],
-                $c['interventionRequest'],
+        $container[DownscaleImageManager::class] = function (Container $c) {
+            return new DownscaleImageManager(
                 $c['em'],
+                $c['assetPackages'],
+                $c['logger'],
+                $c['config']['assetsProcessing']['driver'],
+                $c['config']['assetsProcessing']['maxPixelSize']
+            );
+        };
+
+        $container[FontFaceController::class] = function (Container $c) {
+            return new FontFaceController(
+                $c['kernel'],
+                $c[ManagerRegistry::class],
                 $c['twig.environment'],
                 $c['settingsBag'],
                 $c['assetPackages']
+            );
+        };
+
+        $container[InterventionRequestController::class] = function (Container $c) {
+            return new InterventionRequestController(
+                $c['kernel'],
+                $c['interventionRequest']
             );
         };
 
@@ -66,7 +93,8 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 $c['versionStrategy'],
                 $c['requestStack'],
                 $kernel,
-                $c['settingsBag']->get('static_domain_name', '') ?? ''
+                // Do not require DB, use configuration instead
+                $c['config']['staticDomainName'] ?? ''
             );
         };
 
@@ -141,6 +169,72 @@ class AssetsServiceProvider implements ServiceProviderInterface
 
             return $intervention;
         };
+
+
+        $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+
+            if (!$kernel->isInstallMode()) {
+                /*
+                 * Add custom event subscriber to manage Svg document sanitizing
+                 */
+                $dispatcher->addSubscriber(
+                    new SvgDocumentSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                /*
+                 * Add custom event subscriber to manage image document size and color
+                 */
+                $dispatcher->addSubscriber(
+                    new DocumentSizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new DocumentSvgSizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new DocumentFilesizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new ImageColorDocumentSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                /*
+                 * Add custom event subscriber to create a downscaled version for HD images.
+                 */
+                $dispatcher->addSubscriber(
+                    new RawDocumentsSubscriber(
+                        $c[DownscaleImageManager::class]
+                    )
+                );
+                /*
+                 * Add custom event subscriber to manage document EXIF
+                 */
+                $dispatcher->addSubscriber(
+                    new ExifDocumentSubscriber(
+                        $c[ManagerRegistry::class],
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+            }
+
+            return $dispatcher;
+        });
+
 
         return $container;
     }

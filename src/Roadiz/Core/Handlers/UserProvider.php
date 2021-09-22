@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -15,14 +15,14 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class UserProvider implements UserProviderInterface
 {
-    protected EntityManagerInterface $em;
+    protected ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param ManagerRegistry $managerRegistry
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        $this->em = $em;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -39,7 +39,7 @@ class UserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         /** @var User|null $user */
-        $user = $this->em
+        $user = $this->managerRegistry
                      ->getRepository(User::class)
                      ->findOneBy(['username' => $username]);
 
@@ -65,8 +65,9 @@ class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user)
     {
         if ($user instanceof User) {
+            $manager = $this->managerRegistry->getManagerForClass(User::class);
             /** @var User|null $refreshUser */
-            $refreshUser = $this->em->find(User::class, (int) $user->getId());
+            $refreshUser = $manager->find(User::class, (int) $user->getId());
             if ($refreshUser !== null &&
                 $refreshUser->isEnabled() &&
                 $refreshUser->isAccountNonExpired() &&

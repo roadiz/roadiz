@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -15,19 +15,19 @@ use RZ\Roadiz\Core\Repositories\UrlAliasRepository;
 
 final class NodeFactory
 {
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
     private NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param NodeNamePolicyInterface $nodeNamePolicy
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         NodeNamePolicyInterface $nodeNamePolicy
     ) {
         $this->nodeNamePolicy = $nodeNamePolicy;
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -48,7 +48,7 @@ final class NodeFactory
         Node $parent = null
     ): Node {
         /** @var NodeRepository $repository */
-        $repository = $this->entityManager->getRepository(Node::class)
+        $repository = $this->managerRegistry->getRepository(Node::class)
             ->setDisplayingAllNodesStatuses(true);
 
         if ($node === null && $type === null) {
@@ -56,7 +56,7 @@ final class NodeFactory
         }
 
         if ($translation === null) {
-            $translation = $this->entityManager->getRepository(Translation::class)->findDefault();
+            $translation = $this->managerRegistry->getRepository(Translation::class)->findDefault();
         }
 
         if ($node === null) {
@@ -71,7 +71,8 @@ final class NodeFactory
         $sourceClass = $node->getNodeType()->getSourceEntityFullQualifiedClassName();
         /** @var NodesSources $source */
         $source = new $sourceClass($node, $translation);
-        $source->injectObjectManager($this->entityManager, $this->entityManager->getClassMetadata($sourceClass));
+        $manager = $this->managerRegistry->getManagerForClass(NodesSources::class);
+        $source->injectObjectManager($manager, $manager->getClassMetadata($sourceClass));
         $source->setTitle($title);
         $source->setPublishedAt(new \DateTime());
 
@@ -90,8 +91,8 @@ final class NodeFactory
         }
         $node->setNodeName($nodeName);
 
-        $this->entityManager->persist($source);
-        $this->entityManager->persist($node);
+        $manager->persist($source);
+        $manager->persist($node);
 
         return $node;
     }
@@ -117,11 +118,11 @@ final class NodeFactory
     ): Node {
         $node = $this->create($title, $type, $translation, $node, $parent);
         /** @var UrlAliasRepository $repository */
-        $repository = $this->entityManager->getRepository(UrlAlias::class);
+        $repository = $this->managerRegistry->getRepository(UrlAlias::class);
         if (false === $repository->exists($urlAlias)) {
             $alias = new UrlAlias($node->getNodeSources()->first());
             $alias->setAlias($urlAlias);
-            $this->entityManager->persist($alias);
+            $this->managerRegistry->getManagerForClass(UrlAlias::class)->persist($alias);
         }
 
         return $node;

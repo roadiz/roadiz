@@ -14,7 +14,7 @@ final class Version20210423161606 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Additional table indexes';
+        return 'Additional table indexes on documents, folders, logs and tags';
     }
 
     public function up(Schema $schema) : void
@@ -35,17 +35,32 @@ final class Version20210423161606 extends AbstractMigration
 
     public function down(Schema $schema) : void
     {
-        $this->addSql('DROP INDEX document_created_at ON documents');
-        $this->addSql('DROP INDEX document_updated_at ON documents');
-        $this->addSql('DROP INDEX document_raw_created_at ON documents');
-        $this->addSql('DROP INDEX document_embed_platform ON documents');
-        $this->addSql('DROP INDEX folder_parent_position ON folders');
-        $this->addSql('DROP INDEX log_ns_datetime ON log');
-        $this->addSql('DROP INDEX log_username_datetime ON log');
-        $this->addSql('DROP INDEX log_user_datetime ON log');
-        $this->addSql('DROP INDEX log_level_datetime ON log');
-        $this->addSql('DROP INDEX log_channel_datetime ON log');
-        $this->addSql('DROP INDEX ns_node_translation_discr ON nodes_sources');
-        $this->addSql('DROP INDEX tag_parent_position ON tags');
+        if ($this->connection->getDatabasePlatform()->getName() === 'postgresql') {
+            $this->addSql('DROP INDEX IF EXISTS document_created_at');
+            $this->addSql('DROP INDEX IF EXISTS document_updated_at');
+            $this->addSql('DROP INDEX IF EXISTS document_raw_created_at');
+            $this->addSql('DROP INDEX IF EXISTS document_embed_platform');
+            $this->addSql('DROP INDEX IF EXISTS folder_parent_position');
+            $this->addSql('DROP INDEX IF EXISTS log_ns_datetime');
+            $this->addSql('DROP INDEX IF EXISTS log_username_datetime');
+            $this->addSql('DROP INDEX IF EXISTS log_user_datetime');
+            $this->addSql('DROP INDEX IF EXISTS log_level_datetime');
+            $this->addSql('DROP INDEX IF EXISTS log_channel_datetime');
+            $this->addSql('DROP INDEX IF EXISTS ns_node_translation_discr');
+            $this->addSql('DROP INDEX IF EXISTS tag_parent_position');
+        } else {
+            $this->addSql('DROP INDEX document_created_at ON documents');
+            $this->addSql('DROP INDEX document_updated_at ON documents');
+            $this->addSql('DROP INDEX document_raw_created_at ON documents');
+            $this->addSql('DROP INDEX document_embed_platform ON documents');
+            $this->addSql('DROP INDEX folder_parent_position ON folders');
+            $this->addSql('DROP INDEX log_ns_datetime ON log');
+            $this->addSql('DROP INDEX log_username_datetime ON log');
+            $this->addSql('DROP INDEX log_user_datetime ON log');
+            $this->addSql('DROP INDEX log_level_datetime ON log');
+            $this->addSql('DROP INDEX log_channel_datetime ON log');
+            $this->addSql('DROP INDEX ns_node_translation_discr ON nodes_sources');
+            $this->addSql('DROP INDEX tag_parent_position ON tags');
+        }
     }
 }

@@ -399,11 +399,22 @@
         "defaultValues": ""
     },
     {
+        "name": "unsplash_client_id",
+        "description": "unsplash_client_id.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
         "name": "seo_description",
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 2,
@@ -414,7 +425,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 0,
@@ -426,7 +437,7 @@
         "encrypted": false,
         "description": "Switch maintenance mode. Only login page will be available for public requests.",
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 5,
@@ -437,7 +448,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 0,
@@ -448,7 +459,7 @@
         "encrypted": false,
         "visible": true,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 11,
@@ -459,7 +470,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 9,
@@ -471,21 +482,10 @@
         "encrypted": false,
         "description": "Replace random *Splashbase* login images with your own.",
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 9,
-        "defaultValues": ""
-    },
-    {
-        "name": "static_domain_name",
-        "visible": true,
-        "encrypted": false,
-        "settingGroup": {
-            "name": "Site informations",
-            "inMenu": true
-        },
-        "type": 0,
         "defaultValues": ""
     },
     {
@@ -571,7 +571,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 5
@@ -582,7 +582,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 0
@@ -593,9 +593,20 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Site informations",
+            "name": "Site information",
             "inMenu": true
         },
         "type": 0
+    },
+    {
+        "name": "dashboard_iframe",
+        "description": "dashboard_iframe.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "Site information",
+            "inMenu": true
+        },
+        "type": 2
     }
 ]

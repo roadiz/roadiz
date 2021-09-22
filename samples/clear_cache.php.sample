@@ -1,14 +1,11 @@
 <?php
 declare(strict_types=1);
 
-use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\HttpFoundation\Request;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(__FILE__));
 require dirname(realpath(__FILE__)) . "/bootstrap.php";
 
@@ -21,7 +18,6 @@ $allowedIp = [
 // This check prevents access to debug front controllers that are deployed by accident to production servers.
 // Feel free to remove this, extend it, or make something more sophisticated.
 if (isset($_SERVER['HTTP_CLIENT_IP'])
-    || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
     || !(in_array(@$_SERVER['REMOTE_ADDR'], $allowedIp) || php_sapi_name() === 'cli-server')
 ) {
     $response = new JsonResponse([
@@ -34,11 +30,11 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 
 $request = Request::createFromGlobals();
 if ($request->query->has('env') && $request->query->get('env') == 'preview') {
-    $kernel = new Kernel('prod', false, true);
+    $kernel = new \RZ\Roadiz\Core\SourceKernel('prod', false, true);
 } elseif ($request->query->has('env') && $request->query->get('env') == 'dev') {
-    $kernel = new Kernel('dev', true);
+    $kernel = new \RZ\Roadiz\Core\SourceKernel('dev', true);
 } else {
-    $kernel = new Kernel('prod', false);
+    $kernel = new \RZ\Roadiz\Core\SourceKernel('prod', false);
 }
 $kernel->boot();
 $kernel->getContainer()->offsetSet('request', $request);

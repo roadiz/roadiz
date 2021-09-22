@@ -5,8 +5,6 @@ namespace RZ\Roadiz\Utils\MediaFinders;
 
 /**
  * Vimeo tools class.
- *
- * Manage a Vimeo video feed
  */
 class VimeoEmbedFinder extends AbstractVimeoEmbedFinder
 {

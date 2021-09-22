@@ -14,10 +14,10 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Translation\Twig\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Translation\Twig\TranslationMenuExtension;
+use RZ\Roadiz\TwigExtension\DocumentExtension;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\CentralTruncateExtension;
-use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HandlerExtension;
@@ -30,6 +30,7 @@ use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\SecurityExtension;
+use Symfony\Bridge\Twig\Extension\StopwatchExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
@@ -38,6 +39,7 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Themes\Install\InstallApp;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ProfilerExtension;
@@ -190,6 +192,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new StringExtension());
             $extensions->add(new CentralTruncateExtension());
             $extensions->add(new HtmlExtension());
+            $extensions->add(new StopwatchExtension($c['stopwatch']));
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
@@ -208,11 +211,10 @@ class TwigServiceProvider implements ServiceProviderInterface
             ));
             $extensions->add(new UrlExtension(
                 $c['document.url_generator'],
-                $c['nodesSourcesUrlCacheProvider'],
-                (boolean) $c['settingsBag']->get('force_locale')
+                $c['nodesSourcesUrlCacheProvider']
             ));
             /*
-             * These extension need a valid Database connection
+             * These extensions need a valid Database connection
              * with EntityManager not null.
              */
             try {

@@ -17,10 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 final class NodesSourcesReachableFilter implements EventSubscriberInterface
 {
-    /**
-     * @var NodeTypes
-     */
-    private $nodeTypesBag;
+    private NodeTypes $nodeTypesBag;
 
     const PARAMETER = [
         'node.nodeType.reachable',
@@ -28,8 +25,6 @@ final class NodesSourcesReachableFilter implements EventSubscriberInterface
     ];
 
     /**
-     * NodesSourcesReachableFilter constructor.
-     *
      * @param NodeTypes $nodeTypesBag
      */
     public function __construct(NodeTypes $nodeTypesBag)

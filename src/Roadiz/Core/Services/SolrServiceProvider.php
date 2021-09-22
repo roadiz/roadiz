@@ -3,9 +3,20 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\Indexer\DocumentIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\FolderIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\IndexerFactory;
+use RZ\Roadiz\Core\SearchEngine\Indexer\NodeIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\NodesSourcesIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\TagIndexer;
+use RZ\Roadiz\Core\SearchEngine\Message\Handler\SolrDeleteMessageHandler;
+use RZ\Roadiz\Core\SearchEngine\Message\Handler\SolrReindexMessageHandler;
+use RZ\Roadiz\Core\SearchEngine\Message\SolrDeleteMessage;
+use RZ\Roadiz\Core\SearchEngine\Message\SolrReindexMessage;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
@@ -16,6 +27,8 @@ use Solarium\Client;
 use Solarium\Core\Client\Adapter\AdapterInterface;
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Messenger\Handler\HandlerDescriptor;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Register Solr services for dependency injection container.
@@ -109,7 +122,7 @@ class SolrServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return null|DocumentSearchHandler
          */
-        $container['solr.search.document'] = $container->factory(function (Container $c) {
+        $container[DocumentSearchHandler::class] = $container->factory(function (Container $c) {
             if ($c['solr.ready']) {
                 return new DocumentSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
@@ -131,6 +144,50 @@ class SolrServiceProvider implements ServiceProviderInterface
             );
         };
 
+        $container[IndexerFactory::class] = function (Container $c) {
+            return new IndexerFactory(new \Pimple\Psr11\Container($c));
+        };
+
+        $container[NodeIndexer::class] = $container->factory(function (Container $c) {
+            return new NodeIndexer(
+                $c['solr'],
+                $c[ManagerRegistry::class],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[NodesSourcesIndexer::class] = $container->factory(function (Container $c) {
+            return new NodesSourcesIndexer(
+                $c['solr'],
+                $c[ManagerRegistry::class],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[DocumentIndexer::class] = $container->factory(function (Container $c) {
+            return new DocumentIndexer(
+                $c['solr'],
+                $c[ManagerRegistry::class],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[TagIndexer::class] = $container->factory(function (Container $c) {
+            return new TagIndexer(
+                $c['solr'],
+                $c[ManagerRegistry::class],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[FolderIndexer::class] = $container->factory(function (Container $c) {
+            return new FolderIndexer(
+                $c['solr'],
+                $c[ManagerRegistry::class],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
         /*
          * Add custom event subscribers to the general dispatcher.
          *
@@ -140,13 +197,43 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(
                 new SolariumSubscriber(
-                    $c['solr'],
-                    $c['logger'],
-                    $c[SolariumFactoryInterface::class]
+                    $c[MessageBusInterface::class]
                 )
             );
             return $dispatcher;
         });
+
+
+        /*
+         * Handlers
+         */
+        $container->extend('messenger.handlers', function (array $handlers, Container $c) {
+            return array_merge($handlers, [
+                SolrDeleteMessage::class => [
+                    $c[SolrDeleteMessageHandler::class]
+                ],
+                SolrReindexMessage::class => [
+                    $c[SolrReindexMessageHandler::class]
+                ],
+            ]);
+        });
+
+        $container[SolrDeleteMessageHandler::class] = function (Container $c) {
+            return new HandlerDescriptor(
+                new SolrDeleteMessageHandler($c[IndexerFactory::class], $c['logger.messenger']),
+                [
+                    'handles' => SolrDeleteMessage::class,
+                ]
+            );
+        };
+        $container[SolrReindexMessageHandler::class] = function (Container $c) {
+            return new HandlerDescriptor(
+                new SolrReindexMessageHandler($c[IndexerFactory::class], $c['logger.messenger']),
+                [
+                    'handles' => SolrReindexMessage::class,
+                ]
+            );
+        };
 
         return $container;
     }

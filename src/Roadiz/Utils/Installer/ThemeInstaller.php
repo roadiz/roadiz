@@ -105,7 +105,7 @@ class ThemeInstaller
 
         $assignation["cms"] = ["version" => Kernel::$cmsVersion];
         $assignation["status"] = [];
-        $assignation["status"]["version"] = (version_compare($data["versionRequire"], Kernel::$cmsVersion) <= 0) ? true : false;
+        $assignation["status"]["version"] = version_compare($data["versionRequire"], Kernel::$cmsVersion) <= 0;
         $assignation["cms"]["locale"] = $locale;
         $assignation["status"]["locale"] = in_array($locale, $data["supportedLocale"]);
         $assignation["status"]["import"] = [];

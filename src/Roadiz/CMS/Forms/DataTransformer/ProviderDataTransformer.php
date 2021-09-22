@@ -4,25 +4,16 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms\DataTransformer;
 
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Explorer\ExplorerProviderInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 class ProviderDataTransformer implements DataTransformerInterface
 {
-    /**
-     * @var NodeTypeField
-     */
-    protected $nodeTypeField;
+    protected NodeTypeField $nodeTypeField;
+    protected ExplorerProviderInterface $provider;
 
     /**
-     * @var ExplorerProviderInterface
-     */
-    protected $provider;
-
-    /**
-     * ProviderDataTransformer constructor.
-     *
      * @param NodeTypeField             $nodeTypeField
      * @param ExplorerProviderInterface $provider
      */

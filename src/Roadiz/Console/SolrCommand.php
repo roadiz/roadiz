@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Solarium\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,16 +15,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class SolrCommand extends Command
 {
-    /**
-     * @var SymfonyStyle
-     */
-    protected $io;
-
-    /** @var EntityManager */
-    protected $entityManager;
-
-    /** @var Client */
-    protected $solr;
+    protected ?SymfonyStyle $io = null;
+    protected ?EntityManagerInterface $entityManager = null;
+    protected ?Client $solr = null;
 
     protected function configure()
     {
@@ -34,7 +27,7 @@ class SolrCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->entityManager = $this->getHelper('doctrine')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
         $this->io = new SymfonyStyle($input, $output);
 
@@ -71,37 +64,5 @@ solr:
             password: ""
 EOD);
         }
-    }
-
-    /**
-     * Empty Solr index.
-     *
-     * @param string|null $documentType
-     */
-    protected function emptySolr(?string $documentType = null): void
-    {
-        $update = $this->solr->createUpdate();
-        if (null !== $documentType) {
-            $update->addDeleteQuery('document_type_s:' . trim($documentType));
-        } else {
-            // Delete ALL index
-            $update->addDeleteQuery('*:*');
-        }
-        $update->addCommit();
-        $this->solr->update($update);
-    }
-
-    /**
-     * Send an optimize and commit update query to Solr.
-     */
-    protected function optimizeSolr(): void
-    {
-        $optimizeUpdate = $this->solr->createUpdate();
-        $optimizeUpdate->addOptimize(true, true, 5);
-        $this->solr->update($optimizeUpdate);
-
-        $finalCommitUpdate = $this->solr->createUpdate();
-        $finalCommitUpdate->addCommit(true, true, false);
-        $this->solr->update($finalCommitUpdate);
     }
 }

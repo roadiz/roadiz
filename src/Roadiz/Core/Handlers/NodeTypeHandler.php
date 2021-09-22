@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
@@ -25,6 +26,7 @@ class NodeTypeHandler extends AbstractHandler
     private Kernel $kernel;
     private EntityGeneratorFactory $entityGeneratorFactory;
     private HandlerFactory $handlerFactory;
+    private ManagerRegistry $managerRegistry;
 
     /**
      * @return NodeType
@@ -54,17 +56,20 @@ class NodeTypeHandler extends AbstractHandler
      * @param Kernel $kernel
      * @param EntityGeneratorFactory $entityGeneratorFactory
      * @param HandlerFactory $handlerFactory
+     * @param ManagerRegistry $managerRegistry
      */
     public function __construct(
         ObjectManager $objectManager,
         Kernel $kernel,
         EntityGeneratorFactory $entityGeneratorFactory,
-        HandlerFactory $handlerFactory
+        HandlerFactory $handlerFactory,
+        ManagerRegistry $managerRegistry
     ) {
         parent::__construct($objectManager);
         $this->kernel = $kernel;
         $this->entityGeneratorFactory = $entityGeneratorFactory;
         $this->handlerFactory = $handlerFactory;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -185,7 +190,7 @@ class NodeTypeHandler extends AbstractHandler
         ];
 
         if ($this->objectManager instanceof EntityManagerInterface) {
-            $clearers[] = new DoctrineCacheClearer($this->objectManager, $this->kernel, $recreateProxies);
+            $clearers[] = new DoctrineCacheClearer($this->managerRegistry, $this->kernel, $recreateProxies);
         }
 
         foreach ($clearers as $clearer) {

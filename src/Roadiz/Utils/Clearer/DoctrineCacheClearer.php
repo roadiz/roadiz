@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Clearer;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -13,18 +13,18 @@ use Symfony\Component\Finder\Finder;
 class DoctrineCacheClearer extends Clearer
 {
     protected bool $recreateProxies;
-    protected EntityManagerInterface $entityManager;
+    protected ManagerRegistry $managerRegistry;
     protected Kernel $kernel;
 
     /**
-     * @param EntityManagerInterface $entityManager
-     * @param Kernel                 $kernel
-     * @param bool                   $recreateProxies
+     * @param ManagerRegistry $managerRegistry
+     * @param Kernel $kernel
+     * @param bool $recreateProxies
      */
-    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, bool $recreateProxies = true)
+    public function __construct(ManagerRegistry $managerRegistry, Kernel $kernel, bool $recreateProxies = true)
     {
         parent::__construct('');
-        $this->entityManager = $entityManager;
+        $this->managerRegistry = $managerRegistry;
         $this->kernel = $kernel;
         $this->recreateProxies = $recreateProxies;
     }
@@ -38,8 +38,8 @@ class DoctrineCacheClearer extends Clearer
      */
     public function databaseAvailable(): bool
     {
-        return null !== $this->entityManager &&
-            ($this->entityManager->getConnection()->isConnected() || $this->entityManager->getConnection()->connect());
+        return null !== $this->managerRegistry &&
+            ($this->managerRegistry->getConnection()->isConnected() || $this->managerRegistry->getConnection()->connect());
     }
 
     /**
@@ -48,7 +48,7 @@ class DoctrineCacheClearer extends Clearer
     public function clear(): bool
     {
         if ($this->databaseAvailable()) {
-            $conf = $this->entityManager->getConfiguration();
+            $conf = $this->managerRegistry->getManager()->getConfiguration();
             $this->output .= $this->clearCacheDriver($conf->getResultCacheImpl(), 'result');
             $this->output .= $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
             $this->output .= $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
@@ -87,12 +87,12 @@ class DoctrineCacheClearer extends Clearer
         try {
             $fs = new Filesystem();
             $finder = new Finder();
-            $conf = $this->entityManager->getConfiguration();
+            $conf = $this->managerRegistry->getManager()->getConfiguration();
             $finder->files()->in($conf->getProxyDir());
             $fs->remove($finder);
 
-            $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
-            $proxyFactory = $this->entityManager->getProxyFactory();
+            $meta = $this->managerRegistry->getManager()->getMetadataFactory()->getAllMetadata();
+            $proxyFactory = $this->managerRegistry->getManager()->getProxyFactory();
             $proxyFactory->generateProxyClasses($meta, $conf->getProxyDir());
             $this->output .= 'Doctrine proxy classes has been recreated.';
         } catch (ORMException $exception) {

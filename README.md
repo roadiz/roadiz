@@ -1,12 +1,9 @@
 # Roadiz CMS
 
 [![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
-[![Coverage Status](https://coveralls.io/repos/github/roadiz/roadiz/badge.svg?branch=master)](https://coveralls.io/github/roadiz/roadiz?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d/mini.png)](https://insight.sensiolabs.com/projects/b9240404-8621-4472-9a2d-634ad918660d)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/roadiz-cms/localized.png)](https://crowdin.com/project/roadiz-cms) 
 ![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)
-
 [![Join the chat at https://gitter.im/roadiz/roadiz](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/roadiz/roadiz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Roadiz is a modern CMS based on a polymorphic content-schema system which can handle many types of services.
@@ -28,7 +25,7 @@ To create a new project, use our [Roadiz Standard Edition](https://github.com/ro
 ## Installation
 
 * [*Getting started* section](http://docs.roadiz.io/en/latest/developer/first-steps/installation.html).
-* Developing on a local machine: [use *Vagrant*](http://docs.roadiz.io/en/latest/developer/first-steps/vagrant.html)
+* Developing on a local machine: [use *Docker*](https://docs.roadiz.io/en/latest/developer/first-steps/docker.html)
 or [built-in PHP dev server](https://docs.roadiz.io/en/latest/developer/first-steps/php_server.html)
 * [Troubleshooting](http://docs.roadiz.io/en/latest/developer/troubleshooting.html)
 

@@ -78,6 +78,7 @@ class EntityCollectionTransformer implements DataTransformerInterface
             $ids = explode(',', $entityIds);
         }
 
+        /** @var array<AbstractEntity> $entities */
         $entities = [];
         foreach ($ids as $entityId) {
             /** @var AbstractEntity|null $entity */

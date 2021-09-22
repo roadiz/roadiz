@@ -18,9 +18,11 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
@@ -52,6 +54,7 @@ use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
+use RZ\Roadiz\Utils\Doctrine\RoadizManagerRegistry;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Theme\ThemeInfo;
@@ -169,6 +172,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return $c['em'];
         };
 
+        $container[ManagerRegistry::class] = function (Container $c) {
+            return new RoadizManagerRegistry(new \Pimple\Psr11\Container($c));
+        };
+
         $container[ResolveTargetEntityListener::class] = function () {
             $resolveListener = new ResolveTargetEntityListener();
             $resolveListener->addResolveTargetEntity(
@@ -225,7 +232,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
-                $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
+                $em = EntityManager::create($c['config']['doctrine'], $c['em.config']);
                 $evm = $em->getEventManager();
 
                 // Add the ResolveTargetEntityListener
@@ -250,6 +257,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             }
         };
 
+        $container[FontLifeCycleSubscriber::class] = function (Container $c) {
+            return new FontLifeCycleSubscriber($c['assetPackages'], $c['logger.doctrine']);
+        };
+
         /**
          * @param Container $c
          * @return EventSubscriber[] Event subscribers for Entity manager.
@@ -259,7 +270,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return [
                 new NodesSourcesInheritanceSubscriber($c),
                 new TablePrefixSubscriber($prefix),
-                new FontLifeCycleSubscriber($c),
+                $c[FontLifeCycleSubscriber::class],
                 new DocumentLifeCycleSubscriber($c['kernel']),
                 new UserLifeCycleSubscriber($c),
                 new SettingLifeCycleSubscriber($c),
@@ -290,6 +301,17 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             );
         });
 
+        $container[CacheItemPoolInterface::class] = $container->factory(function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return CacheFactory::psrCacheFromConfig(
+                $c['config']['cacheDriver'],
+                $kernel->getEnvironment(),
+                $kernel->getCacheDir(),
+                $c['config']["appNamespace"]
+            );
+        });
+
         $container[LoggableListener::class] = function (Container $c) {
             $loggableListener = new UserLoggableListener();
             $loggableListener->setAnnotationReader($c[CachedReader::class]);
@@ -307,7 +329,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
         $container[SchemaUpdater::class] = function (Container $c) {
             return new SchemaUpdater(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c['kernel'],
                 $c['logger.doctrine']
             );

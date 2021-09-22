@@ -12,12 +12,9 @@ use Twig\TwigFilter;
 /**
  * Extension that allow render fonts.
  */
-class FontExtension extends AbstractExtension
+final class FontExtension extends AbstractExtension
 {
-    /**
-     * @var Packages
-     */
-    protected $assetPackages;
+    private Packages $assetPackages;
 
     /**
      * @param Packages $assetPackages
@@ -43,7 +40,7 @@ class FontExtension extends AbstractExtension
     }
 
     /**
-     * @param Font $font
+     * @param Font|null $font
      * @return string
      * @throws RuntimeError
      */
@@ -56,7 +53,7 @@ class FontExtension extends AbstractExtension
     }
 
     /**
-     * @param Font $font
+     * @param Font|null $font
      * @return string
      * @throws RuntimeError
      */
@@ -69,7 +66,7 @@ class FontExtension extends AbstractExtension
     }
 
     /**
-     * @param Font $font
+     * @param Font|null $font
      * @return string
      * @throws RuntimeError
      */
@@ -82,7 +79,7 @@ class FontExtension extends AbstractExtension
     }
 
     /**
-     * @param Font $font
+     * @param Font|null $font
      * @return string
      * @throws RuntimeError
      */
@@ -95,7 +92,7 @@ class FontExtension extends AbstractExtension
     }
 
     /**
-     * @param Font $font
+     * @param Font|null $font
      * @return string
      * @throws RuntimeError
      */

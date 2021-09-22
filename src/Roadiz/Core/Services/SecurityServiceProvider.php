@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
@@ -176,7 +177,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container[UserProvider::class] = function (Container $c) {
-            return new UserProvider($c['em']);
+            return new UserProvider($c[ManagerRegistry::class]);
         };
 
         $container['userChecker'] = function () {
@@ -184,7 +185,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container[LoginAttemptManager::class] = function (Container $c) {
-            return new LoginAttemptManager($c['requestStack'], $c['em'], $c['logger']);
+            return new LoginAttemptManager($c['requestStack'], $c[ManagerRegistry::class], $c['logger']);
         };
 
         $container['daoAuthenticationProvider'] = function (Container $c) {
@@ -333,7 +334,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 if ($kernel->isInstallMode()) {
                     return new DoctrineRoleHierarchy();
                 }
-                return new DoctrineRoleHierarchy($c['em']);
+                return new DoctrineRoleHierarchy($c[ManagerRegistry::class]);
             } catch (ConnectionException $e) {
                 /*
                  * Do not use DB roles when DB is not reachable

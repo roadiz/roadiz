@@ -5,7 +5,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,26 +18,19 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class RolesType extends AbstractType
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ManagerRegistry $managerRegistry;
+    protected AuthorizationCheckerInterface $authorizationChecker;
 
     /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authorizationChecker;
-
-    /**
-     * @param EntityManagerInterface $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
+        ManagerRegistry $managerRegistry,
         AuthorizationCheckerInterface $authorizationChecker
     ) {
-        $this->entityManager = $entityManager;
         $this->authorizationChecker = $authorizationChecker;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -57,7 +50,7 @@ class RolesType extends AbstractType
          * Use normalizer to populate choices from ChoiceType
          */
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
-            $roles = $this->entityManager->getRepository(Role::class)->findAll();
+            $roles = $this->managerRegistry->getRepository(Role::class)->findAll();
 
             /** @var Role $role */
             foreach ($roles as $role) {

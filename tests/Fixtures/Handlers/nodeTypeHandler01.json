@@ -8,5 +8,6 @@
     "color": "#000000",
     "fields": [],
     "defaultTtl": 0,
+    "searchable": true,
     "hidingNonReachableNodes": false
 }
