@@ -36,7 +36,7 @@ class ImporterServiceProvider implements ServiceProviderInterface
             return new GroupsImporter($c);
         });
         $container[NodesImporter::class] = $container->factory(function (Container $c) {
-            return new NodesImporter($c);
+            return new NodesImporter($c[ManagerRegistry::class]);
         });
         $container[NodeTypesImporter::class] = $container->factory(function (Container $c) {
             return new NodeTypesImporter($c);
