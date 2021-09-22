@@ -291,9 +291,9 @@ class EmailManager
      *
      * This email will be used as ReplyTo: and ReturnPath:
      *
-     * @return null|string
+     * @return null|string|array
      */
-    public function getSender(): ?string
+    public function getSender()
     {
         return $this->sender;
     }
