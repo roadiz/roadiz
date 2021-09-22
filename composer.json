@@ -53,14 +53,14 @@
         "phpoffice/phpspreadsheet":                "^1.15",
         "pimple/pimple":                           "^3.3.1",
         "rezozero/crypto":                         "^0.2.0",
-        "roadiz/documents":                        "~1.7.0 || dev-develop",
-        "roadiz/entity-generator":                 "~1.7.0 || dev-main",
-        "roadiz/jwt":                              "~1.7.0 || dev-main",
-        "roadiz/markdown":                         "~1.7.0 || dev-develop",
-        "roadiz/models":                           "~1.7.0 || dev-develop",
-        "roadiz/nodetype-contracts":               "dev-main",
-        "roadiz/openid":                           "~1.7.0 || dev-develop",
-        "roadiz/random":                           "~1.7.0 || dev-main",
+        "roadiz/documents":                        "~1.7.0",
+        "roadiz/entity-generator":                 "~1.7.0",
+        "roadiz/jwt":                              "~1.7.0",
+        "roadiz/markdown":                         "~1.7.0",
+        "roadiz/models":                           "~1.7.0",
+        "roadiz/nodetype-contracts":               "~1.1.0",
+        "roadiz/openid":                           "~1.7.0",
+        "roadiz/random":                           "~1.7.0",
         "rollerworks/password-strength-validator": "^1.3.2",
         "scienta/doctrine-json-functions":         "^4.2",
         "solarium/solarium":                       "^6.0.4",
@@ -103,9 +103,12 @@
         "phpunit/phpunit": "^9.4.3",
         "sentry/sentry": "^3.0.4",
         "squizlabs/php_codesniffer": "^3.5",
-        "roadiz/rozier": "~1.7.0 || dev-develop",
-        "roadiz/dts-generator": "~1.7.0 || dev-main",
-        "roadiz/doc-generator": "~1.7.0 || dev-develop"
+        "roadiz/rozier": "~1.7.0",
+        "roadiz/dts-generator": "~1.7.0",
+        "roadiz/doc-generator": "~1.7.0"
+    },
+    "replace": {
+        "roadiz/roadiz": "*"
     },
     "suggest": {
         "ext-apcu": "Allows APCU system cache",
