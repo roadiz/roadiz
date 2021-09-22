@@ -67,11 +67,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 {
     use ContainerAwareTrait;
 
-    const CMS_VERSION = 'develop';
+    const CMS_VERSION = 'master';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static ?string $cmsBuild = null;
-    public static string $cmsVersion = "1.6.30";
+    public static string $cmsVersion = "1.7.0";
     protected string $environment;
     protected bool $debug;
     /**

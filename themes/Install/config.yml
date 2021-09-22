@@ -6,7 +6,7 @@ themeDir: "Install"
 supportedLocale:
     - "en"
     - "fr"
-versionRequire: "1.3.0"
+versionRequire: "1.7.0"
 importFiles:
     roles:
         - "Resources/import/roles.json"
