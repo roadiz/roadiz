@@ -63,6 +63,16 @@ abstract class FrontendController extends AppController
     protected ?Container $themeContainer = null;
 
     /**
+     * Compatibility method for Next Roadiz…
+     *
+     * @return array<string, string>
+     */
+    public static function getSubscribedServices()
+    {
+        return [];
+    }
+
+    /**
      * Append objects to global container.
      *
      * Add a request matcher on frontend to make securityTokenStorage
