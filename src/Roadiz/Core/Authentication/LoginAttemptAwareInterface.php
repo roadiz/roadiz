@@ -14,8 +14,7 @@ interface LoginAttemptAwareInterface
 
     /**
      * @param LoginAttemptManager $loginAttemptManager
-     *
-     * @return self
+     * @return $this
      */
     public function setLoginAttemptManager(LoginAttemptManager $loginAttemptManager);
 }
