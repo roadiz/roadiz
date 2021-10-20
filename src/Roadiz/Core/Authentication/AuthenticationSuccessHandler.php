@@ -17,7 +17,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler i
 {
     protected ?RememberMeServicesInterface $rememberMeServices;
     protected ?LoginAttemptManager $loginAttemptManager = null;
-    private ManagerRegistry $managerRegistry;
+    protected ManagerRegistry $managerRegistry;
 
     /**
      * @param HttpUtils $httpUtils
@@ -49,7 +49,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler i
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $token->getUser();
-        if (null !== $user && $user instanceof UserInterface) {
+        if ($user instanceof UserInterface) {
             $this->getLoginAttemptManager()->onSuccessLoginAttempt($user->getUsername());
             if ($user instanceof User) {
                 $user->setLastLogin(new \DateTime('now'));

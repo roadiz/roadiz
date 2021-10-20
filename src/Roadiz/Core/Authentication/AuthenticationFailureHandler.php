@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureH
 
 class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler implements LoginAttemptAwareInterface
 {
-    private LoginAttemptManager $loginAttemptManager;
+    protected ?LoginAttemptManager $loginAttemptManager = null;
 
     /**
      * {@inheritdoc}
@@ -26,9 +26,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler i
                 'ipAddress' => $ipAddress
             ]);
         }
-        if (null !== $username &&
-            is_string($username) &&
-            null !== $this->getLoginAttemptManager() && $exception instanceof BadCredentialsException) {
+        if (is_string($username) && $exception instanceof BadCredentialsException) {
             $this->getLoginAttemptManager()->onFailedLoginAttempt($username);
         }
 
@@ -40,6 +38,9 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler i
      */
     public function getLoginAttemptManager(): LoginAttemptManager
     {
+        if (null === $this->loginAttemptManager) {
+            throw new \InvalidArgumentException('LoginAttemptManager should not be null');
+        }
         return $this->loginAttemptManager;
     }
 

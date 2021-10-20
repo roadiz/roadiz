@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine\Indexer;
 
+use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Solarium\Exception\HttpException;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
@@ -53,11 +54,27 @@ class NodesSourcesIndexer extends AbstractIndexer
     }
 
     /**
-     * Delete Solr index and loop over every NodesSources to index them again.
+     * Overridable
      *
+     * @return QueryBuilder
+     */
+    protected function getAllQueryBuilder(): QueryBuilder
+    {
+        return $this->managerRegistry
+            ->getRepository(NodesSources::class)
+            ->createQueryBuilder('ns')
+            ->innerJoin('ns.node', 'n');
+    }
+
+    /**
+     * Loop over every NodesSources to index them again.
+     *
+     * @param int $batchCount Split reindex span to several batches.
+     * @param int $batchNumber Execute reindex on a specific batch.
+     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function reindexAll(): void
+    public function reindexAll(int $batchCount = 1, int $batchNumber = 0): void
     {
         $update = $this->getSolr()->createUpdate();
         /*
@@ -67,22 +84,34 @@ class NodesSourcesIndexer extends AbstractIndexer
         $buffer = $this->getSolr()->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        $countQuery = $this->managerRegistry
-            ->getRepository(NodesSources::class)
-            ->createQueryBuilder('ns')
+        $countQuery = $this->getAllQueryBuilder()
             ->select('count(ns)')
-            ->innerJoin('ns.node', 'n')
             ->getQuery();
-        $q = $this->managerRegistry
-            ->getRepository(NodesSources::class)
-            ->createQueryBuilder('ns')
-            ->addSelect('n')
-            ->innerJoin('ns.node', 'n')
-            ->getQuery();
+        $count = $countQuery->getSingleScalarResult();
+
+        $baseQb = $this->getAllQueryBuilder()->addSelect('n');
+        if ($batchCount > 1) {
+            $limit = round($count/$batchCount);
+            $offset = $batchNumber * $limit;
+            if ($batchNumber === $batchCount - 1) {
+                $limit = $count - $offset;
+                $baseQb->setMaxResults($limit)->setFirstResult($offset);
+                if (null !== $this->io) {
+                    $this->io->note('Batch mode enabled (last): Limit to ' . $limit . ', offset from ' . $offset);
+                }
+            } else {
+                $baseQb->setMaxResults($limit)->setFirstResult($offset);
+                if (null !== $this->io) {
+                    $this->io->note('Batch mode enabled: Limit to ' . $limit . ', offset from ' . $offset);
+                }
+            }
+            $count = $limit;
+        }
+        $q = $baseQb->getQuery();
         $iterableResult = $q->iterate();
 
         if (null !== $this->io) {
-            $this->io->progressStart($countQuery->getSingleScalarResult());
+            $this->io->progressStart($count);
         }
 
         while (($row = $iterableResult->next()) !== false) {

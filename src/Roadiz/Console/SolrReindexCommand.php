@@ -26,7 +26,9 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $this->setName('solr:reindex')
             ->setDescription('Reindex Solr search engine index')
             ->addOption('nodes', null, InputOption::VALUE_NONE, 'Reindex with only nodes.')
-            ->addOption('documents', null, InputOption::VALUE_NONE, 'Reindex with only documents.');
+            ->addOption('documents', null, InputOption::VALUE_NONE, 'Reindex with only documents.')
+            ->addOption('batch-count', null, InputOption::VALUE_REQUIRED, 'Split reindexing in batch (only for nodes).')
+            ->addOption('batch-number', null, InputOption::VALUE_REQUIRED, 'Run a selected batch (only for nodes), <comment>first batch is 0</comment>.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -61,13 +63,26 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
                         $duration = $stopwatch->getEvent('global')->getDuration();
                         $this->io->success(sprintf('Document database has been re-indexed in %.2d ms.', $duration));
                     } elseif ($input->getOption('nodes')) {
-                        // Empty first
-                        $nodesSourcesIndexer->emptySolr(SolariumNodeSource::DOCUMENT_TYPE);
-                        $nodesSourcesIndexer->reindexAll();
+                        $batchCount = (int) $input->getOption('batch-count') ?? 1;
+                        $batchNumber = (int) $input->getOption('batch-number') ?? 0;
+                        // Empty first ONLY if one batch or first batch.
+                        if ($batchNumber === 0) {
+                            $nodesSourcesIndexer->emptySolr(SolariumNodeSource::DOCUMENT_TYPE);
+                        }
+                        $nodesSourcesIndexer->reindexAll($batchCount, $batchNumber);
 
                         $stopwatch->stop('global');
                         $duration = $stopwatch->getEvent('global')->getDuration();
-                        $this->io->success(sprintf('Node database has been re-indexed in %.2d ms.', $duration));
+                        if ($batchCount > 1) {
+                            $this->io->success(sprintf(
+                                'Batch %d/%d of node database has been re-indexed in %.2d ms.',
+                                $batchNumber+1,
+                                $batchCount,
+                                $duration
+                            ));
+                        } else {
+                            $this->io->success(sprintf('Node database has been re-indexed in %.2d ms.', $duration));
+                        }
                     } else {
                         // Empty first
                         $nodesSourcesIndexer->emptySolr();
