@@ -398,17 +398,21 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param Node             $parentNode
+     * @param Node $parentNode
      * @param TranslationInterface|null $translation
      *
-     * @return mixed
+     * @return Tag[]
      */
     public function findAllLinkedToNodeChildren(Node $parentNode, ?TranslationInterface $translation = null)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t')
+            ->addSelect('tt')
+            ->addSelect('tr')
             ->innerJoin('t.nodes', 'n')
             ->innerJoin('n.parent', 'pn')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->leftJoin('tt.translation', 'tr')
             ->andWhere($qb->expr()->eq('pn', ':parentNode'))
             ->setParameter('parentNode', $parentNode)
             ->addOrderBy('t.tagName', 'ASC')
@@ -416,11 +420,13 @@ class TagRepository extends EntityRepository
         if (null !== $translation) {
             $qb->innerJoin('n.nodeSources', 'ns')
                 ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+                ->andWhere($qb->expr()->eq('tt.translation', ':translation'))
                 ->setParameter('translation', $translation);
         }
         return $qb->getQuery()
+            ->setHint(\Doctrine\ORM\Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult()
-        ;
+            ;
     }
 
     /**
