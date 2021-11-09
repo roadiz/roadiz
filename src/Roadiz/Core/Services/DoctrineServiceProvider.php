@@ -12,6 +12,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
 use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;
+use Doctrine\Migrations\Version\Comparator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
@@ -54,6 +55,7 @@ use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
+use RZ\Roadiz\Utils\Doctrine\ProjectVersionComparator;
 use RZ\Roadiz\Utils\Doctrine\RoadizManagerRegistry;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
@@ -363,13 +365,19 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         };
 
         $container[DependencyFactory::class] = function (Container $c) {
-            return DependencyFactory::fromEntityManager(
+            $factory = DependencyFactory::fromEntityManager(
                 new ConfigurationArray([
                     'migrations_paths' => $c['doctrine.migrations_paths']
                 ]),
                 new ExistingEntityManager($c['em']),
                 $c['logger.cli']
             );
+            /*
+             * Use only timestamp as project migration comparator.
+             */
+            $factory->setService(Comparator::class, new ProjectVersionComparator());
+
+            return $factory;
         };
 
         return $container;
