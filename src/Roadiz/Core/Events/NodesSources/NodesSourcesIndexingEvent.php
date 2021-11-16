@@ -10,11 +10,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class NodesSourcesIndexingEvent extends Event
 {
     protected NodesSources $nodeSource;
-
     protected array $associations;
-
     protected ?AbstractSolarium $solariumDocument;
-
     protected bool $subResource;
 
     /**
