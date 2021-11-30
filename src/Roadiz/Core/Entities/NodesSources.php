@@ -20,6 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  * NodesSources store Node content according to a translation and a NodeType.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
+ *
+ * THESE ANNOTATIONS ARE OVERRIDDEN IN NodesSourcesInheritanceSubscriber.php
+ *
  * @ORM\Table(name="nodes_sources", uniqueConstraints={
  *     @ORM\UniqueConstraint(columns={"node_id", "translation_id"})
  * }, indexes={
