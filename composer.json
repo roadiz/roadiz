@@ -105,7 +105,8 @@
         "squizlabs/php_codesniffer": "^3.5",
         "roadiz/rozier": "~1.7.0",
         "roadiz/dts-generator": "~1.7.0",
-        "roadiz/doc-generator": "~1.7.0"
+        "roadiz/doc-generator": "~1.7.0",
+        "symfony/doctrine-messenger": "^5.3"
     },
     "replace": {
         "roadiz/roadiz": "*"

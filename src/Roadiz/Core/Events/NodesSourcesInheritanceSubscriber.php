@@ -9,6 +9,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Pimple\Container;
 use RZ\Roadiz\Config\Configuration;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeFieldInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 
@@ -62,6 +63,28 @@ class NodesSourcesInheritanceSubscriber implements EventSubscriber
                 }
 
                 $metadata->setDiscriminatorMap($map);
+                /*
+                 * MAKE SURE these parameters are synced with NodeSources.php annotations.
+                 */
+                $nodeSourceTableAnnotation = [
+                    'name' => $metadata->getTableName(),
+                    'indexes' => [
+                        ['columns' => ['discr']],
+                        ['columns' => ['title']],
+                        ['columns' => ['published_at']],
+                        'ns_node_translation_published' => ['columns' => ['node_id', 'translation_id', 'published_at']],
+                        'ns_node_discr_translation' => ['columns' => ['node_id', 'discr', 'translation_id']],
+                        'ns_node_discr_translation_published' => ['columns' => ['node_id', 'discr', 'translation_id', 'published_at']],
+                        'ns_translation_published' => ['columns' => ['translation_id', 'published_at']],
+                        'ns_discr_translation' => ['columns' => ['discr', 'translation_id']],
+                        'ns_discr_translation_published' => ['columns' => ['discr', 'translation_id', 'published_at']],
+                        'ns_title_published' => ['columns' => ['title', 'published_at']],
+                        'ns_title_translation_published' => ['columns' => ['title', 'translation_id', 'published_at']],
+                    ],
+                    'uniqueConstraints' => [
+                        ['columns' => ["node_id", "translation_id"]]
+                    ]
+                ];
 
                 /*
                  * change here your inheritance type according to configuration
@@ -71,7 +94,23 @@ class NodesSourcesInheritanceSubscriber implements EventSubscriber
                     $metadata->setInheritanceType(ClassMetadataInfo::INHERITANCE_TYPE_JOINED);
                 } elseif ($inheritanceType === Configuration::INHERITANCE_TYPE_SINGLE_TABLE) {
                     $metadata->setInheritanceType(ClassMetadataInfo::INHERITANCE_TYPE_SINGLE_TABLE);
+
+                    /*
+                     * If inheritance type is single table, we need to set indexes on parent class: NodesSources
+                     */
+                    foreach ($nodeTypes as $type) {
+                        $indexedFields = $type->getFields()->filter(function (NodeTypeFieldInterface $field) {
+                            return $field->isIndexed();
+                        });
+                        /** @var NodeTypeFieldInterface $indexedField */
+                        foreach ($indexedFields as $indexedField) {
+                            $nodeSourceTableAnnotation['indexes']['nsapp_'.$indexedField->getName()] = [
+                                'columns' => [$indexedField->getName()],
+                            ];
+                        }
+                    }
                 }
+                $metadata->setPrimaryTable($nodeSourceTableAnnotation);
             } catch (\Exception $e) {
                 /*
                  * Database tables don't exist yet
