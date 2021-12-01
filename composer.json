@@ -61,7 +61,7 @@
         "roadiz/models":                           "~1.5.0",
         "rollerworks/password-strength-validator": "^1.1",
         "scienta/doctrine-json-functions":         "^4.1",
-        "solarium/solarium":                       "^5.2.0",
+        "solarium/solarium":                       "^6.0.4",
         "swiftmailer/swiftmailer":                 "^6.0.0",
         "symfony-cmf/routing":                     "^2.1.0",
         "symfony/asset":                           "~4.4.1",
