@@ -15,7 +15,8 @@ stages:
 branches:
     except:
         - l10n_develop
-
+env:
+    - COMPOSER_ROOT_VERSION=1.7.6
 jobs:
     allow_failures:
         -   php: nightly
