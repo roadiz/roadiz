@@ -79,6 +79,7 @@
         "symfony/http-foundation":                 "~5.0.7",
         "symfony/http-kernel":                     "~4.4.1",
         "symfony/messenger":                       "^5.3",
+        "symfony/doctrine-messenger":              "^5.3",
         "symfony/rate-limiter":                    "^5.3",
         "symfony/routing":                         "~4.4.1",
         "symfony/security":                        "~4.4.1",
@@ -105,11 +106,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "roadiz/rozier": "~1.7.0",
         "roadiz/dts-generator": "~1.7.0",
-        "roadiz/doc-generator": "~1.7.0",
-        "symfony/doctrine-messenger": "^5.3"
-    },
-    "replace": {
-        "roadiz/roadiz": "*"
+        "roadiz/doc-generator": "~1.7.0"
     },
     "suggest": {
         "ext-apcu": "Allows APCU system cache",
