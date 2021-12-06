@@ -34,14 +34,14 @@ class CustomFormAnswer extends AbstractEntity
      *            cascade={"ALL"})
      * @var Collection<CustomFormFieldAttribute>
      */
-    private $answerFields;
+    private Collection $answerFields;
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
      *           inversedBy="customFormAnswers")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      * @var CustomForm|null
      **/
-    private $customForm = null;
+    private ?CustomForm $customForm = null;
 
     /**
      * Create a new empty CustomFormAnswer according to given node-type.
@@ -68,7 +68,7 @@ class CustomFormAnswer extends AbstractEntity
     /**
      * @return Collection<CustomFormFieldAttribute>
      */
-    public function getAnswers()
+    public function getAnswers(): Collection
     {
         return $this->answerFields;
     }

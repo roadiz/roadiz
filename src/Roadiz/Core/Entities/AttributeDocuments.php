@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 use JMS\Serializer\Annotation as Serializer;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * Describes a complex ManyToMany relation
@@ -30,25 +31,22 @@ class AttributeDocuments extends AbstractPositioned
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="attributeDocuments", fetch="EAGER", cascade={"persist", "merge"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Document|null
+     * @var DocumentInterface|null
      * @Serializer\Groups({"attribute"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      */
-    protected ?Document $document = null;
+    protected ?DocumentInterface $document = null;
 
     /**
      * @param Attribute|null $attribute
-     * @param Document|null $document
+     * @param DocumentInterface|null $document
      */
-    public function __construct(Attribute $attribute = null, Document $document = null)
+    public function __construct(?Attribute $attribute = null, ?DocumentInterface $document = null)
     {
         $this->document = $document;
         $this->attribute = $attribute;
     }
 
-    /**
-     *
-     */
     public function __clone()
     {
         if ($this->id) {
@@ -60,9 +58,9 @@ class AttributeDocuments extends AbstractPositioned
     /**
      * Gets the value of document.
      *
-     * @return Document|null
+     * @return DocumentInterface|null
      */
-    public function getDocument(): ?Document
+    public function getDocument(): ?DocumentInterface
     {
         return $this->document;
     }
@@ -70,11 +68,11 @@ class AttributeDocuments extends AbstractPositioned
     /**
      * Sets the value of document.
      *
-     * @param Document|null $document the document
+     * @param DocumentInterface|null $document the document
      *
      * @return AttributeDocuments
      */
-    public function setDocument(?Document $document): AttributeDocuments
+    public function setDocument(?DocumentInterface $document): AttributeDocuments
     {
         $this->document = $document;
 

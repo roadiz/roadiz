@@ -78,23 +78,23 @@ class Font extends AbstractDateTimed
     /**
      * @var UploadedFile|null
      */
-    protected $eotFile = null;
+    protected ?UploadedFile $eotFile = null;
     /**
      * @var UploadedFile|null
      */
-    protected $woffFile = null;
+    protected ?UploadedFile $woffFile = null;
     /**
      * @var UploadedFile|null
      */
-    protected $woff2File = null;
+    protected ?UploadedFile $woff2File = null;
     /**
      * @var UploadedFile|null
      */
-    protected $otfFile = null;
+    protected ?UploadedFile $otfFile = null;
     /**
      * @var UploadedFile|null
      */
-    protected $svgFile = null;
+    protected ?UploadedFile $svgFile = null;
     /**
      * @ORM\Column(type="string", nullable=true, name="eot_filename")
      * @var string|null

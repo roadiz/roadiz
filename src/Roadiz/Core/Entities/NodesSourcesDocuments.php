@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * Describes a complex ManyToMany relation
@@ -29,9 +30,9 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="nodesSourcesByFields", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Document|null
+     * @var DocumentInterface|null
      */
-    protected ?Document $document;
+    protected ?DocumentInterface $document;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
@@ -43,11 +44,11 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
      *
-     * @param NodesSources  $nodeSource NodesSources and inherited types
-     * @param Document      $document   Document to link
+     * @param NodesSources $nodeSource NodesSources and inherited types
+     * @param DocumentInterface $document   Document to link
      * @param NodeTypeField $field      NodeTypeField
      */
-    public function __construct(NodesSources $nodeSource, Document $document, NodeTypeField $field)
+    public function __construct(NodesSources $nodeSource, DocumentInterface $document, NodeTypeField $field)
     {
         $this->nodeSource = $nodeSource;
         $this->document = $document;
@@ -89,9 +90,9 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * Gets the value of document.
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function getDocument(): Document
+    public function getDocument(): DocumentInterface
     {
         return $this->document;
     }
@@ -99,11 +100,11 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * Sets the value of document.
      *
-     * @param Document|null $document the document
+     * @param DocumentInterface|null $document the document
      *
      * @return self
      */
-    public function setDocument(?Document $document): NodesSourcesDocuments
+    public function setDocument(?DocumentInterface $document): NodesSourcesDocuments
     {
         $this->document = $document;
 

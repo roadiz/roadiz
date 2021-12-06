@@ -8,24 +8,19 @@ use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\TagTranslationDocuments;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Class TagTranslationDocumentsTransformer
  * @package RZ\Roadiz\CMS\Forms\DataTransformer
  */
 class TagTranslationDocumentsTransformer implements DataTransformerInterface
 {
-    private $manager;
-    /**
-     * @var TagTranslation
-     */
-    private $tagTranslation;
+    private ObjectManager $manager;
+    private TagTranslation $tagTranslation;
 
     /**
-     * NodeTypeTransformer constructor.
-     *
      * @param ObjectManager $manager
      * @param TagTranslation $tagTranslation
      */
@@ -40,7 +35,7 @@ class TagTranslationDocumentsTransformer implements DataTransformerInterface
      * to Document entities for displaying in document VueJS component.
      *
      * @param TagTranslationDocuments[]|null $tagTranslationDocuments
-     * @return Document[]
+     * @return DocumentInterface[]
      */
     public function transform($tagTranslationDocuments)
     {

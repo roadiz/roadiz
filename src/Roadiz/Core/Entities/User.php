@@ -65,13 +65,13 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * @Serializer\Groups({"user"})
      * @var string|null
      */
-    protected $confirmationToken;
+    protected $confirmationToken = null;
     /**
      * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
      * @Serializer\Groups({"user"})
      * @var \DateTime|null
      */
-    protected $passwordRequestedAt;
+    protected $passwordRequestedAt = null;
     /**
      * @ORM\Column(type="string", unique=true)
      * @Serializer\Groups({"user", "log_user"})
@@ -107,7 +107,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="last_login", type="datetime", nullable=true)
      * @Serializer\Groups({"user"})
      */
-    private $lastLogin;
+    private $lastLogin = null;
     /**
      * @var Collection<Role>
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
@@ -118,12 +118,12 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")}
      * )
      */
-    private $roles;
+    private Collection $roles;
     /**
      * Names of current User roles
      * to be compatible with symfony security scheme
      *
-     * @var array<string>
+     * @var array<string>|null
      * @Serializer\Groups({"user"})
      */
     private $rolesNames = null;
@@ -136,7 +136,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * @var Collection<Group>
      * @Serializer\Groups({"user_group"})
      */
-    private $groups;
+    private Collection $groups;
     /**
      * @var boolean
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
@@ -154,7 +154,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * @Serializer\Groups({"user"})
      * @var \DateTime|null
      */
-    private $credentialsExpiresAt;
+    private $credentialsExpiresAt = null;
     /**
      * @var boolean
      * @ORM\Column(type="boolean", name="credentials_expired", nullable=false, options={"default" = false})
@@ -166,14 +166,14 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * @Serializer\Groups({"user"})
      * @var \DateTime|null
      */
-    private $expiresAt;
+    private $expiresAt = null;
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
      * @Serializer\Groups({"user"})
      * @var Node|null
      */
-    private $chroot;
+    private $chroot = null;
 
     /**
      * @var null|string
@@ -384,7 +384,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * Set random string sent to the user email address in order to verify it.
      *
-     * @param string $confirmationToken
+     * @param string|null $confirmationToken
      * @return $this
      */
     public function setConfirmationToken($confirmationToken): User

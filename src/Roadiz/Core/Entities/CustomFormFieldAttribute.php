@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * CustomFormField entities are used to create CustomForms with
@@ -25,21 +26,21 @@ class CustomFormFieldAttribute extends AbstractEntity
      * @ORM\JoinColumn(name="custom_form_answer_id", referencedColumnName="id", onDelete="CASCADE")
      * @var CustomFormAnswer|null
      */
-    protected $customFormAnswer;
+    protected ?CustomFormAnswer $customFormAnswer = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttributes")
      * @ORM\JoinColumn(name="custom_form_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var CustomFormField|null
      */
-    protected $customFormField;
+    protected ?CustomFormField $customFormField = null;
 
     /**
      * @var Collection<Document>
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="customFormFieldAttributes")
      * @ORM\JoinTable(name="custom_form_answers_documents")
      */
-    protected $documents;
+    protected Collection $documents;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -47,9 +48,6 @@ class CustomFormFieldAttribute extends AbstractEntity
      */
     protected $value = null;
 
-    /**
-     * CustomFormFieldAttribute constructor.
-     */
     public function __construct()
     {
         $this->documents = new ArrayCollection();
@@ -61,7 +59,7 @@ class CustomFormFieldAttribute extends AbstractEntity
     public function getValue(): ?string
     {
         if ($this->getCustomFormField()->isDocuments()) {
-            return implode(', ', $this->getDocuments()->map(function (Document $document) {
+            return implode(', ', $this->getDocuments()->map(function (DocumentInterface $document) {
                 return $document->getRelativePath();
             })->toArray());
         }
@@ -69,7 +67,7 @@ class CustomFormFieldAttribute extends AbstractEntity
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      *
      * @return $this
      */
@@ -83,9 +81,9 @@ class CustomFormFieldAttribute extends AbstractEntity
     /**
      * Gets the value of customFormAnswer.
      *
-     * @return CustomFormAnswer
+     * @return CustomFormAnswer|null
      */
-    public function getCustomFormAnswer()
+    public function getCustomFormAnswer(): ?CustomFormAnswer
     {
         return $this->customFormAnswer;
     }
@@ -93,11 +91,11 @@ class CustomFormFieldAttribute extends AbstractEntity
     /**
      * Sets the value of customFormAnswer.
      *
-     * @param CustomFormAnswer $customFormAnswer the custom form answer
+     * @param CustomFormAnswer|null $customFormAnswer the custom form answer
      *
      * @return self
      */
-    public function setCustomFormAnswer(CustomFormAnswer $customFormAnswer)
+    public function setCustomFormAnswer(?CustomFormAnswer $customFormAnswer)
     {
         $this->customFormAnswer = $customFormAnswer;
 
@@ -107,9 +105,9 @@ class CustomFormFieldAttribute extends AbstractEntity
     /**
      * Gets the value of customFormField.
      *
-     * @return CustomFormField
+     * @return CustomFormField|null
      */
-    public function getCustomFormField()
+    public function getCustomFormField(): ?CustomFormField
     {
         return $this->customFormField;
     }
@@ -117,11 +115,11 @@ class CustomFormFieldAttribute extends AbstractEntity
     /**
      * Sets the value of customFormField.
      *
-     * @param CustomFormField $customFormField the custom form field
+     * @param CustomFormField|null $customFormField the custom form field
      *
      * @return self
      */
-    public function setCustomFormField(CustomFormField $customFormField)
+    public function setCustomFormField(?CustomFormField $customFormField)
     {
         $this->customFormField = $customFormField;
 

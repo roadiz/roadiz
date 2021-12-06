@@ -41,7 +41,7 @@ class Log extends AbstractEntity
      * @var User|null
      * @Serializer\Groups({"log_user"})
      */
-    protected $user = null;
+    protected ?User $user = null;
     /**
      * @ORM\Column(type="string", name="username", nullable=true)
      * @var string|null
@@ -71,7 +71,7 @@ class Log extends AbstractEntity
      * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id", onDelete="SET NULL")
      * @Serializer\Groups({"log_sources"})
      */
-    protected $nodeSource = null;
+    protected ?NodesSources $nodeSource = null;
     /**
      * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
      * @Serializer\Groups({"log"})
@@ -177,7 +177,7 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @param string $clientIp
+     * @param string|null $clientIp
      * @return Log
      */
     public function setClientIp(?string $clientIp): Log

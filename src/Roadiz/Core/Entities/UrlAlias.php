@@ -47,7 +47,7 @@ class UrlAlias extends AbstractEntity
      * @ORM\JoinColumn(name="ns_id", referencedColumnName="id")
      * @Serializer\Exclude
      */
-    private $nodeSource;
+    private ?NodesSources $nodeSource = null;
 
     /**
      * @return NodesSources

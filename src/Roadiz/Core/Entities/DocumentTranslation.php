@@ -8,6 +8,7 @@ use Gedmo\Loggable\Loggable;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
@@ -102,26 +103,25 @@ class DocumentTranslation extends AbstractEntity implements Loggable
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
-     * @var Translation|null
+     * @var TranslationInterface|null
      */
-    protected $translation;
+    protected ?TranslationInterface $translation = null;
 
     /**
-     * @return Translation
+     * @return TranslationInterface
      */
-    public function getTranslation(): Translation
+    public function getTranslation(): TranslationInterface
     {
         return $this->translation;
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return $this
      */
-    public function setTranslation(Translation $translation): DocumentTranslation
+    public function setTranslation(TranslationInterface $translation): DocumentTranslation
     {
         $this->translation = $translation;
-
         return $this;
     }
 
@@ -131,7 +131,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
      * @var DocumentInterface|null
      * @Serializer\Exclude
      */
-    protected $document;
+    protected ?DocumentInterface $document = null;
 
     /**
      * @return DocumentInterface

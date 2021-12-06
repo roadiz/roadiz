@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 use JMS\Serializer\Annotation as Serializer;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * Describes a complex ManyToMany relation
@@ -25,24 +26,24 @@ class TagTranslationDocuments extends AbstractPositioned
      * @var TagTranslation|null
      * @Serializer\Exclude()
      */
-    protected $tagTranslation = null;
+    protected ?TagTranslation $tagTranslation = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="tagTranslations", fetch="EAGER", cascade={"persist", "merge"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Document|null
+     * @var DocumentInterface|null
      * @Serializer\Groups({"tag"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      */
-    protected $document = null;
+    protected ?DocumentInterface $document = null;
 
     /**
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
      *
      * @param TagTranslation|null $tagTranslation
-     * @param Document|null $document
+     * @param DocumentInterface|null $document
      */
-    public function __construct(TagTranslation $tagTranslation = null, Document $document = null)
+    public function __construct(TagTranslation $tagTranslation = null, ?DocumentInterface $document = null)
     {
         $this->document = $document;
         $this->tagTranslation = $tagTranslation;
@@ -62,9 +63,9 @@ class TagTranslationDocuments extends AbstractPositioned
     /**
      * Gets the value of document.
      *
-     * @return Document
+     * @return DocumentInterface
      */
-    public function getDocument(): ?Document
+    public function getDocument(): ?DocumentInterface
     {
         return $this->document;
     }
@@ -72,11 +73,10 @@ class TagTranslationDocuments extends AbstractPositioned
     /**
      * Sets the value of document.
      *
-     * @param Document $document the document
-     *
+     * @param DocumentInterface|null $document the document
      * @return self
      */
-    public function setDocument(?Document $document): TagTranslationDocuments
+    public function setDocument(?DocumentInterface $document): TagTranslationDocuments
     {
         $this->document = $document;
 
@@ -92,7 +92,7 @@ class TagTranslationDocuments extends AbstractPositioned
     }
 
     /**
-     * @param TagTranslation $tagTranslation
+     * @param TagTranslation|null $tagTranslation
      * @return TagTranslationDocuments
      */
     public function setTagTranslation(?TagTranslation $tagTranslation): TagTranslationDocuments

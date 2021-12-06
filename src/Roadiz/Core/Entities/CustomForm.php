@@ -68,7 +68,7 @@ class CustomForm extends AbstractDateTimed
      * @var Collection<CustomFormField>
      * @Serializer\Groups({"custom_form"})
      */
-    private $fields;
+    private Collection $fields;
     /**
      * @ORM\OneToMany(
      *    targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer",
@@ -78,13 +78,13 @@ class CustomForm extends AbstractDateTimed
      * @var Collection<CustomFormAnswer>
      * @Serializer\Exclude
      */
-    private $customFormAnswers;
+    private Collection $customFormAnswers;
     /**
      * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
      * @var Collection<NodesCustomForms>
      * @Serializer\Exclude
      */
-    private $nodes;
+    private Collection $nodes;
 
     /**
      * Create a new CustomForm.
