@@ -75,10 +75,8 @@ class SettingGroup extends AbstractEntity
      * @var Collection<Setting>
      * @Serializer\Groups({"setting_group"})
      */
-    private $settings;
-    /**
-     * @{inheritdoc}
-     */
+    private Collection $settings;
+
     public function __construct()
     {
         $this->settings = new ArrayCollection();
@@ -86,7 +84,7 @@ class SettingGroup extends AbstractEntity
     /**
      * @return Collection
      */
-    public function getSettings()
+    public function getSettings(): Collection
     {
         return $this->settings;
     }
@@ -94,7 +92,7 @@ class SettingGroup extends AbstractEntity
      * @param Setting $setting
      * @return SettingGroup
      */
-    public function addSetting($setting)
+    public function addSetting(Setting $setting)
     {
         if (!$this->getSettings()->contains($setting)) {
             $this->settings->add($setting);
@@ -103,10 +101,10 @@ class SettingGroup extends AbstractEntity
     }
 
     /**
-     * @param ArrayCollection $settings
+     * @param Collection<Setting> $settings
      * @return SettingGroup
      */
-    public function addSettings($settings)
+    public function addSettings(Collection $settings)
     {
         foreach ($settings as $setting) {
             if (!$this->getSettings()->contains($setting)) {

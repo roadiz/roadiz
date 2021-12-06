@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Contracts\NodeType\NodeTypeFieldInterface;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
 use RZ\Roadiz\Contracts\NodeType\SerializableInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
@@ -51,12 +52,12 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface, Ser
     private $excludeFromSearch = false;
 
     /**
-     * @var NodeType|null
+     * @var NodeTypeInterface|null
      * @ORM\ManyToOne(targetEntity="NodeType", inversedBy="fields")
      * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
      * @Serializer\Exclude()
      */
-    private $nodeType = null;
+    private ?NodeTypeInterface $nodeType = null;
 
     /**
      * @var string|null
@@ -91,19 +92,19 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface, Ser
     private bool $excludedFromSerialization = false;
 
     /**
-     * @return NodeType|null
+     * @return NodeTypeInterface|null
      */
-    public function getNodeType()
+    public function getNodeType(): ?NodeTypeInterface
     {
         return $this->nodeType;
     }
 
     /**
-     * @param NodeType $nodeType
+     * @param NodeTypeInterface|null $nodeType
      *
      * @return $this
      */
-    public function setNodeType($nodeType)
+    public function setNodeType(?NodeTypeInterface $nodeType)
     {
         $this->nodeType = $nodeType;
 

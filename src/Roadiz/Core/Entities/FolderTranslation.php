@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 /**
  * Translated representation of Folders.
@@ -50,22 +51,21 @@ class FolderTranslation extends AbstractEntity
      * @Serializer\Exclude
      * @var Folder|null
      */
-    protected $folder = null;
+    protected ?Folder $folder = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="folderTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"folder", "document"})
-     * @var Translation|null
+     * @var TranslationInterface|null
      */
-    protected $translation = null;
+    protected ?TranslationInterface $translation = null;
 
     /**
-     * FolderTranslation constructor.
      * @param Folder $original
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      */
-    public function __construct(Folder $original, Translation $translation)
+    public function __construct(Folder $original, TranslationInterface $translation)
     {
         $this->setFolder($original);
         $this->setTranslation($translation);
@@ -94,9 +94,9 @@ class FolderTranslation extends AbstractEntity
     /**
      * Gets the value of translation.
      *
-     * @return Translation
+     * @return TranslationInterface
      */
-    public function getTranslation(): Translation
+    public function getTranslation(): TranslationInterface
     {
         return $this->translation;
     }
@@ -104,10 +104,10 @@ class FolderTranslation extends AbstractEntity
     /**
      * Sets the value of translation.
      *
-     * @param Translation $translation the translation
+     * @param TranslationInterface $translation the translation
      * @return self
      */
-    public function setTranslation(Translation $translation): FolderTranslation
+    public function setTranslation(TranslationInterface $translation): FolderTranslation
     {
         $this->translation = $translation;
         return $this;

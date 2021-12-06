@@ -51,12 +51,12 @@ class CustomFormField extends AbstractField
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $customForm = null;
+    private ?CustomForm $customForm = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
      * @var Collection<CustomFormFieldAttribute>
      */
-    private $customFormFieldAttributes;
+    private Collection $customFormFieldAttributes;
     /**
      * @ORM\Column(name="field_required", type="boolean", nullable=false, options={"default" = false})
      * @var bool

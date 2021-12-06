@@ -10,6 +10,7 @@ use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeTrait;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * @package RZ\Roadiz\Core\Entities
@@ -68,17 +69,17 @@ class Attribute extends AbstractEntity implements AttributeInterface
     }
 
     /**
-     * @return Collection<Document>
+     * @return Collection<DocumentInterface>
      * @Serializer\SerializedName("documents")
      * @Serializer\VirtualProperty()
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      */
     public function getDocuments(): Collection
     {
-        /** @var Collection<Document> $values */
+        /** @var Collection<DocumentInterface> $values */
         $values = $this->attributeDocuments->map(function (AttributeDocuments $attributeDocuments) {
             return $attributeDocuments->getDocument();
-        })->filter(function (?Document $document) {
+        })->filter(function (?DocumentInterface $document) {
             return null !== $document;
         });
         return $values; // phpstan does not understand filtering null values

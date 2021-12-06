@@ -8,7 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
@@ -37,21 +39,21 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
      * @var Folder|null
      * @Serializer\Exclude
      */
-    protected $parent = null;
+    protected ?LeafInterface $parent = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var Collection<Folder>
      * @Serializer\Groups({"folder"})
      */
-    protected $children;
+    protected Collection $children;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders")
      * @ORM\JoinTable(name="documents_folders")
      * @var Collection<Document>
      * @Serializer\Groups({"folder"})
      */
-    protected $documents;
+    protected Collection $documents;
     /**
      * @ORM\Column(name="folder_name", type="string", unique=true, nullable=false)
      * @var string
@@ -74,7 +76,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
      * @var Collection<FolderTranslation>
      * @Serializer\Groups({"folder", "document"})
      */
-    private $translatedFolders;
+    private Collection $translatedFolders;
 
     /**
      * Create a new Folder.
@@ -158,10 +160,10 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return Collection<FolderTranslation>
      */
-    public function getTranslatedFoldersByTranslation(Translation $translation): Collection
+    public function getTranslatedFoldersByTranslation(TranslationInterface $translation): Collection
     {
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('translation', $translation));

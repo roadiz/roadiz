@@ -550,15 +550,15 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Node|null
      * @Serializer\Exclude
      */
-    protected $parent = null;
+    protected ?LeafInterface $parent = null;
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection<Node>
+     * @var Collection<Node>
      * @Serializer\Groups({"node_children"})
      */
-    protected $children;
+    protected Collection $children;
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
@@ -566,7 +566,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Collection<Tag>
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node"})
      */
-    private $tags;
+    private Collection $tags;
 
     /**
      * @return Collection<Tag>
@@ -620,7 +620,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Collection<NodesCustomForms>
      * @Serializer\Exclude()
      */
-    private $customForms;
+    private Collection $customForms;
 
     /**
      * @return Collection<NodesCustomForms>
@@ -660,7 +660,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Collection<NodeType>
      * @Serializer\Groups({"node"})
      */
-    private $stackTypes;
+    private Collection $stackTypes;
 
     /**
      * @return Collection<NodeType>
@@ -703,7 +703,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @Serializer\Groups({"node"})
      * @var Collection<NodesSources>
      */
-    private $nodeSources;
+    private Collection $nodeSources;
 
     /**
      * @return Collection<NodesSources>
@@ -766,7 +766,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Collection<NodesToNodes>
      * @Serializer\Exclude()
      */
-    protected $bNodes;
+    protected Collection $bNodes;
 
     /**
      * Return nodes related to this (B nodes).
@@ -792,11 +792,11 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param ArrayCollection<NodesToNodes> $bNodes
+     * @param Collection<NodesToNodes> $bNodes
      *
      * @return Node
      */
-    public function setBNodes(ArrayCollection $bNodes): Node
+    public function setBNodes(Collection $bNodes): Node
     {
         foreach ($this->bNodes as $bNode) {
             $bNode->setNodeA(null);
@@ -849,7 +849,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Collection<NodesToNodes>
      * @Serializer\Exclude()
      */
-    protected $aNodes;
+    protected Collection $aNodes;
 
     /**
      * Return nodes which own a relation with this (A nodes).
@@ -867,7 +867,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\OrderBy({"position" = "ASC"})
      * @Serializer\Groups({"nodes_sources", "node"})
      */
-    protected $attributeValues;
+    protected Collection $attributeValues;
 
     /**
      * Create a new empty Node according to given node-type.
@@ -924,12 +924,10 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
             $this->id = null;
             $this->home = false;
             $children = $this->getChildren();
-            if ($children !== null) {
-                $this->children = new ArrayCollection();
-                foreach ($children as $child) {
-                    $cloneChild = clone $child;
-                    $this->addChild($cloneChild);
-                }
+            $this->children = new ArrayCollection();
+            foreach ($children as $child) {
+                $cloneChild = clone $child;
+                $this->addChild($cloneChild);
             }
             $nodeSources = $this->getNodeSources();
             if ($nodeSources !== null) {
@@ -941,15 +939,14 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
                 }
             }
             $attributeValues = $this->getAttributeValues();
-            if ($attributeValues !== null) {
-                $this->attributeValues = new ArrayCollection();
-                /** @var AttributeValue $attributeValue */
-                foreach ($attributeValues as $attributeValue) {
-                    $cloneAttributeValue = clone $attributeValue;
-                    $cloneAttributeValue->setNode($this);
-                    $this->addAttributeValue($cloneAttributeValue);
-                }
+            $this->attributeValues = new ArrayCollection();
+            /** @var AttributeValue $attributeValue */
+            foreach ($attributeValues as $attributeValue) {
+                $cloneAttributeValue = clone $attributeValue;
+                $cloneAttributeValue->setNode($this);
+                $this->addAttributeValue($cloneAttributeValue);
             }
+
             // Get a random string after node-name.
             // This is for safety reasons
             // NodeDuplicator service will override it

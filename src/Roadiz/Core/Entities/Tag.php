@@ -10,6 +10,7 @@ use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -47,7 +48,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @var Tag|null
      * @Serializer\Exclude
      */
-    protected $parent = null;
+    protected ?LeafInterface $parent = null;
     /**
      * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
@@ -56,7 +57,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Tag>")
      * @Serializer\Accessor(setter="setChildren", getter="getChildren")
      */
-    protected $children;
+    protected Collection $children;
     /**
      * @ORM\OneToMany(
      *     targetEntity="TagTranslation",
@@ -70,7 +71,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslation>")
      * @Serializer\Accessor(setter="setTranslatedTags", getter="getTranslatedTags")
      */
-    protected $translatedTags = null;
+    protected Collection $translatedTags;
     /**
      * @var string
      * @ORM\Column(type="string", name="tag_name", unique=true)
@@ -116,7 +117,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @var Collection<Node>
      * @Serializer\Exclude
      */
-    private $nodes;
+    private Collection $nodes;
 
     /**
      * Create a new Tag.
@@ -244,10 +245,10 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return Collection<TagTranslation>
      */
-    public function getTranslatedTagsByTranslation(Translation $translation)
+    public function getTranslatedTagsByTranslation(TranslationInterface $translation)
     {
         return $this->translatedTags->filter(function (TagTranslation $tagTranslation) use ($translation) {
             return $tagTranslation->getTranslation()->getLocale() === $translation->getLocale();

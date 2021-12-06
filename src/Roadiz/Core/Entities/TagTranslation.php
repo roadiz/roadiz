@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use JMS\Serializer\Annotation as Serializer;
 use Gedmo\Mapping\Annotation as Gedmo;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 /**
  * Translated representation of Tags.
@@ -43,15 +44,15 @@ class TagTranslation extends AbstractEntity
      * @var Tag|null
      * @Serializer\Exclude()
      */
-    protected $tag = null;
+    protected ?Tag $tag = null;
     /**
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Translation|null
+     * @var TranslationInterface|null
      * @Serializer\Groups({"tag", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
      */
-    protected $translation = null;
+    protected ?TranslationInterface $translation = null;
     /**
      * @ORM\OneToMany(
      *     targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments",
@@ -63,15 +64,15 @@ class TagTranslation extends AbstractEntity
      * @var Collection<TagTranslationDocuments>
      * @Serializer\Exclude
      */
-    protected $tagTranslationDocuments;
+    protected Collection $tagTranslationDocuments;
 
     /**
      * Create a new TagTranslation with its origin Tag and Translation.
      *
      * @param Tag|null         $original
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      */
-    public function __construct(Tag $original = null, Translation $translation = null)
+    public function __construct(Tag $original = null, ?TranslationInterface $translation = null)
     {
         $this->setTag($original);
         $this->setTranslation($translation);
@@ -147,23 +148,19 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * Gets the value of translation.
-     *
-     * @return Translation
+     * @return TranslationInterface
      */
-    public function getTranslation(): ?Translation
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }
 
     /**
-     * Sets the value of translation.
-     *
-     * @param Translation $translation the translation
+     * @param TranslationInterface|null $translation the translation
      *
      * @return self
      */
-    public function setTranslation(?Translation $translation): TagTranslation
+    public function setTranslation(?TranslationInterface $translation): TagTranslation
     {
         $this->translation = $translation;
 
@@ -181,14 +178,12 @@ class TagTranslation extends AbstractEntity
         if ($this->id) {
             $this->id = null;
             $documents = $this->getDocuments();
-            if ($documents !== null) {
-                $this->tagTranslationDocuments = new ArrayCollection();
-                /** @var TagTranslationDocuments $document */
-                foreach ($documents as $document) {
-                    $cloneDocument = clone $document;
-                    $this->tagTranslationDocuments->add($cloneDocument);
-                    $cloneDocument->setTagTranslation($this);
-                }
+            $this->tagTranslationDocuments = new ArrayCollection();
+            /** @var TagTranslationDocuments $document */
+            foreach ($documents as $document) {
+                $cloneDocument = clone $document;
+                $this->tagTranslationDocuments->add($cloneDocument);
+                $cloneDocument->setTagTranslation($this);
             }
         }
     }
@@ -216,10 +211,10 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * @param ArrayCollection|null $tagTranslationDocuments
+     * @param Collection $tagTranslationDocuments
      * @return TagTranslation
      */
-    public function setTagTranslationDocuments($tagTranslationDocuments): TagTranslation
+    public function setTagTranslationDocuments(Collection $tagTranslationDocuments): TagTranslation
     {
         $this->tagTranslationDocuments = $tagTranslationDocuments;
         return $this;

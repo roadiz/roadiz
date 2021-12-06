@@ -23,11 +23,13 @@ class LoginAttempt
     private $id;
 
     /**
+     * @var string|null
      * @ORM\Column(type="string", length=50, nullable=true, name="ip_address")
      */
-    private $ipAddress;
+    private $ipAddress = null;
 
     /**
+     * @var \DateTimeImmutable
      * @ORM\Column(type="datetime_immutable")
      */
     private $date;
@@ -36,7 +38,7 @@ class LoginAttempt
      * @var \DateTime|null
      * @ORM\Column(type="datetime", nullable=true, name="blocks_login_until")
      */
-    private $blocksLoginUntil;
+    private $blocksLoginUntil = null;
 
     /**
      * @ORM\Column(type="string", nullable=false, name="username", unique=false)
@@ -46,7 +48,7 @@ class LoginAttempt
     /**
      * @ORM\Column(type="integer", nullable=true, name="attempt_count")
      */
-    private $attemptCount;
+    private $attemptCount = null;
 
     public function __construct(?string $ipAddress, ?string $username)
     {
