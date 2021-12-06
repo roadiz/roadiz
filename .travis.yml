@@ -16,7 +16,7 @@ branches:
     except:
         - l10n_develop
 env:
-    - COMPOSER_ROOT_VERSION=1.7.6
+    - COMPOSER_ROOT_VERSION=1.7.7
 jobs:
     allow_failures:
         -   php: nightly
