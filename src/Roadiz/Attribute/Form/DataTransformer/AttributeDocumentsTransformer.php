@@ -8,6 +8,7 @@ use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Entities\AttributeDocuments;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -31,7 +32,7 @@ final class AttributeDocumentsTransformer implements DataTransformerInterface
      * to Document entities for displaying in document VueJS component.
      *
      * @param AttributeDocuments[]|null $attributeDocuments
-     * @return Document[]
+     * @return DocumentInterface[]
      */
     public function transform($attributeDocuments)
     {

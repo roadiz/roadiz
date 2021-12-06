@@ -33,7 +33,7 @@ class Redirection extends AbstractDateTimed
      * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
      * @var NodesSources|null
      */
-    private $redirectNodeSource = null;
+    private ?NodesSources $redirectNodeSource = null;
 
     /**
      * @ORM\Column(type="integer")
@@ -113,7 +113,7 @@ class Redirection extends AbstractDateTimed
             Response::HTTP_FOUND => 'redirection.moved_temporarily',
         ];
 
-        return isset($types[$this->type]) ? $types[$this->type] : '';
+        return $types[$this->type] ?? '';
     }
 
     /**

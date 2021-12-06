@@ -28,7 +28,7 @@ class UserLogEntry extends AbstractLogEntry
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="SET NULL")
      * @var User|null
      */
-    protected $user = null;
+    protected ?User $user = null;
 
     /**
      * @return User|null

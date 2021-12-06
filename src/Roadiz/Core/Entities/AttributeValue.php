@@ -87,14 +87,12 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
         if ($this->id) {
             $this->id = null;
             $attributeValueTranslations = $this->getAttributeValueTranslations();
-            if ($attributeValueTranslations !== null) {
-                $this->attributeValueTranslations = new ArrayCollection();
-                /** @var AttributeValueTranslationInterface $attributeValueTranslation */
-                foreach ($attributeValueTranslations as $attributeValueTranslation) {
-                    $cloneAttributeValueTranslation = clone $attributeValueTranslation;
-                    $cloneAttributeValueTranslation->setAttributeValue($this);
-                    $this->attributeValueTranslations->add($cloneAttributeValueTranslation);
-                }
+            $this->attributeValueTranslations = new ArrayCollection();
+            /** @var AttributeValueTranslationInterface $attributeValueTranslation */
+            foreach ($attributeValueTranslations as $attributeValueTranslation) {
+                $cloneAttributeValueTranslation = clone $attributeValueTranslation;
+                $cloneAttributeValueTranslation->setAttributeValue($this);
+                $this->attributeValueTranslations->add($cloneAttributeValueTranslation);
             }
         }
     }

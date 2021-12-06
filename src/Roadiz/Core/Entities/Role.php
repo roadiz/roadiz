@@ -119,7 +119,7 @@ class Role implements PersistableInterface
      * @Serializer\Accessor(getter="getGroups", setter="setGroups")
      * @var Collection<Group>
      */
-    private $groups;
+    private Collection $groups;
 
     /**
      * @return Collection
@@ -173,7 +173,7 @@ class Role implements PersistableInterface
     /**
      * Get a classified version of current role name.
      *
-     * It replace underscores by dashes and lowercase.
+     * It replaces underscores by dashes and lowercase.
      *
      * @return string
      * @Serializer\Groups({"role"})

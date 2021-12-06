@@ -168,7 +168,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableIn
      * Define if this node-type produces nodes that will be
      * viewable from a Controller.
      *
-     * Typically if a node has an URL.
+     * Typically, if a node has a URL.
      *
      * @var bool
      * @ORM\Column(name="reachable", type="boolean", nullable=false, options={"default" = true})

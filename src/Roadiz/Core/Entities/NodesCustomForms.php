@@ -24,21 +24,21 @@ class NodesCustomForms extends AbstractPositioned
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node|null
      */
-    protected $node;
+    protected ?Node $node = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="nodes", fetch="EAGER")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      * @var CustomForm|null
      */
-    protected $customForm;
+    protected ?CustomForm $customForm = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var NodeTypeField|null
      */
-    protected $field;
+    protected ?NodeTypeField $field = null;
 
     /**
      * Create a new relation between a Node, a CustomForm and a NodeTypeField.
@@ -88,9 +88,9 @@ class NodesCustomForms extends AbstractPositioned
     /**
      * Gets the value of customForm.
      *
-     * @return CustomForm
+     * @return CustomForm|null
      */
-    public function getCustomForm(): CustomForm
+    public function getCustomForm(): ?CustomForm
     {
         return $this->customForm;
     }
@@ -112,9 +112,9 @@ class NodesCustomForms extends AbstractPositioned
     /**
      * Gets the value of field.
      *
-     * @return NodeTypeField
+     * @return NodeTypeField|null
      */
-    public function getField(): NodeTypeField
+    public function getField(): ?NodeTypeField
     {
         return $this->field;
     }
