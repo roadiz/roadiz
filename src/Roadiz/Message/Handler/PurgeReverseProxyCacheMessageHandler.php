@@ -84,6 +84,8 @@ final class PurgeReverseProxyCacheMessageHandler implements MessageHandlerInterf
     {
         $requests = [];
         foreach ($this->configuration['reverseProxyCache']['frontend'] as $name => $frontend) {
+            // Remove other entry points than index.php to avoid authentication issues.
+            $path = preg_replace('#(?:preview|dev)\.php\/?#', '', $path);
             $requests[$name] = new \GuzzleHttp\Psr7\Request(
                 Request::METHOD_PURGE,
                 'http://' . $frontend['host'] . $path,
@@ -98,6 +100,8 @@ final class PurgeReverseProxyCacheMessageHandler implements MessageHandlerInterf
     /**
      * @param \GuzzleHttp\Psr7\Request $request
      * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     protected function sendRequest(\GuzzleHttp\Psr7\Request $request): void
     {
