@@ -26,21 +26,21 @@ class NodesToNodes extends AbstractPositioned
      * @ORM\JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node|null
      */
-    protected ?Node $nodeA;
+    protected $nodeA;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node|null
      */
-    protected ?Node $nodeB;
+    protected $nodeB;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var NodeTypeField|null
      */
-    protected ?NodeTypeField $field;
+    protected $field;
 
     /**
      * Create a new relation between two Nodes and a NodeTypeField.
