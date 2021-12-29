@@ -78,9 +78,17 @@
                 <source>webhooks.automatic</source>
                 <target state="translated">自动触发器</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.automatic.help">
+                <source>webhooks.automatic.help</source>
+                <target state="translated">Webhooks自动帮助</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
                 <source>webhook.too_many_triggered_in_period</source>
                 <target state="translated">在再次触发此 webhook 前，请等待至少30秒。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.description">
+                <source>webhooks.description</source>
+                <target state="translated">webhooks描述</target>
             </trans-unit>
     </body>
   </file>
