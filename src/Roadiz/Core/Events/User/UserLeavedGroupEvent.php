@@ -10,10 +10,7 @@ use RZ\Roadiz\Core\Events\FilterUserEvent;
 
 final class UserLeavedGroupEvent extends FilterUserEvent
 {
-    /**
-     * @var Group
-     */
-    private $group;
+    private Group $group;
 
     public function __construct(User $user, Group $group)
     {
