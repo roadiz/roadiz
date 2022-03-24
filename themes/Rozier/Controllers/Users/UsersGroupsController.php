@@ -6,6 +6,8 @@ namespace Themes\Rozier\Controllers\Users;
 use RZ\Roadiz\CMS\Forms\GroupsType;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Events\User\UserJoinedGroupEvent;
+use RZ\Roadiz\Core\Events\User\UserLeavedGroupEvent;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
@@ -138,6 +140,8 @@ class UsersGroupsController extends RozierApp
             if ($group !== null) {
                 $user->addGroup($group);
                 $this->get('em')->flush();
+
+                $this->get("dispatcher")->dispatch(new UserJoinedGroupEvent($user, $group));
             }
 
             return $group;
@@ -161,6 +165,8 @@ class UsersGroupsController extends RozierApp
             if ($group !== null) {
                 $user->removeGroup($group);
                 $this->get('em')->flush();
+
+                $this->get("dispatcher")->dispatch(new UserLeavedGroupEvent($user, $group));
             }
 
             return $group;
