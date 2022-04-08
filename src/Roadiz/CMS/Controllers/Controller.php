@@ -193,6 +193,8 @@ abstract class Controller implements ContainerAwareInterface
         $requestUri = $request->getRequestUri();
 
         $url = str_replace($pathInfo, rtrim($pathInfo, ' /'), $requestUri);
+        // Fix CVE where user could be redirected to external website URL
+        $url = preg_replace('#[/]{2,}#', '/', $url);
 
         return $this->redirect($url, Response::HTTP_MOVED_PERMANENTLY);
     }
