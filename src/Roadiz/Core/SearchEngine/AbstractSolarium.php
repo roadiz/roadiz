@@ -194,8 +194,8 @@ abstract class AbstractSolarium
      */
     public function index()
     {
-        if (null !== $this->document && $this->document instanceof Document) {
-            $this->document->setField('id', uniqid());
+        if ($this->document instanceof Document) {
+            $this->document->setField('id', uniqid('', true));
 
             try {
                 foreach ($this->getFieldsAssoc() as $key => $value) {
