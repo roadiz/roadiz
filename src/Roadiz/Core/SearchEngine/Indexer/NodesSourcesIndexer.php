@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\SearchEngine\Indexer;
 
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Solarium\Exception\HttpException;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
@@ -84,15 +85,14 @@ class NodesSourcesIndexer extends AbstractIndexer
         $buffer = $this->getSolr()->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        $countQuery = $this->getAllQueryBuilder()
-            ->select('count(ns)')
-            ->getQuery();
-        $count = $countQuery->getSingleScalarResult();
+        $paginator = new Paginator($this->getAllQueryBuilder()->getQuery(), true);
+        $count = $paginator->count();
 
         $baseQb = $this->getAllQueryBuilder()->addSelect('n');
         if ($batchCount > 1) {
-            $limit = round($count/$batchCount);
-            $offset = $batchNumber * $limit;
+            $limit = (int) ceil($count/$batchCount);
+            $offset = (int) $batchNumber * $limit;
+
             if ($batchNumber === $batchCount - 1) {
                 $limit = $count - $offset;
                 $baseQb->setMaxResults($limit)->setFirstResult($offset);
@@ -108,14 +108,13 @@ class NodesSourcesIndexer extends AbstractIndexer
             $count = $limit;
         }
         $q = $baseQb->getQuery();
-        $iterableResult = $q->iterate();
 
         if (null !== $this->io) {
             $this->io->progressStart($count);
         }
 
-        while (($row = $iterableResult->next()) !== false) {
-            $solarium = $this->solariumFactory->createWithNodesSources($row[0]);
+        foreach ($q->toIterable() as $row) {
+            $solarium = $this->solariumFactory->createWithNodesSources($row);
             $solarium->createEmptyDocument($update);
             $solarium->index();
             $buffer->addDocument($solarium->getDocument());
@@ -123,6 +122,8 @@ class NodesSourcesIndexer extends AbstractIndexer
             if (null !== $this->io) {
                 $this->io->progressAdvance();
             }
+            // detach from Doctrine, so that it can be Garbage-Collected immediately
+            $this->managerRegistry->getManager()->detach($row);
         }
 
         $buffer->flush();

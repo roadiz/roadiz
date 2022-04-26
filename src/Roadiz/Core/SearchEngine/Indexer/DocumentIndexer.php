@@ -59,14 +59,13 @@ class DocumentIndexer extends AbstractIndexer
         $q = $this->managerRegistry->getRepository(Document::class)
             ->createQueryBuilder('d')
             ->getQuery();
-        $iterableResult = $q->iterate();
 
         if (null !== $this->io) {
             $this->io->progressStart($countQuery->getSingleScalarResult());
         }
 
-        while (($row = $iterableResult->next()) !== false) {
-            $solarium = $this->solariumFactory->createWithDocument($row[0]);
+        foreach ($q->toIterable() as $row) {
+            $solarium = $this->solariumFactory->createWithDocument($row);
             $solarium->createEmptyDocument($update);
             $solarium->index();
             foreach ($solarium->getDocuments() as $document) {
@@ -75,6 +74,8 @@ class DocumentIndexer extends AbstractIndexer
             if (null !== $this->io) {
                 $this->io->progressAdvance();
             }
+            // detach from Doctrine, so that it can be Garbage-Collected immediately
+            $this->managerRegistry->getManager()->detach($row);
         }
 
         $buffer->flush();

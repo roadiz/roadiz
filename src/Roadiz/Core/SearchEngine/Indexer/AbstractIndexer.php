@@ -63,12 +63,12 @@ abstract class AbstractIndexer implements Indexer
     {
         $update = $this->getSolr()->createUpdate();
         if (null !== $documentType) {
-            $update->addDeleteQuery('document_type_s:' . trim($documentType));
+            $update->addDeleteQuery(sprintf('document_type_s:"%s"', trim($documentType)));
         } else {
             // Delete ALL index
             $update->addDeleteQuery('*:*');
         }
-        $update->addCommit();
+        $update->addCommit(false, true, true);
         $this->getSolr()->update($update);
     }
 
@@ -78,7 +78,7 @@ abstract class AbstractIndexer implements Indexer
     public function optimizeSolr(): void
     {
         $optimizeUpdate = $this->getSolr()->createUpdate();
-        $optimizeUpdate->addOptimize(true, true, 5);
+        $optimizeUpdate->addOptimize(true, true);
         $this->getSolr()->update($optimizeUpdate);
 
         $this->commitSolr();
