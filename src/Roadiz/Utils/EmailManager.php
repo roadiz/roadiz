@@ -150,7 +150,7 @@ class EmailManager
 
         $this->message = new Swift_Message();
         $this->message->setSubject($this->getSubject())
-            ->setFrom($this->getOrigin())
+            ->setFrom($this->getOrigin(), $this->getSenderName())
             ->setTo($this->getReceiver())
             // Force using string and only one email
             ->setReturnPath($this->getSenderEmail());
@@ -516,6 +516,19 @@ class EmailManager
             $defaultSender = $this->settingsBag->get('email_sender');
         }
         return (null !== $this->origin && $this->origin != "") ? ($this->origin) : ($defaultSender);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSenderName()
+    {
+        $defaultSenderName = null;
+        if (null !== $this->settingsBag && $this->settingsBag->get('email_sender_name')) {
+            $defaultSenderName = $this->settingsBag->get('email_sender_name', null);
+            $defaultSenderName = null !== $defaultSenderName ? (string) $defaultSenderName : null;
+        }
+        return $defaultSenderName;
     }
 
     /**
