@@ -521,7 +521,7 @@ class EmailManager
     /**
      * @return null|string
      */
-    public function getSenderName()
+    public function getSenderName(): ?string
     {
         $defaultSenderName = null;
         if (null !== $this->settingsBag && $this->settingsBag->get('email_sender_name')) {
