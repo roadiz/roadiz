@@ -144,11 +144,11 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @param string $email
+     * @param string|null $email
      *
      * @return $this
      */
-    public function setEmail(string $email): CustomForm
+    public function setEmail(?string $email): CustomForm
     {
         $this->email = $email;
         return $this;
@@ -166,7 +166,7 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getCloseDate(): ?\DateTime
     {
@@ -174,11 +174,11 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @param \DateTime $closeDate
+     * @param \DateTime|null $closeDate
      *
      * @return $this
      */
-    public function setCloseDate(\DateTime $closeDate = null): CustomForm
+    public function setCloseDate(?\DateTime $closeDate = null): CustomForm
     {
         $this->closeDate = $closeDate;
         return $this;
@@ -194,12 +194,10 @@ class CustomForm extends AbstractDateTimed
     {
         $nowDate = new \DateTime();
 
-        if ($this->closeDate >= $nowDate &&
-            $this->open === true) {
-            return true;
-        } else {
-            return false;
-        }
+        return (
+            null === $this->getCloseDate() ||
+            $this->getCloseDate() >= $nowDate
+        ) && $this->open === true;
     }
 
     /**
