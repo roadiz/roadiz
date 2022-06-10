@@ -41,6 +41,9 @@ trait AttributeValueTranslationTrait
      */
     public function getValue()
     {
+        if (null === $this->value) {
+            return null;
+        }
         switch ($this->getAttributeValue()->getType()) {
             case AttributeInterface::DECIMAL_T:
                 return (float) $this->value;
@@ -68,18 +71,18 @@ trait AttributeValueTranslationTrait
                 if (false === filter_var($value, FILTER_VALIDATE_EMAIL)) {
                     throw new \InvalidArgumentException('Email is not valid');
                 }
-                $this->value = $value;
+                $this->value = (string) $value;
                 return $this;
             case AttributeInterface::DATETIME_T:
             case AttributeInterface::DATE_T:
                 if ($value instanceof \DateTime) {
                     $this->value = $value->format('Y-m-d H:i:s');
                 } else {
-                    $this->value = $value;
+                    $this->value = (string) $value;
                 }
                 return $this;
             default:
-                $this->value = $value;
+                $this->value = null !== $value ? (string) $value : null;
                 return $this;
         }
     }
