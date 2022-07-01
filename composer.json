@@ -69,7 +69,7 @@
         "symfony/console":                         "~4.4.1",
         "symfony/filesystem":                      "~4.4.1",
         "symfony/finder":                          "~4.4.1",
-        "symfony/form":                            "~4.4.1",
+        "symfony/form":                            "4.4.41",
         "symfony/http-foundation":                 "~4.4.1",
         "symfony/http-kernel":                     "~4.4.1",
         "symfony/routing":                         "~4.4.1",
