@@ -74,7 +74,7 @@
         "symfony/expression-language":             "^5.2",
         "symfony/filesystem":                      "~4.4.1",
         "symfony/finder":                          "~4.4.1",
-        "symfony/form":                            "~4.4.1",
+        "symfony/form":                            "4.4.41",
         "symfony/framework-bundle":                "~4.4.1|^5.0",
         "symfony/http-foundation":                 "~5.0.7",
         "symfony/http-kernel":                     "~4.4.1",
