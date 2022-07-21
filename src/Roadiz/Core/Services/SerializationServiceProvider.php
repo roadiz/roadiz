@@ -14,6 +14,7 @@ use JMS\Serializer\SerializerBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Serializers\NodeSourceXlsxSerializer;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\ChainDoctrineObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\GroupObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\NodeObjectConstructor;
@@ -122,6 +123,14 @@ class SerializationServiceProvider implements ServiceProviderInterface
 
         $container[CustomFormAnswerSerializer::class] = function (Container $c) {
             return new CustomFormAnswerSerializer($c['router']);
+        };
+
+        $container[NodeSourceXlsxSerializer::class] = function (Container $c) {
+            return new NodeSourceXlsxSerializer(
+                $c['em'],
+                $c['translator'],
+                $c['urlGenerator'],
+            );
         };
     }
 }
