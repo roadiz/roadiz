@@ -1,3 +1,9 @@
+## [v1.7.19](https://github.com/roadiz/roadiz/compare/v1.7.18...v1.7.19) (2022-07-21)
+
+### Bug Fixes
+
+* Missing NodeSourceXlsxSerializer service declaration ([feb9134](https://github.com/roadiz/roadiz/commit/feb9134410ce1f048949e56d9dcd5f8b7edf82f8))
+
 ## [v1.7.18](https://github.com/roadiz/roadiz/compare/v1.7.17...v1.7.18) (2022-07-01)
 
 ### Bug Fixes
