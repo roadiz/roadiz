@@ -1,3 +1,9 @@
+## [v1.7.20](https://github.com/roadiz/roadiz/compare/v1.7.19...v1.7.20) (2022-07-21)
+
+### Bug Fixes
+
+* Quick fix to prevent issue with `solariumphp/solarium` 6.2.5 and empty arrays ([3916521](https://github.com/roadiz/roadiz/commit/39165217b2f1a1cd25a90ee5894db7c97a2e30d0))
+
 ## [v1.7.19](https://github.com/roadiz/roadiz/compare/v1.7.18...v1.7.19) (2022-07-21)
 
 ### Bug Fixes

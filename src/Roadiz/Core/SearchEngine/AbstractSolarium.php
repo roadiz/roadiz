@@ -195,11 +195,13 @@ abstract class AbstractSolarium
     public function index()
     {
         if ($this->document instanceof Document) {
-            $this->document->setField('id', uniqid('', true));
+            $this->document->setKey('id', uniqid('', true));
 
             try {
                 foreach ($this->getFieldsAssoc() as $key => $value) {
-                    $this->document->setField($key, $value);
+                    if (!\is_array($value) || \count($value) > 0) {
+                        $this->document->setField($key, $value);
+                    }
                 }
                 return true;
             } catch (\RuntimeException $e) {
