@@ -204,20 +204,21 @@ abstract class AbstractSolarium
      */
     public function index()
     {
-        if (null !== $this->document && $this->document instanceof Document) {
-            $this->document->setField('id', uniqid());
+        if ($this->document instanceof Document) {
+            $this->document->setKey('id', uniqid('', true));
 
             try {
                 foreach ($this->getFieldsAssoc() as $key => $value) {
-                    $this->document->setField($key, $value);
+                    if (!\is_array($value) || \count($value) > 0) {
+                        $this->document->setField($key, $value);
+                    }
                 }
                 return true;
             } catch (\RuntimeException $e) {
                 return false;
             }
-        } else {
-            throw new \RuntimeException("No Solr item available for current entity", 1);
         }
+        throw new \RuntimeException("No Solr item available for current entity", 1);
     }
 
     /**
