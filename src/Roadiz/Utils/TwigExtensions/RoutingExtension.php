@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Error\RuntimeError;
@@ -20,10 +21,12 @@ use Twig\TwigFunction;
 class RoutingExtension extends AbstractExtension
 {
     private UrlGeneratorInterface $generator;
+    private PreviewResolverInterface $previewResolver;
 
-    public function __construct(UrlGeneratorInterface $generator)
+    public function __construct(UrlGeneratorInterface $generator, PreviewResolverInterface $previewResolver)
     {
         $this->generator = $generator;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -48,6 +51,9 @@ class RoutingExtension extends AbstractExtension
      */
     public function getPath($name, array $parameters = [], bool $relative = false)
     {
+        if ($this->previewResolver->isPreview()) {
+            $parameters['_preview'] = 1;
+        }
         if (is_string($name)) {
             return $this->generator->generate(
                 $name,
@@ -74,6 +80,9 @@ class RoutingExtension extends AbstractExtension
      */
     public function getUrl($name, array $parameters = [], bool $schemeRelative = false)
     {
+        if ($this->previewResolver->isPreview()) {
+            $parameters['_preview'] = 1;
+        }
         if (is_string($name)) {
             return $this->generator->generate(
                 $name,

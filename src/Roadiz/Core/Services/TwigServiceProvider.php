@@ -12,6 +12,7 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Translation\Twig\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Translation\Twig\TranslationMenuExtension;
 use RZ\Roadiz\TwigExtension\DocumentExtension;
@@ -39,7 +40,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Themes\Install\InstallApp;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ProfilerExtension;
@@ -252,7 +252,7 @@ class TwigServiceProvider implements ServiceProviderInterface
          * Twig routing extension
          */
         $container['twig.routingExtension'] = function (Container $c) {
-            return new RoutingExtension($c['router']);
+            return new RoutingExtension($c['router'], $c[PreviewResolverInterface::class]);
         };
 
         return $container;
