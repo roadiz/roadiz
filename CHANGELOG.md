@@ -1,3 +1,9 @@
+## [v1.7.21](https://github.com/roadiz/roadiz/compare/v1.7.20...v1.7.21) (2022-09-15)
+
+### Bug Fixes
+
+* **Twig:** Keep `_preview` query param during a Preview session ([39efb77](https://github.com/roadiz/roadiz/commit/39efb77d854f6c54dc59c2f8df186381f113459a))
+
 ## [v1.7.20](https://github.com/roadiz/roadiz/compare/v1.7.19...v1.7.20) (2022-07-21)
 
 ### Bug Fixes
