@@ -30,7 +30,10 @@
     ],
     "config": {
         "optimize-autoloader": true,
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     },
     "require": {
         "php":                                     "^7.4 || ^8.0",
