@@ -1,55 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="" source-language="en" datatype="plaintext" target-language="fr">
-    <body>
-      <trans-unit xml:space="preserve" id="document.private.help">
+    <file original="" source-language="en" datatype="plaintext" target-language="fr">
+        <body>
+            <trans-unit xml:space="preserve" id="document.private.help">
                 <source>document.private.help</source>
-                <target state="translated">Déplace le fichier dans un dossier du serveur non-accessible publiquement. Cette option désactive l’affichage du document dans votre site.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="document.imageAverageColor.help">
+
+                <target state="translated">Déplace le fichier dans un dossier du serveur non-accessible publiquement. Cette option désactive l’affichage du document dans votre site.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="document.imageAverageColor.help">
                 <source>document.imageAverageColor.help</source>
-                <target state="translated">Couleur moyenne de votre image pour créer des placeholders colorés pendant de le chargement de vos pages. </target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="node.nodeName.help">
+
+                <target state="translated">Couleur moyenne de votre image pour créer des placeholders colorés pendant de le chargement de vos pages. </target></trans-unit>
+            <trans-unit xml:space="preserve" id="node.nodeName.help">
                 <source>node.nodeName.help</source>
-                <target state="translated">Le nom du nœud doit être unique et permet de générer les URL de vos pages et de repérer le nœud depuis vos thèmes. Il ne doit contenir aucun caractère spécial.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="tag.tagName.help">
+
+                <target state="translated">Le nom du nœud doit être unique et permet de générer les URL de vos pages et de repérer le nœud depuis vos thèmes. Il ne doit contenir aucun caractère spécial.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="tag.tagName.help">
                 <source>tag.tagName.help</source>
-                <target state="translated">Le nom de l’étiquette doit être unique et permet de générer les URL de vos pages et de repérer l’étiquette depuis vos thèmes. Il ne doit contenir aucun caractère spécial.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="tag.locked.help">
+
+                <target state="translated">Le nom de l’étiquette doit être unique et permet de générer les URL de vos pages et de repérer l’étiquette depuis vos thèmes. Il ne doit contenir aucun caractère spécial.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="tag.locked.help">
                 <source>tag.locked.help</source>
-                <target state="translated">Une étiquette verrouillée n’est pas renommée lorsque vous modifiez son titre dans la traduction principale. Cela empêche aussi sa suppression.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeSource.metaTitle.help">
+
+                <target state="translated">Une étiquette verrouillée n’est pas renommée lorsque vous modifiez son titre dans la traduction principale. Cela empêche aussi sa suppression.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="folder.locked.help">
+                <source>folder.locked.help</source>
+
+                <target state="translated">Un dossier verrouillée n’est pas renommée lorsque vous modifiez son titre dans la traduction principale. Cela empêche aussi sa suppression.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="nodeSource.metaTitle.help">
                 <source>nodeSource.metaTitle.help</source>
-                <target state="translated">Le titre de référencement permet de rédiger entièrement le titre de votre page. Pour un affichage optimal dans les moteurs de recherche, le titre ne doit pas dépasser 55 à 65 caractères en moyenne.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeSource.metaKeywords.help">
+
+                <target state="translated">Le titre de référencement permet de rédiger entièrement le titre de votre page. Pour un affichage optimal dans les moteurs de recherche, le titre ne doit pas dépasser 55 à 65 caractères en moyenne.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="nodeSource.metaKeywords.help">
                 <source>nodeSource.metaKeywords.help</source>
-                <target state="translated">Les mot-clés de référencement sont aujourd’hui facultatifs et ne sont plus pris en compte par les moteurs de recherche.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeSource.metaDescription.help">
+
+                <target state="translated">Les mot-clés de référencement sont aujourd’hui facultatifs et ne sont plus pris en compte par les moteurs de recherche.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="nodeSource.metaDescription.help">
                 <source>nodeSource.metaDescription.help</source>
-                <target state="translated">La description est un résumé de quelques caractères de votre page. Son objectif est de décrire succinctement son contenu. Cette description doit respecter une taille entre 120 et 155 caractères.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeSource.urlAlias.help">
+
+                <target state="translated">La description est un résumé de quelques caractères de votre page. Son objectif est de décrire succinctement son contenu. Cette description doit respecter une taille entre 120 et 155 caractères.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="nodeSource.urlAlias.help">
                 <source>nodeSource.urlAlias.help</source>
-                <target state="translated">Les alias d’URL permettent de réécrire la dernière partie de l’URL de votre page pour chaque traduction. Ils doivent être différents du nom du nœud et uniques sur tout votre site.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeSource.redirections.help">
+
+                <target state="translated">Les alias d’URL permettent de réécrire la dernière partie de l’URL de votre page pour chaque traduction. Ils doivent être différents du nom du nœud et uniques sur tout votre site.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="nodeSource.redirections.help">
                 <source>nodeSource.redirections.help</source>
-                <target state="translated">Les redirections automatiques permettent de rediriger la requête saisie vers l'URL actuel du noeud, et pour cette langue en particulier. Les redirections créées sont toujours du type "permanent".</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes.help">
+
+                <target state="translated">Les redirections automatiques permettent de rediriger la requête saisie vers l'URL actuel du noeud, et pour cette langue en particulier. Les redirections créées sont toujours du type "permanent".</target></trans-unit>
+            <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes.help">
                 <source>nodeType.hidingNonReachableNodes.help</source>
-                <target state="translated">Ce type de nœud cachera seulement les nœuds enfant non-accessibles.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="exclude_this_field_from_fulltext_search_engine">
+
+                <target state="translated">Ce type de nœud cachera seulement les nœuds enfant non-accessibles.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="exclude_this_field_from_fulltext_search_engine">
                 <source>exclude_this_field_from_fulltext_search_engine</source>
-                <target state="translated">Exclut la valeur de ce champ du moteur de recherche plein-texte.</target>
-            </trans-unit>
-    </body>
-  </file>
+
+                <target state="translated">Exclut la valeur de ce champ du moteur de recherche plein-texte.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="source_translation.help">
+                <source>source_translation.help</source>
+
+                <target state="translated">Traduction à partir de laquelle tous les contenus seront dupliqués.</target></trans-unit>
+            <trans-unit xml:space="preserve" id="translate_offspring.help">
+                <source>translate_offspring.help</source>
+
+                <target state="translated">Effectue la traduction sur tous les nœuds enfants en cascade lorsque ceux-ci ne sont pas traduits dans la langue de destination.</target></trans-unit>
+        </body>
+    </file>
 </xliff>
