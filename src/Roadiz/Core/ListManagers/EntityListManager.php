@@ -154,10 +154,13 @@ class EntityListManager extends AbstractEntityListManager
 
         $this->createPaginator();
 
-        if (false === $disabled && null !== $this->request) {
-            if ($this->request->query->get('search') != "") {
-                $this->paginator->setSearchPattern($this->request->query->get('search'));
-            }
+        if (
+            $this->allowRequestSearching &&
+            false === $disabled &&
+            null !== $this->request &&
+            $this->request->query->get('search') != ""
+        ) {
+            $this->paginator->setSearchPattern($this->request->query->get('search'));
         }
     }
 
