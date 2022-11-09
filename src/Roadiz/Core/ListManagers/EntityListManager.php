@@ -8,7 +8,6 @@ use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,8 +117,11 @@ class EntityListManager extends AbstractEntityListManager
         }
 
         if (false === $disabled && null !== $this->request) {
-            if ($this->request->query->get('field') &&
-                $this->request->query->get('ordering')) {
+            if (
+                $this->allowRequestSorting &&
+                $this->request->query->get('field') &&
+                $this->request->query->get('ordering')
+            ) {
                 $this->orderingArray = [
                     $this->request->query->get('field') => $this->request->query->get('ordering')
                 ];
@@ -127,7 +129,7 @@ class EntityListManager extends AbstractEntityListManager
                 $this->queryArray['ordering'] = $this->request->query->get('ordering');
             }
 
-            if ($this->request->query->get('search') != "") {
+            if ($this->allowRequestSearching && $this->request->query->get('search') != "") {
                 $this->searchPattern = $this->request->query->get('search');
                 $this->queryArray['search'] = $this->request->query->get('search');
             }

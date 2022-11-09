@@ -513,4 +513,14 @@ abstract class FrontendController extends AppController
             }
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
+    {
+        return parent::createEntityListManager($entity, $criteria, $ordering)
+            ->setAllowRequestSearching(false)
+            ->setAllowRequestSorting(false);
+    }
 }
