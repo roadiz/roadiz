@@ -1,3 +1,9 @@
+## [v1.7.22](https://github.com/roadiz/roadiz/compare/v1.7.21...v1.7.22) (2022-11-09)
+
+### Bug Fixes
+
+* Make EntityListManager request sorting and searching optional for security purposes ([e4ee554](https://github.com/roadiz/roadiz/commit/e4ee554776026ee98d8aceba210d59cc903632f4))
+
 ## [v1.7.21](https://github.com/roadiz/roadiz/compare/v1.7.20...v1.7.21) (2022-09-15)
 
 ### Bug Fixes
