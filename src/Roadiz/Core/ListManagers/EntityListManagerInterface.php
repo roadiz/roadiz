@@ -8,6 +8,18 @@ interface EntityListManagerInterface
     const ITEM_PER_PAGE = 20;
 
     /**
+     * @param bool $allowRequestSorting
+     * @return EntityListManagerInterface
+     */
+    public function setAllowRequestSorting(bool $allowRequestSorting);
+
+    /**
+     * @param bool $allowRequestSearching
+     * @return EntityListManagerInterface
+     */
+    public function setAllowRequestSearching(bool $allowRequestSearching);
+
+    /**
      * @return bool
      */
     public function isDisplayingNotPublishedNodes(): bool;

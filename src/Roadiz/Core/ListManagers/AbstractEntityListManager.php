@@ -14,6 +14,8 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
     protected ?int $itemPerPage = null;
     protected bool $displayNotPublishedNodes;
     protected bool $displayAllNodesStatuses;
+    protected bool $allowRequestSorting = true;
+    protected bool $allowRequestSearching = true;
 
     /**
      * @param Request|null  $request
@@ -29,6 +31,18 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
             $this->queryArray = [];
         }
         $this->itemPerPage = static::ITEM_PER_PAGE;
+    }
+
+    public function setAllowRequestSorting(bool $allowRequestSorting): static
+    {
+        $this->allowRequestSorting = $allowRequestSorting;
+        return $this;
+    }
+
+    public function setAllowRequestSearching(bool $allowRequestSearching): static
+    {
+        $this->allowRequestSearching = $allowRequestSearching;
+        return $this;
     }
 
     /**

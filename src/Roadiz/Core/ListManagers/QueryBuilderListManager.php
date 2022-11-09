@@ -47,7 +47,8 @@ class QueryBuilderListManager extends AbstractEntityListManager
     public function handle($disabled = false)
     {
         if (false === $disabled && null !== $this->request) {
-            if ($this->request->query->get('field') &&
+            if ($this->allowRequestSorting &&
+                $this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
                 $this->queryBuilder->addOrderBy(
                     sprintf('%s.%s', $this->identifier, $this->request->query->get('field')),
@@ -57,7 +58,7 @@ class QueryBuilderListManager extends AbstractEntityListManager
                 $this->queryArray['ordering'] = $this->request->query->get('ordering');
             }
 
-            if ($this->request->query->get('search') != "") {
+            if ($this->allowRequestSearching && $this->request->query->get('search') != "") {
                 $this->handleSearchParam($this->request->query->get('search'));
                 $this->queryArray['search'] = $this->request->query->get('search');
             }
