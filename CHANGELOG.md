@@ -1,3 +1,9 @@
+## [v1.7.23](https://github.com/roadiz/roadiz/compare/v1.7.22...v1.7.23) (2022-11-09)
+
+### Bug Fixes
+
+* Missing allowRequestSearching condition on Paginator ([686ce37](https://github.com/roadiz/roadiz/commit/686ce37eabab0fd9329813baebf2ab8837aaaaea))
+
 ## [v1.7.22](https://github.com/roadiz/roadiz/compare/v1.7.21...v1.7.22) (2022-11-09)
 
 ### Bug Fixes
