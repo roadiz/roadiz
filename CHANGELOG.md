@@ -1,3 +1,9 @@
+## [v1.7.24](https://github.com/roadiz/roadiz/compare/v1.7.23...v1.7.24) (2023-01-12)
+
+### Bug Fixes
+
+* Fixed central_truncate twig filter ([c79508e](https://github.com/roadiz/roadiz/commit/c79508e55db1646c68b69cf736a600c090d11f75))
+
 ## [v1.7.23](https://github.com/roadiz/roadiz/compare/v1.7.22...v1.7.23) (2022-11-09)
 
 ### Bug Fixes
