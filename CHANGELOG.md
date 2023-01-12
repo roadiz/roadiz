@@ -1,3 +1,9 @@
+## [1.6.39](https://github.com/roadiz/roadiz/compare/v1.6.38...v1.6.39) (2023-01-12)
+
+### Bug Fixes
+
+* Fixed central_truncate twig filter ([b525c67](https://github.com/roadiz/roadiz/commit/b525c6792739ad592981cac2afe6763cca078e5e))
+
 ## [1.6.38](https://github.com/roadiz/roadiz/compare/v1.6.37...v1.6.38) (2022-09-30)
 
 ### Features
