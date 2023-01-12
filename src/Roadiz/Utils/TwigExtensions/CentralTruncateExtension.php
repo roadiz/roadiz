@@ -37,9 +37,11 @@ class CentralTruncateExtension extends AbstractExtension
         }
         $unicode = u($object);
         $unicodeEllipsis = u($ellipsis);
-        if ($unicode->length() > $length + $unicodeEllipsis->length()) {
-            $str1 = $unicode->slice(0, (int)(floor($length / 2) + floor($offset / 2)));
-            $str2 = $unicode->slice(0, (int)((floor($length / 2) * -1) + floor($offset / 2)));
+        $halfLength = ceil($length / 2);
+        $halfOffset = ceil($offset / 2);
+        if ($unicode->length() > ($length + $unicodeEllipsis->length()) && $halfLength > $halfOffset) {
+            $str1 = $unicode->slice(0, (int)($halfLength + $halfOffset));
+            $str2 = $unicode->slice((int)(($halfLength * -1) + $halfOffset));
             return $str1 . $ellipsis . $str2;
         }
 
