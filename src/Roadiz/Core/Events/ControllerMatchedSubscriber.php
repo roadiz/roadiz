@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -90,14 +91,15 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
          * Install mode is active.
          */
         $request = $event->getRequest();
-        if (null !== $event->getRequest()->get('theme') &&
-            $request instanceof RoadizRequest) {
-            $request->setTheme($event->getRequest()->get('theme'));
-        } elseif (true !== $this->kernel->isInstallMode() &&
-            $request instanceof RoadizRequest &&
-            $matchedCtrl instanceof AppController) {
-            // No node controller matching in install mode
-            $request->setTheme($matchedCtrl->getTheme());
+        $theme = $event->getRequest()->get('theme');
+
+        if ($request instanceof RoadizRequest && true !== $this->kernel->isInstallMode()) {
+            if ($matchedCtrl instanceof AppController) {
+                // No node controller matching in install mode
+                $request->setTheme($matchedCtrl->getTheme());
+            } elseif ($theme instanceof Theme) {
+                $request->setTheme($theme);
+            }
         }
 
         /*
@@ -105,7 +107,7 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
          * is present in Route.
          */
         $locale = $event->getRequest()->get('_locale');
-        if (null !== $locale) {
+        if (\is_string($locale)) {
             $event->getRequest()->setLocale($locale);
         }
 
