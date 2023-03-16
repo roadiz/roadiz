@@ -1,3 +1,9 @@
+## [v1.6.40](https://github.com/roadiz/roadiz/compare/v1.6.39...v1.6.40) (2023-03-16)
+
+### Bug Fixes
+
+* **Request:** Test request theme and _locale types to avoid errors when using POST body params ([a3e3290](https://github.com/roadiz/roadiz/commit/a3e3290d1306a1eefae58677de4a365b5c239531))
+
 ## [1.6.39](https://github.com/roadiz/roadiz/compare/v1.6.38...v1.6.39) (2023-01-12)
 
 ### Bug Fixes
