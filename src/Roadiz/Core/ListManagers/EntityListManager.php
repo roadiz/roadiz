@@ -117,8 +117,7 @@ class EntityListManager extends AbstractEntityListManager
         }
 
         if (false === $disabled && null !== $this->request) {
-            if (
-                $this->allowRequestSorting &&
+            if ($this->allowRequestSorting &&
                 $this->request->query->get('field') &&
                 $this->request->query->get('ordering')
             ) {
@@ -154,8 +153,7 @@ class EntityListManager extends AbstractEntityListManager
 
         $this->createPaginator();
 
-        if (
-            $this->allowRequestSearching &&
+        if ($this->allowRequestSearching &&
             false === $disabled &&
             null !== $this->request &&
             $this->request->query->get('search') != ""
