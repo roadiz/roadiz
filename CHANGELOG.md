@@ -1,3 +1,9 @@
+## [v1.7.26](https://github.com/roadiz/roadiz/compare/v1.7.25...v1.7.26) (2023-04-06)
+
+### Bug Fixes
+
+* **PreviewBarSubscriber:** Test if Response content is string before searching </body> tag ([0392f46](https://github.com/roadiz/roadiz/commit/0392f46de76b6136c525d28bc4060a6d24d6dde8))
+
 ## [v1.7.25](https://github.com/roadiz/roadiz/compare/v1.7.24...v1.7.25) (2023-03-16)
 
 ### Bug Fixes
