@@ -1,3 +1,10 @@
+## [v1.6.41](https://github.com/roadiz/roadiz/compare/v1.6.40...v1.6.41) (2023-04-11)
+
+
+### Bug Fixes
+
+* Allow `symfony/http-foundation` ^5.0.7 to address IPv4-mapped IPv6 addresses incorrectly rejected ([da45dcf](https://github.com/roadiz/roadiz/commit/da45dcf761783997e8d3fec488d272c635d27272))
+
 ## [v1.6.40](https://github.com/roadiz/roadiz/compare/v1.6.39...v1.6.40) (2023-03-16)
 
 ### Bug Fixes
