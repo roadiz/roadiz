@@ -1,3 +1,10 @@
+## [v1.7.27](https://github.com/roadiz/roadiz/compare/v1.7.26...v1.7.27) (2023-04-11)
+
+
+### Bug Fixes
+
+* Upgrade `symfony/http-foundation` to min 5.4.17 (IPv4-mapped IPv6 addresses incorrectly rejected) ([c0424b6](https://github.com/roadiz/roadiz/commit/c0424b6592ff532acb1e74437c2bec6c4e542186))
+
 ## [v1.7.26](https://github.com/roadiz/roadiz/compare/v1.7.25...v1.7.26) (2023-04-06)
 
 ### Bug Fixes
