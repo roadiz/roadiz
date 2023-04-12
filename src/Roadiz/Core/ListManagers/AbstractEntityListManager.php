@@ -33,13 +33,13 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
         $this->itemPerPage = static::ITEM_PER_PAGE;
     }
 
-    public function setAllowRequestSorting(bool $allowRequestSorting): static
+    public function setAllowRequestSorting(bool $allowRequestSorting)
     {
         $this->allowRequestSorting = $allowRequestSorting;
         return $this;
     }
 
-    public function setAllowRequestSearching(bool $allowRequestSearching): static
+    public function setAllowRequestSearching(bool $allowRequestSearching)
     {
         $this->allowRequestSearching = $allowRequestSearching;
         return $this;
