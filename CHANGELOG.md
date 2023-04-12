@@ -1,3 +1,10 @@
+## [v1.7.28](https://github.com/roadiz/roadiz/compare/v1.7.27...v1.7.28) (2023-04-12)
+
+
+### Bug Fixes
+
+* Removed php80 only static return types ([f940b20](https://github.com/roadiz/roadiz/commit/f940b202cba9897c0db4fcaa4df8a0b40bb923ea))
+
 ## [v1.7.27](https://github.com/roadiz/roadiz/compare/v1.7.26...v1.7.27) (2023-04-11)
 
 

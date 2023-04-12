@@ -107,7 +107,7 @@ final class RoadizManagerRegistry implements ManagerRegistry
     public function getManagerNames()
     {
         return [
-            $this->getDefaultManagerName(),
+            $this->getDefaultManagerName() => $this->getDefaultManagerName(),
         ];
     }
 
