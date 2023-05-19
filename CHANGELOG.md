@@ -1,3 +1,10 @@
+## [v1.6.42](https://github.com/roadiz/roadiz/compare/v1.6.41...v1.6.42) (2023-05-19)
+
+
+### Bug Fixes
+
+* **DebugBarSubscriber:** Test is Content-Type header exists before reading value ([ec443f4](https://github.com/roadiz/roadiz/commit/ec443f403ace9678e7d851b1f2dc720997b1b792))
+
 ## [v1.6.41](https://github.com/roadiz/roadiz/compare/v1.6.40...v1.6.41) (2023-04-11)
 
 
