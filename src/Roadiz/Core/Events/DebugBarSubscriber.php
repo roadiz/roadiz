@@ -44,8 +44,12 @@ final class DebugBarSubscriber implements EventSubscriberInterface
     protected function supports(ResponseEvent $event)
     {
         $response = $event->getResponse();
-        if ($this->container['settingsBag']->get('display_debug_panel') == true &&
-            false !== strpos($response->headers->get('Content-Type'), 'text/html')) {
+        $contentType = $response->headers->get('Content-Type');
+        if (
+            $this->container['settingsBag']->get('display_debug_panel') == true &&
+            is_string($contentType) &&
+            false !== strpos($contentType, 'text/html')
+        ) {
             return true;
         }
 
