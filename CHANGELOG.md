@@ -1,3 +1,10 @@
+## [v1.7.30](https://github.com/roadiz/roadiz/compare/v1.7.29...v1.7.30) (2023-06-21)
+
+
+### Bug Fixes
+
+* Nullable `getUrl` options array ([c24f806](https://github.com/roadiz/roadiz/commit/c24f806b14a4efb40cf7d181330dcc2b84a70969))
+
 ## [v1.7.29](https://github.com/roadiz/roadiz/compare/v1.7.28...v1.7.29) (2023-05-19)
 
 
