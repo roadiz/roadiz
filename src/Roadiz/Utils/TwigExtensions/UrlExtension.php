@@ -36,8 +36,6 @@ class UrlExtension extends AbstractExtension
     private $throwExceptions;
 
     /**
-     * UrlExtension constructor.
-     *
      * @param DocumentUrlGeneratorInterface $documentUrlGenerator
      * @param CacheProvider|null            $cacheProvider
      * @param bool                          $forceLocale
@@ -85,11 +83,11 @@ class UrlExtension extends AbstractExtension
      * - Document
      *
      * @param  AbstractEntity|null $mixed
-     * @param  array $criteria
+     * @param  array|null $criteria
      * @return string
      * @throws RuntimeError
      */
-    public function getUrl(AbstractEntity $mixed = null, array $criteria = [])
+    public function getUrl(AbstractEntity $mixed = null, ?array $criteria = null)
     {
         if (null === $mixed) {
             if ($this->throwExceptions) {
@@ -102,6 +100,7 @@ class UrlExtension extends AbstractExtension
         if ($mixed instanceof Document) {
             try {
                 $absolute = false;
+                $criteria = $criteria ?? [];
                 if (isset($criteria['absolute'])) {
                     $absolute = (boolean) $criteria['absolute'];
                 }
