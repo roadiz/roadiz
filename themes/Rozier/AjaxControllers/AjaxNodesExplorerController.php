@@ -101,7 +101,11 @@ class AjaxNodesExplorerController extends AbstractAjaxController
          */
         $listManager = $this->createEntityListManager(
             Node::class,
-            $arrayFilter
+            $arrayFilter,
+            [
+                'updatedAt' => 'DESC',
+                'nodeName' => 'ASC',
+            ]
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage($this->getItemPerPage());
