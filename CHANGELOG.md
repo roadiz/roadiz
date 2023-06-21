@@ -1,3 +1,11 @@
+## [v1.6.43](https://github.com/roadiz/roadiz/compare/v1.6.42...v1.6.43) (2023-06-21)
+
+
+### Bug Fixes
+
+* Nullable `getUrl` options array ([3eebe5f](https://github.com/roadiz/roadiz/commit/3eebe5f536d924122e60cceafd2428de33b4a77c))
+* Sort `AjaxNodesExplorer` by updated-at desc ([febbfea](https://github.com/roadiz/roadiz/commit/febbfeacb8f5ceb8aceb3d6dc8420cb402ec2761))
+
 ## [v1.6.42](https://github.com/roadiz/roadiz/compare/v1.6.41...v1.6.42) (2023-05-19)
 
 
