@@ -13,7 +13,7 @@ class AssetsCacheEventSubscriber implements EventSubscriberInterface
     /**
      * @inheritDoc
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             CachePurgeAssetsRequestEvent::class => ['onPurgeAssetsRequest', 0],

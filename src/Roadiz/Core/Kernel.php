@@ -70,7 +70,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static ?string $cmsBuild = null;
-    public static string $cmsVersion = "1.7.30";
+    public static string $cmsVersion = "1.7.31";
     protected string $environment;
     protected bool $debug;
     /**
@@ -502,7 +502,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function serialize()
     {
-        return serialize([$this->environment, $this->debug, $this->preview]);
+        return serialize($this->__serialize());
     }
 
     /**
@@ -510,8 +510,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function unserialize($data)
     {
-        [$environment, $debug, $preview] = unserialize($data);
-        $this->__construct($environment, $debug, $preview);
+        $this->__unserialize(unserialize($data));
     }
 
     /**
@@ -601,5 +600,16 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public function locateResource($name)
     {
         throw new \InvalidArgumentException('Roadiz v1.x does not support bundles');
+    }
+
+    public function __serialize(): array
+    {
+        return [$this->environment, $this->debug, $this->preview];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        [$environment, $debug, $preview] = $data;
+        $this->__construct($environment, $debug, $preview);
     }
 }

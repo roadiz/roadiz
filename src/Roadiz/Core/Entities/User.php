@@ -856,7 +856,12 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      */
     public function serialize()
     {
-        return serialize([
+        return serialize($this->__serialize());
+    }
+
+    public function __serialize(): array
+    {
+        return [
             $this->password,
             $this->salt,
             $this->username,
@@ -866,23 +871,18 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
             // needed for token roles
             $this->roles,
             $this->groups,
-            // needed for advancedUserinterface
+            // needed for AdvancedUserinterface
             $this->expired,
             $this->expiresAt,
             $this->locked,
             $this->credentialsExpired,
             $this->credentialsExpiresAt,
-        ]);
+        ];
     }
-    /**
-     * {@inheritdoc}
-     *
-     * @see https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Model/User.php
-     */
-    public function unserialize($serialized)
+
+    public function __unserialize(array $data): void
     {
-        $data = unserialize($serialized);
-        if (count($data) === 6) {
+        if (\count($data) === 6) {
             // Compatibility with Roadiz <=1.4
             [
                 $this->password,
@@ -909,6 +909,18 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
                 $this->credentialsExpiresAt,
             ] = $data;
         }
+    }
+
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Model/User.php
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        $this->__unserialize($data);
     }
 
     /**
