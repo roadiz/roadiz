@@ -37,6 +37,7 @@ final class AttributeValueRepository extends EntityRepository
             ])
             ->setCacheable(true)
             ->getQuery()
+            ->setQueryCacheLifetime(120)
             ->getResult();
     }
 
@@ -73,6 +74,7 @@ final class AttributeValueRepository extends EntityRepository
             ])
             ->setCacheable(true)
             ->getQuery()
+            ->setQueryCacheLifetime(120)
             ->getResult();
     }
 }

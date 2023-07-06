@@ -24,7 +24,7 @@ class UserRepository extends EntityRepository
             ->setParameter('username', $username)
             ->setCacheable(true);
 
-        return (boolean) $qb->getQuery()->getSingleScalarResult();
+        return (boolean) $qb->getQuery()->setQueryCacheLifetime(60)->getSingleScalarResult();
     }
 
     /**
@@ -40,6 +40,6 @@ class UserRepository extends EntityRepository
             ->setParameter('email', $email)
             ->setCacheable(true);
 
-        return (boolean) $qb->getQuery()->getSingleScalarResult();
+        return (boolean) $qb->getQuery()->setQueryCacheLifetime(60)->getSingleScalarResult();
     }
 }

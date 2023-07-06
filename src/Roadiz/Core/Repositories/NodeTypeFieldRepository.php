@@ -25,7 +25,7 @@ class NodeTypeFieldRepository extends EntityRepository
             ORDER BY ntf.groupName ASC
         ')->setParameter(':nodeType', $nodeType);
 
-        return $query->getScalarResult();
+        return $query->setQueryCacheLifetime(60)->getScalarResult();
     }
 
     /**
@@ -41,7 +41,7 @@ class NodeTypeFieldRepository extends EntityRepository
             ->setParameter(':nodeType', $nodeType)
             ->setParameter(':universal', false);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -57,7 +57,7 @@ class NodeTypeFieldRepository extends EntityRepository
             ->setParameter(':nodeType', $nodeType)
             ->setParameter(':universal', true);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -77,6 +77,6 @@ class NodeTypeFieldRepository extends EntityRepository
             WHERE ntf.nodeType = :nodeType')
             ->setParameter('nodeType', $nodeType);
 
-        return (int) $query->getSingleScalarResult();
+        return (int) $query->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 }

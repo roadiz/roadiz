@@ -28,7 +28,7 @@ class CustomFormRepository extends EntityRepository
                         ->setParameter('field', $field)
                         ->setParameter('node', $node);
 
-        return $query->getResult();
+        return $query->setQueryCacheLifetime(120)->getResult();
     }
 
     /**
@@ -52,6 +52,6 @@ class CustomFormRepository extends EntityRepository
             ORDER BY ncf.position ASC')
                         ->setParameter('name', (string) $fieldName)
                         ->setParameter('node', $node);
-        return $query->getResult();
+        return $query->setQueryCacheLifetime(120)->getResult();
     }
 }

@@ -118,7 +118,7 @@ class FolderRepository extends EntityRepository
                     ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
                     ->setParameter(':translation', $translation);
             }
-            return $qb->getQuery()->getResult();
+            return $qb->getQuery()->setQueryCacheLifetime(0)->getResult();
         }
         return [];
     }
@@ -145,7 +145,7 @@ class FolderRepository extends EntityRepository
                 ->setParameter(':translation', $translation);
         }
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(0)->getOneOrNullResult();
     }
 
     /**
@@ -174,7 +174,7 @@ class FolderRepository extends EntityRepository
             ->where($qb->expr()->eq('f.parent', ':parent'))
             ->setParameter(':parent', $folder);
 
-        return array_map('current', $qb->getQuery()->getScalarResult());
+        return array_map('current', $qb->getQuery()->setQueryCacheLifetime(120)->getScalarResult());
     }
 
     /**
@@ -232,7 +232,7 @@ class FolderRepository extends EntityRepository
         $qb->select($qb->expr()->countDistinct($alias));
         $qb = $this->createSearchBy($pattern, $qb, $criteria, $alias);
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -258,7 +258,7 @@ class FolderRepository extends EntityRepository
                 ->setParameter(':translation', $translation);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(120)->getResult();
     }
 
     /**
@@ -289,6 +289,6 @@ class FolderRepository extends EntityRepository
                 ->setParameter(':translation', $translation);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(120)->getResult();
     }
 }

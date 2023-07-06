@@ -99,6 +99,7 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
                     ->getQuery()
                     ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
                     ->setCacheable(true)
+                    ->setQueryCacheLifetime(60)
                     ->getArrayResult()
                 ;
                 usort($parents, function ($a, $b) use ($parentIds) {

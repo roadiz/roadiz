@@ -242,7 +242,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
             $this->applyFilterByCriteria($criteria, $qb);
 
             try {
-                return (int) $qb->getQuery()->getSingleScalarResult();
+                return (int) $qb
+                    ->getQuery()
+                    ->setQueryCacheLifetime(0)
+                    ->getSingleScalarResult()
+                ;
             } catch (NoResultException $e) {
                 return 0;
             }

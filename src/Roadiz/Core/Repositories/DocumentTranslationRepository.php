@@ -24,6 +24,6 @@ class DocumentTranslationRepository extends EntityRepository
             ->setMaxResults(1)
             ->setParameter(':id', $id);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(120)->getOneOrNullResult();
     }
 }

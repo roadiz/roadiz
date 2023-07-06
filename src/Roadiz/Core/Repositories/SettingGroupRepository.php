@@ -24,7 +24,7 @@ class SettingGroupRepository extends EntityRepository
             WHERE s.name = :name')
                         ->setParameter('name', $name);
 
-        return (boolean) $query->getSingleScalarResult();
+        return (boolean) $query->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -33,6 +33,6 @@ class SettingGroupRepository extends EntityRepository
     public function findAllNames()
     {
         $query = $this->_em->createQuery('SELECT s.name FROM RZ\Roadiz\Core\Entities\SettingGroup s');
-        return array_map('current', $query->getScalarResult());
+        return array_map('current', $query->setQueryCacheLifetime(0)->getScalarResult());
     }
 }

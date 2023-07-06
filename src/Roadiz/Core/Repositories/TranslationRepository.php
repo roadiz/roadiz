@@ -30,7 +30,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(1800, 'RZTranslationDefault');
+        $query
+            ->enableResultCache(1800, 'RZTranslationDefault')
+            ->setQueryCacheLifetime(1800)
+        ;
 
         return $query->getOneOrNullResult();
     }
@@ -49,10 +52,10 @@ class TranslationRepository extends EntityRepository
             ->setParameter(':available', true)
             ->setCacheable(true);
 
-        $query = $qb->getQuery();
-        $query->enableResultCache(1800, 'RZTranslationAllAvailable');
-
-        return $query->getResult();
+        return $qb->getQuery()
+            ->enableResultCache(1800, 'RZTranslationAllAvailable')
+            ->setQueryCacheLifetime(1800)
+            ->getResult();
     }
 
     /**
@@ -69,7 +72,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'RZTranslationExists-' . $locale);
+        $query
+            ->enableResultCache(120, 'RZTranslationExists-' . $locale)
+            ->setQueryCacheLifetime(120)
+        ;
 
         return (boolean) $query->getSingleScalarResult();
     }
@@ -90,7 +96,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'RZTranslationGetAvailableLocales');
+        $query
+            ->enableResultCache(120, 'RZTranslationGetAvailableLocales')
+            ->setQueryCacheLifetime(120)
+        ;
 
         return array_map('current', $query->getScalarResult());
     }
@@ -109,7 +118,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'RZTranslationGetAllLocales');
+        $query
+            ->enableResultCache(120, 'RZTranslationGetAllLocales')
+            ->setQueryCacheLifetime(120)
+        ;
 
         return array_map('current', $query->getScalarResult());
     }
@@ -133,7 +145,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'RZTranslationGetAvailableOverrideLocales');
+        $query
+            ->enableResultCache(120, 'RZTranslationGetAvailableOverrideLocales')
+            ->setQueryCacheLifetime(120)
+        ;
 
         return array_map('current', $query->getScalarResult());
     }
@@ -155,7 +170,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'RZTranslationGetAllOverrideLocales');
+        $query
+            ->enableResultCache(120, 'RZTranslationGetAllOverrideLocales')
+            ->setQueryCacheLifetime(120)
+        ;
 
         return array_map('current', $query->getScalarResult());
     }
@@ -180,7 +198,7 @@ class TranslationRepository extends EntityRepository
         $query->enableResultCache(
             120,
             'RZTranslationAllByLocaleAndAvailable-' . $locale
-        );
+        )->setQueryCacheLifetime(120);
 
         return $query->getResult();
     }
@@ -204,7 +222,7 @@ class TranslationRepository extends EntityRepository
         $query->enableResultCache(
             120,
             'RZTranslationAllByOverrideAndAvailable-' . $overrideLocale
-        );
+        )->setQueryCacheLifetime(120);
 
         return $query->getResult();
     }
@@ -231,7 +249,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'findOneByLocaleOrOverrideLocale_' . $locale);
+        $query
+            ->enableResultCache(120, 'findOneByLocaleOrOverrideLocale_' . $locale)
+            ->setQueryCacheLifetime(120)
+        ;
 
         return $query->getOneOrNullResult();
     }
@@ -257,7 +278,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'findOneAvailableByLocaleOrOverrideLocale_' . $locale);
+        $query
+            ->enableResultCache(120, 'findOneAvailableByLocaleOrOverrideLocale_' . $locale)
+            ->setQueryCacheLifetime(120)
+        ;
 
         return $query->getOneOrNullResult();
     }
@@ -280,7 +304,10 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->enableResultCache(120, 'RZTranslationOneByLocaleAndAvailable-' . $locale);
+        $query
+            ->enableResultCache(120, 'RZTranslationOneByLocaleAndAvailable-' . $locale)
+            ->setQueryCacheLifetime(120)
+        ;
 
         return $query->getOneOrNullResult();
     }
@@ -306,7 +333,7 @@ class TranslationRepository extends EntityRepository
         $query->enableResultCache(
             120,
             'RZTranslationOneByOverrideAndAvailable-' . $overrideLocale
-        );
+        )->setQueryCacheLifetime(120);
 
         return $query->getOneOrNullResult();
     }
@@ -325,7 +352,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('node', $node)
             ->setCacheable(true);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -341,7 +368,7 @@ class TranslationRepository extends EntityRepository
             ->addOrderBy('t.locale', 'ASC')
             ->setParameter('tag', $tag);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -357,7 +384,7 @@ class TranslationRepository extends EntityRepository
             ->addOrderBy('t.locale', 'ASC')
             ->setParameter('folder', $folder);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -378,7 +405,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('available', true)
             ->setCacheable(true);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
 
@@ -393,7 +420,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -411,7 +438,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('node', $node)
             ->setCacheable(true);
 
-        return array_map('current', $qb->getQuery()->getScalarResult());
+        return array_map('current', $qb->getQuery()->setQueryCacheLifetime(60)->getScalarResult());
     }
 
     /**
@@ -426,6 +453,6 @@ class TranslationRepository extends EntityRepository
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
 
-        return array_map('current', $qb->getQuery()->getScalarResult());
+        return array_map('current', $qb->getQuery()->setQueryCacheLifetime(60)->getScalarResult());
     }
 }
