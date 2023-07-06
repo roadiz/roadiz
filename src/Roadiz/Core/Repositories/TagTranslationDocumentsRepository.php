@@ -25,6 +25,6 @@ FROM RZ\Roadiz\Core\Entities\TagTranslationDocuments ttd
 WHERE ttd.tagTranslation = :tagTranslation')
                     ->setParameter('tagTranslation', $tagTranslation);
 
-        return (int) $query->getSingleScalarResult();
+        return (int) $query->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 }

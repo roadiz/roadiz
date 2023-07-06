@@ -91,7 +91,7 @@ class NodeRepository extends StatusAwareRepository
         $this->applyFilterByCriteria($criteria, $qb);
         $this->applyTranslationByTag($qb, $translation);
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -312,7 +312,7 @@ class NodeRepository extends StatusAwareRepository
         $this->applyFilterByTag($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
         $this->applyTranslationByTag($qb, $translation);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
@@ -431,7 +431,7 @@ class NodeRepository extends StatusAwareRepository
         $this->applyFilterByTag($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
         $this->applyTranslationByTag($qb, $translation);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         return $query->getOneOrNullResult();
@@ -460,7 +460,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -485,7 +485,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -514,7 +514,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -558,7 +558,7 @@ class NodeRepository extends StatusAwareRepository
         $query = $qb->getQuery();
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setHydrationMode(Query::HYDRATE_ARRAY);
-        return $query->getOneOrNullResult();
+        return $query->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -586,7 +586,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -614,7 +614,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -637,7 +637,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -667,7 +667,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -693,7 +693,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -714,7 +714,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -739,7 +739,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -762,7 +762,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -805,7 +805,7 @@ class NodeRepository extends StatusAwareRepository
         $qb->setParameter('field', $field)
             ->setParameter('nodeA', $node);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -835,7 +835,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('nodeA', $node)
             ->setParameter('translation', $translation);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -860,7 +860,7 @@ class NodeRepository extends StatusAwareRepository
         $qb->setParameter('field', $field)
             ->setParameter('nodeB', $node);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -890,7 +890,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('translation', $translation)
             ->setParameter('nodeB', $node);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -909,7 +909,7 @@ class NodeRepository extends StatusAwareRepository
                   ->andWhere($subQb->expr()->in('n.parent', ':tab'))
                   ->setParameter('tab', $in)
                   ->setCacheable(true);
-            $result = $subQb->getQuery()->getScalarResult();
+            $result = $subQb->getQuery()->setQueryCacheLifetime(60)->getScalarResult();
             $in = [];
 
             //For memory optimizations

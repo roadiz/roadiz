@@ -24,7 +24,10 @@ class SettingRepository extends EntityRepository
                 ->setParameter(':name', $name);
 
         $query = $builder->getQuery();
-        $query->enableResultCache(3600, 'RZSettingValue_'.$name);
+        $query
+            ->enableResultCache(3600, 'RZSettingValue_'.$name)
+            ->setQueryCacheLifetime(3600)
+        ;
 
         return $query->getSingleScalarResult();
     }
@@ -43,9 +46,12 @@ class SettingRepository extends EntityRepository
             ->setParameter(':name', $name);
 
         $query = $builder->getQuery();
-        $query->enableResultCache(3600, 'RZSettingExists_'.$name);
+        $query
+            ->enableResultCache(3600, 'RZSettingExists_'.$name)
+            ->setQueryCacheLifetime(3600)
+        ;
 
-        return (boolean) $query->getSingleScalarResult();
+        return (boolean) $query->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -58,7 +64,10 @@ class SettingRepository extends EntityRepository
         $builder = $this->createQueryBuilder('s');
         $builder->select('s.name');
         $query = $builder->getQuery();
-        $query->enableResultCache(3600, 'RZSettingAll');
+        $query
+            ->enableResultCache(3600, 'RZSettingAll')
+            ->setQueryCacheLifetime(3600)
+        ;
 
         return array_map('current', $query->getScalarResult());
     }

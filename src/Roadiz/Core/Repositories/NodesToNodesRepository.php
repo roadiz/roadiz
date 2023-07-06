@@ -26,6 +26,6 @@ class NodesToNodesRepository extends EntityRepository
                     ->setParameter('nodeA', $node)
                     ->setParameter('field', $field);
 
-        return (int) $query->getSingleScalarResult();
+        return (int) $query->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 }

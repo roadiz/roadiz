@@ -303,7 +303,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->applyFilterByTag($criteria, $query);
         $this->applyFilterByCriteria($criteria, $query);
 
-        return (int) $query->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -361,7 +361,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByTag($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
@@ -407,7 +407,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByTag($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         return $query->getOneOrNullResult();
@@ -524,7 +524,7 @@ class NodesSourcesRepository extends StatusAwareRepository
             $this->applyFilterByCriteria($additionalCriteria, $qb);
         }
 
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         return $query->getResult();
@@ -574,7 +574,7 @@ class NodesSourcesRepository extends StatusAwareRepository
             ->setMaxResults(1)
             ->setCacheable(true);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -594,7 +594,7 @@ class NodesSourcesRepository extends StatusAwareRepository
             ->setParameter('translation', $translation)
             ->setCacheable(true);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getOneOrNullResult();
     }
 
     /**
@@ -698,6 +698,6 @@ class NodesSourcesRepository extends StatusAwareRepository
             ->setParameter('nodeA', $nodesSources->getNode())
             ->setParameter('translation', $nodesSources->getTranslation());
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->setQueryCacheLifetime(60)->getResult();
     }
 }

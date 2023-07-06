@@ -14,6 +14,6 @@ class FontRepository extends EntityRepository
         $query = $this->_em->createQuery('
             SELECT MAX(f.updatedAt) FROM RZ\Roadiz\Core\Entities\Font f');
 
-        return $query->getSingleScalarResult();
+        return $query->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 }

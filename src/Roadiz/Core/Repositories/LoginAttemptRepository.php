@@ -25,6 +25,7 @@ class LoginAttemptRepository extends EntityRepository
             ->andWhere($qb->expr()->gte('la.blocksLoginUntil', ':now'))
             ->andWhere($qb->expr()->eq('la.username', ':username'))
             ->getQuery()
+            ->setQueryCacheLifetime(0)
             ->setParameters([
                 'now' =>  new \DateTime('now'),
                 'username' => $username,
@@ -52,6 +53,7 @@ class LoginAttemptRepository extends EntityRepository
             ->andWhere($qb->expr()->gte('la.date', ':now'))
             ->andWhere($qb->expr()->eq('la.ipAddress', ':ipAddress'))
             ->getQuery()
+            ->setQueryCacheLifetime(0)
             ->setParameters([
                 'now' =>  (new \DateTime())->sub(new \DateInterval('PT' . $seconds . 'S')),
                 'ipAddress' => $ipAddress,
@@ -93,6 +95,7 @@ class LoginAttemptRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('la.ipAddress', ':ipAddress'))
             ->andWhere($qb->expr()->eq('la.username', ':username'))
             ->getQuery()
+            ->setQueryCacheLifetime(0)
             ->execute([
                 'username' => $username,
                 'ipAddress' => $ipAddress,
@@ -109,6 +112,7 @@ class LoginAttemptRepository extends EntityRepository
         $qb->delete(LoginAttempt::class, 'la')
             ->andWhere($qb->expr()->eq('la.ipAddress', ':ipAddress'))
             ->getQuery()
+            ->setQueryCacheLifetime(0)
             ->execute([
                 'ipAddress' => $ipAddress,
             ])
@@ -121,6 +125,7 @@ class LoginAttemptRepository extends EntityRepository
         $qb->delete(LoginAttempt::class, 'la')
             ->andWhere($qb->expr()->lte('la.blocksLoginUntil', ':date'))
             ->getQuery()
+            ->setQueryCacheLifetime(0)
             ->execute([
                 'date' =>  (new \DateTime())->sub(new \DateInterval('P1D')),
             ])
