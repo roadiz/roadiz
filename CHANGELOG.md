@@ -1,3 +1,10 @@
+## [v1.7.33](https://github.com/roadiz/roadiz/compare/v1.7.32...v1.7.33) (2023-07-06)
+
+
+### Bug Fixes
+
+* Implemented __serialize() and __unserialize() in RZ\Roadiz\Core\Routing\NodePathInfo ([6f09001](https://github.com/roadiz/roadiz/commit/6f090019e417fcff58419a81fc7e784af33348ec))
+
 ## [v1.7.32](https://github.com/roadiz/roadiz/compare/v1.7.31...v1.7.32) (2023-07-06)
 
 
