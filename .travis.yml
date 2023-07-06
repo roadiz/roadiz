@@ -1,10 +1,12 @@
 node_js:
     - "lts/*"
+    - "14"
     - "12"
     - "10"
 php:
     - 7.4
     - 8.0
+    - 8.1
     - nightly
 dist: bionic
 stages:
@@ -28,6 +30,10 @@ jobs:
             script: sh .travis/default_theme_assets.sh
         -   stage: "Default theme assets tests"
             language: node_js
+            node_js: "14"
+            script: sh .travis/default_theme_assets.sh
+        -   stage: "Default theme assets tests"
+            language: node_js
             node_js: "12"
             script: sh .travis/default_theme_assets.sh
         -   stage: "Default theme assets tests"
@@ -38,6 +44,10 @@ jobs:
         -   stage: "Install assets tests"
             language: node_js
             node_js: "lts/*"
+            script: sh .travis/install_assets.sh
+        -   stage: "Install assets tests"
+            language: node_js
+            node_js: "14"
             script: sh .travis/install_assets.sh
         -   stage: "Install assets tests"
             language: node_js
@@ -156,6 +166,44 @@ jobs:
             services:
                 - postgresql
             php: 8.0
+            env:
+                - DB=pgsql
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+
+        # php 8.1
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            php: 8.1
+            env:
+                - DB=mysql
+                - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            addons:
+                mariadb: '10.5'
+            php: 8.1
+            env:
+                - DB=mariadb
+                - MYSQL_VERSION=mariadb-10.5.2
+                - MYSQL_PASSWORD=travis
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - postgresql
+            php: 8.1
             env:
                 - DB=pgsql
             before_script: sh .travis/php_unit_install.sh

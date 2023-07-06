@@ -1,3 +1,10 @@
+## [v1.7.31](https://github.com/roadiz/roadiz/compare/v1.7.30...v1.7.31) (2023-07-06)
+
+
+### Bug Fixes
+
+* **Search engine:** Do not add quotes if multi-word exact query, Solr Helper already does it ([6c6a727](https://github.com/roadiz/roadiz/commit/6c6a727d901bd76eb843f02662d1bc73ca7bab53))
+
 ## [v1.7.30](https://github.com/roadiz/roadiz/compare/v1.7.29...v1.7.30) (2023-06-21)
 
 
