@@ -233,7 +233,7 @@ class TagRepository extends EntityRepository
         $this->applyFilterByNodes($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
         $this->applyTranslationByTag($qb, $translation);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
@@ -273,7 +273,7 @@ class TagRepository extends EntityRepository
         $this->applyFilterByNodes($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
         $this->applyTranslationByTag($qb, $translation);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         return $query->getOneOrNullResult();
@@ -299,7 +299,7 @@ class TagRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $query);
         $this->applyTranslationByTag($query, $translation);
 
-        return (int) $query->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -320,7 +320,7 @@ class TagRepository extends EntityRepository
             ->setMaxResults(1)
         ;
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->setQueryCacheLifetime(0)->getOneOrNullResult();
     }
 
     /**
@@ -425,8 +425,9 @@ class TagRepository extends EntityRepository
         }
         return $qb->getQuery()
             ->setHint(\Doctrine\ORM\Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->setQueryCacheLifetime(120)
             ->getResult()
-            ;
+        ;
     }
 
     /**

@@ -1,3 +1,10 @@
+## [v1.7.32](https://github.com/roadiz/roadiz/compare/v1.7.31...v1.7.32) (2023-07-06)
+
+
+### Bug Fixes
+
+* Missing `setQueryCacheLifetime` call when Query `setCacheable(true)` is called ([827afc2](https://github.com/roadiz/roadiz/commit/827afc29efaa6e094f519c77d12657ebbb290b1f))
+
 ## [v1.7.31](https://github.com/roadiz/roadiz/compare/v1.7.30...v1.7.31) (2023-07-06)
 
 

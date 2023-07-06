@@ -25,7 +25,7 @@ class UrlAliasRepository extends EntityRepository
             WHERE n.id = :nodeId')
                         ->setParameter('nodeId', (int) $nodeId);
 
-        return $query->getResult();
+        return $query->setQueryCacheLifetime(60)->getResult();
     }
 
     /**
@@ -40,6 +40,6 @@ class UrlAliasRepository extends EntityRepository
             WHERE ua.alias = :alias')
                         ->setParameter('alias', $alias);
 
-        return (boolean) $query->getSingleScalarResult();
+        return (boolean) $query->setQueryCacheLifetime(60)->getSingleScalarResult();
     }
 }

@@ -182,7 +182,7 @@ class PrefixAwareRepository extends EntityRepository
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
@@ -226,7 +226,7 @@ class PrefixAwareRepository extends EntityRepository
         $qb->setMaxResults(1);
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         return $query->getOneOrNullResult();
@@ -272,7 +272,7 @@ class PrefixAwareRepository extends EntityRepository
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
@@ -301,7 +301,7 @@ class PrefixAwareRepository extends EntityRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
 
-        return (int) $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**

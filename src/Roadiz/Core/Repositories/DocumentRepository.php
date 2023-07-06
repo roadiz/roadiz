@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
@@ -390,7 +392,7 @@ class DocumentRepository extends EntityRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByFolder($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
@@ -431,7 +433,7 @@ class DocumentRepository extends EntityRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByFolder($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
-        $query = $qb->getQuery();
+        $query = $qb->getQuery()->setQueryCacheLifetime(0);
         $this->dispatchQueryEvent($query);
 
         return $query->getOneOrNullResult();
@@ -444,6 +446,8 @@ class DocumentRepository extends EntityRepository
      * @param TranslationInterface|null $translation
      *
      * @return int
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function countBy(
         $criteria,
@@ -458,7 +462,7 @@ class DocumentRepository extends EntityRepository
         $this->applyFilterByFolder($criteria, $query);
         $this->applyFilterByCriteria($criteria, $query);
 
-        return (int) $query->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -486,7 +490,10 @@ class DocumentRepository extends EntityRepository
             ->setParameter('raw', false)
             ->setCacheable(true);
 
-        return $qb->getQuery()->getResult();
+        return $qb
+            ->getQuery()
+            ->setQueryCacheLifetime(120)
+            ->getResult();
     }
 
     /**
@@ -519,7 +526,11 @@ class DocumentRepository extends EntityRepository
             ->setParameter('raw', false)
             ->setCacheable(true);
 
-        return $qb->getQuery()->getResult();
+        return $qb
+            ->getQuery()
+            ->setQueryCacheLifetime(120)
+            ->getResult()
+        ;
     }
 
     /**

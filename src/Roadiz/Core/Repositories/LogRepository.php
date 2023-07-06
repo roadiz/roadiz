@@ -48,6 +48,7 @@ class LogRepository extends EntityRepository
         ;
         $ids = $qb->getQuery()
             ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->setQueryCacheLifetime(120)
             ->getScalarResult();
 
         $qb2 = $this->createQueryBuilder('log');
@@ -61,6 +62,6 @@ class LogRepository extends EntityRepository
                 return $item['id'];
             }, $ids));
 
-        return new Paginator($qb2->getQuery(), true);
+        return new Paginator($qb2->getQuery()->setQueryCacheLifetime(120), true);
     }
 }

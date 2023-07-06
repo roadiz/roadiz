@@ -20,6 +20,9 @@ class NodeTypeRepository extends EntityRepository
             ->addOrderBy('nt.name', 'ASC')
             ->setCacheable(true);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()
+            ->enableResultCache(3600, 'RZNodeTypeAll')
+            ->setQueryCacheLifetime(3600)
+            ->getResult();
     }
 }

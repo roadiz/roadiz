@@ -25,7 +25,7 @@ class RoleRepository extends EntityRepository
               ->andWhere($query->expr()->eq('r.name', ':name'))
               ->setParameter('name', $roleName);
 
-        return (int) $query->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 
     /**
@@ -44,7 +44,7 @@ class RoleRepository extends EntityRepository
               ->setMaxResults(1)
               ->setParameter('name', $roleName);
 
-        $role = $query->getQuery()->getOneOrNullResult();
+        $role = $query->getQuery()->setQueryCacheLifetime(0)->getOneOrNullResult();
         if (null === $role) {
             $role = new Role($roleName);
             $this->_em->persist($role);
@@ -67,7 +67,10 @@ class RoleRepository extends EntityRepository
               ->setParameter('name', Role::ROLE_SUPERADMIN);
 
         $query = $builder->getQuery();
-        $query->enableResultCache(3600, 'RZRoleAllBasic');
+        $query
+            ->enableResultCache(3600, 'RZRoleAllBasic')
+            ->setQueryCacheLifetime(3600)
+        ;
 
         return array_map('current', $query->getScalarResult());
     }
@@ -83,7 +86,10 @@ class RoleRepository extends EntityRepository
         $builder->select('r.name');
 
         $query = $builder->getQuery();
-        $query->enableResultCache(3600, 'RZRoleAll');
+        $query
+            ->enableResultCache(3600, 'RZRoleAll')
+            ->setQueryCacheLifetime(3600)
+        ;
 
         return array_map('current', $query->getScalarResult());
     }

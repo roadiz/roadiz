@@ -25,6 +25,6 @@ class NodesSourcesDocumentsRepository extends EntityRepository
                     ->setParameter('nodeSource', $nodeSource)
                     ->setParameter('field', $field);
 
-        return (int) $query->getSingleScalarResult();
+        return (int) $query->setQueryCacheLifetime(0)->getSingleScalarResult();
     }
 }
