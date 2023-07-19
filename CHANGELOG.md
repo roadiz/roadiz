@@ -1,3 +1,10 @@
+## [v1.7.34](https://github.com/roadiz/roadiz/compare/v1.7.33...v1.7.34) (2023-07-19)
+
+
+### Bug Fixes
+
+* Fixed Argument [#1](https://github.com/roadiz/roadiz/issues/1) ($page) must be of type int, string given on `AbstractDoctrineExplorerProvider` ([0f18ad5](https://github.com/roadiz/roadiz/commit/0f18ad55c3d741f192cca3ad024e9c7188a83ba8))
+
 ## [v1.7.33](https://github.com/roadiz/roadiz/compare/v1.7.32...v1.7.33) (2023-07-06)
 
 
