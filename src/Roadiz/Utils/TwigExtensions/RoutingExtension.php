@@ -44,17 +44,21 @@ class RoutingExtension extends AbstractExtension
 
     /**
      * @param string|object|null $name
-     * @param array  $parameters
-     * @param bool   $relative
+     * @param array $parameters
+     * @param bool $relative
      *
      * @return string
+     * @throws RuntimeError
      */
     public function getPath($name, array $parameters = [], bool $relative = false)
     {
-        if ($this->previewResolver->isPreview()) {
-            $parameters['_preview'] = 1;
+        if ($this->previewResolver->isPreview() && !\is_string($name)) {
+            $parameters = array_merge(
+                ['_preview' => 1],
+                $parameters,
+            );
         }
-        if (is_string($name)) {
+        if (\is_string($name)) {
             return $this->generator->generate(
                 $name,
                 $parameters,
@@ -73,17 +77,21 @@ class RoutingExtension extends AbstractExtension
 
     /**
      * @param string|object|null $name
-     * @param array  $parameters
-     * @param bool   $schemeRelative
+     * @param array $parameters
+     * @param bool $schemeRelative
      *
      * @return string
+     * @throws RuntimeError
      */
     public function getUrl($name, array $parameters = [], bool $schemeRelative = false)
     {
-        if ($this->previewResolver->isPreview()) {
-            $parameters['_preview'] = 1;
+        if ($this->previewResolver->isPreview() && !\is_string($name)) {
+            $parameters = array_merge(
+                ['_preview' => 1],
+                $parameters,
+            );
         }
-        if (is_string($name)) {
+        if (\is_string($name)) {
             return $this->generator->generate(
                 $name,
                 $parameters,
