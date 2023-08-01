@@ -1,3 +1,10 @@
+## [v1.7.35](https://github.com/roadiz/roadiz/compare/v1.7.34...v1.7.35) (2023-08-01)
+
+
+### Bug Fixes
+
+* **RoutingExtensions:** Only append `_preview` query param for non-string routes ([9b37f1b](https://github.com/roadiz/roadiz/commit/9b37f1b9401e6aad15efb102bfd68779e626411c))
+
 ## [v1.7.34](https://github.com/roadiz/roadiz/compare/v1.7.33...v1.7.34) (2023-07-19)
 
 
