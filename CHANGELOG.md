@@ -1,3 +1,11 @@
+## [v1.7.36](https://github.com/roadiz/roadiz/compare/v1.7.35...v1.7.36) (2023-09-04)
+
+
+### Bug Fixes
+
+* **doctrine/cache:** Fix doctrine/cache version to 1.12 due to ApcuCache signature change ([9a9ef39](https://github.com/roadiz/roadiz/commit/9a9ef3916bd380b639a0d2e7ffd453ea909b4a53))
+* **NodeNameChecker:** Limit generated unique nodeName to 250 chars, no matter suffix added to it ([4dcf5d5](https://github.com/roadiz/roadiz/commit/4dcf5d57fa0757d959e29c9cde7082cefd4cf107))
+
 ## [v1.7.35](https://github.com/roadiz/roadiz/compare/v1.7.34...v1.7.35) (2023-08-01)
 
 
