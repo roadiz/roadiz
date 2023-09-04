@@ -16,6 +16,7 @@ use RZ\Roadiz\Utils\StringHandler;
  */
 class NodeNameChecker implements NodeNamePolicyInterface
 {
+    public const MAX_LENGTH = 250;
     protected bool $useTypedSuffix;
     private ManagerRegistry $managerRegistry;
 
@@ -31,38 +32,71 @@ class NodeNameChecker implements NodeNamePolicyInterface
 
     public function getCanonicalNodeName(NodesSources $nodeSource): string
     {
+        $nodeTypeSuffix = StringHandler::slugify($nodeSource->getNodeTypeName());
         if ($nodeSource->getTitle() !== '') {
+            $title = StringHandler::slugify($nodeSource->getTitle());
             if ($nodeSource->isReachable() || !$this->useTypedSuffix) {
-                return StringHandler::slugify($nodeSource->getTitle());
+                // truncate title to 250 chars if needed
+                if (strlen($title) > self::MAX_LENGTH) {
+                    $title = substr($title, 0, self::MAX_LENGTH);
+                }
+                return $title;
+            }
+            // truncate title if title + suffix + 1 exceed 250 chars
+            if ((strlen($title) + strlen($nodeTypeSuffix) + 1) > self::MAX_LENGTH) {
+                $title = substr($title, 0, self::MAX_LENGTH - (strlen($nodeTypeSuffix) + 1));
             }
             return sprintf(
                 '%s-%s',
-                StringHandler::slugify($nodeSource->getTitle()),
-                StringHandler::slugify($nodeSource->getNodeTypeName()),
+                $title,
+                $nodeTypeSuffix,
             );
         }
         return sprintf(
             '%s-%s',
-            StringHandler::slugify($nodeSource->getNodeTypeName()),
+            $nodeTypeSuffix,
             null !== $nodeSource->getNode() ? $nodeSource->getNode()->getId() : $nodeSource->getId()
         );
     }
 
     public function getSafeNodeName(NodesSources $nodeSource): string
     {
+        $canonicalNodeName = $this->getCanonicalNodeName($nodeSource);
+        $uniqueId = uniqid();
+
+        // truncate canonicalNodeName if canonicalNodeName + uniqueId + 1 exceed 250 chars
+        if ((strlen($canonicalNodeName) + strlen($uniqueId) + 1) > self::MAX_LENGTH) {
+            $canonicalNodeName = substr(
+                $canonicalNodeName,
+                0,
+                self::MAX_LENGTH - (strlen($uniqueId) + 1)
+            );
+        }
+
         return sprintf(
             '%s-%s',
-            $this->getCanonicalNodeName($nodeSource),
-            uniqid()
+            $canonicalNodeName,
+            $uniqueId
         );
     }
 
     public function getDatestampedNodeName(NodesSources $nodeSource): string
     {
+        $canonicalNodeName = $this->getCanonicalNodeName($nodeSource);
+        $timestamp = $nodeSource->getPublishedAt()->format('Y-m-d');
+        // truncate canonicalNodeName if canonicalNodeName + uniqueId + 1 exceed 250 chars
+        if ((strlen($canonicalNodeName) + strlen($timestamp) + 1) > self::MAX_LENGTH) {
+            $canonicalNodeName = substr(
+                $canonicalNodeName,
+                0,
+                self::MAX_LENGTH - (strlen($timestamp) + 1)
+            );
+        }
+
         return sprintf(
             '%s-%s',
-            $this->getCanonicalNodeName($nodeSource),
-            $nodeSource->getPublishedAt()->format('Y-m-d')
+            $canonicalNodeName,
+            $timestamp
         );
     }
 

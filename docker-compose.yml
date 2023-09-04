@@ -110,16 +110,6 @@ services:
             - "traefik.http.routers.${APP_NAMESPACE}.rule=Host(${HOSTNAME})"
             - "traefik.http.routers.${APP_NAMESPACE}.service=${APP_NAMESPACE}"
 
-    blackfire:
-        image: blackfire/blackfire
-        environment:
-            # Exposes BLACKFIRE_* environment variables from the host
-            BLACKFIRE_LOG_LEVEL: ${BLACKFIRE_LOG_LEVEL}
-            BLACKFIRE_SERVER_ID: ${BLACKFIRE_SERVER_ID}
-            BLACKFIRE_SERVER_TOKEN: ${BLACKFIRE_SERVER_TOKEN}
-            BLACKFIRE_CLIENT_ID: ${BLACKFIRE_CLIENT_ID}
-            BLACKFIRE_CLIENT_TOKEN: ${BLACKFIRE_CLIENT_TOKEN}
-
     mailer:
         image: mailhog/mailhog
         ports:
@@ -154,6 +144,8 @@ services:
                 aliases:
                     - ${APP_NAMESPACE}_varnish
             default:
+                aliases:
+                    - varnish
         labels:
             - "traefik.enable=true"
             - "traefik.http.services.${APP_NAMESPACE}_varnish.loadbalancer.server.scheme=http"
