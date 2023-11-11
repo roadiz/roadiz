@@ -47,7 +47,7 @@
         "composer/composer":                       "^1.8.6 || ^2.0.0",
         "doctrine/migrations":                     "^3.0",
         "doctrine/cache":                          "~1.12.1",
-        "doctrine/orm":                            "~2.7.5 || ~2.8.1",
+        "doctrine/orm":                            "~2.8.1",
         "friendsofphp/proxy-manager-lts":          "^1.0",
         "gedmo/doctrine-extensions":               "^2.4 || ^3.0.0",
         "guzzlehttp/guzzle":                       "^6.3 || ^7.2.0",
