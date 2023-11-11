@@ -1,3 +1,10 @@
+## [v1.7.37](https://github.com/roadiz/roadiz/compare/v1.7.36...v1.7.37) (2023-11-11)
+
+
+### Bug Fixes
+
+* Requires min doctrine/orm 2.8 because of `Query::toIterate` method ([9227784](https://github.com/roadiz/roadiz/commit/9227784d45041c0ae89a567df225e1999dff1312))
+
 ## [v1.7.36](https://github.com/roadiz/roadiz/compare/v1.7.35...v1.7.36) (2023-09-04)
 
 
