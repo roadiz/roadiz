@@ -1,0 +1,5424 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en-US" datatype="plaintext">
+    <body>
+      <trans-unit xml:space="preserve" id="2">
+        <source>node.%name%.updated</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="3">
+        <source>node.%nodeId%.not_exists</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="4">
+        <source>node.%name%.status.%field%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="5">
+        <source>node.has_no.field.%field%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="6">
+        <source>node.id.not_specified</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="7">
+        <source>document.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="8">
+        <source>document.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="9">
+        <source>document.%name%.cannot_delete</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="10">
+        <source>document.%name%.uploaded</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="11">
+        <source>document.cannot_persist</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="12">
+        <source>name</source>
+        <target></target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="13">
+        <source>description</source>
+        <target></target>
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="14">
+        <source>copyright</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="15">
+        <source>private</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="16">
+        <source>choose.documents.to_upload</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="17">
+        <source>cache.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="18">
+        <source>group.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="19">
+        <source>group.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="20">
+        <source>group.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="21">
+        <source>role.%role%.linked_group.%group%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="22">
+        <source>role.%role%.removed_from_group.%group%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="23">
+        <source>user.%user%.linked.group.%group%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="24">
+        <source>user.%user%.removed_from_group.%group%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="25">
+        <source>group.name</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="26">
+        <source>choose.role</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="27">
+        <source>choose.user</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="28">
+        <source>group.name.already.exists</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="29">
+        <source>theme.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="30">
+        <source>theme.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="31">
+        <source>theme.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="32">
+        <source>themeClass</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="33">
+        <source>available</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="34">
+        <source>hostname</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="35">
+        <source>backendTheme</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="36">
+        <source>theme.%name%.no_creation.already_exists</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="37">
+        <source>user.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="38">
+        <source>user.%user%.role.%role%.linked</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="39">
+        <source>user.%name%.role_removed</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="40">
+        <source>user.%user%.group.%group%.linked</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="41">
+        <source>user.%user%.group.%group%.removed</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="42">
+        <source>user.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="43">
+        <source>user.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="47">
+        <source>user.facebook_name.%name%._does_not_exist</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="48">
+        <source>email</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="49">
+        <source>username</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="50">
+        <source>password</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="51">
+        <source>passwordVerify</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="52">
+        <source>firstName</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="53">
+        <source>lastName</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="phone">
+        <source>phone</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="54">
+        <source>company</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="55">
+        <source>job</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="56">
+        <source>birthday</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="57">
+        <source>facebookName</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="58">
+        <source>role.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="59">
+        <source>role.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="60">
+        <source>role.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="61">
+        <source>role.name.must_comply_with_standard</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="62">
+        <source>role.name.already.exists</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="63">
+        <source>role.required.cannot_be_updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="64">
+        <source>role.is.required</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="65">
+        <source>nodeType.imported.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="66">
+        <source>nodeType.imported.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="67">
+        <source>file.format.not_valid</source>
+        <target></target>
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="68">
+        <source>file.not_uploaded</source>
+        <target></target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="69">
+        <source>nodeType.file</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="70">
+        <source>tag.%name%.updated</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="71">
+        <source>tag.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="72">
+        <source>tag.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="73">
+        <source>child.tag.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="77">
+        <source>locked</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="78">
+        <source>visible</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="invisible">
+        <source>invisible</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="79">
+        <source>parent_tagId</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="80">
+        <source>tagName</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="81">
+        <source>node.seo.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="82">
+        <source>node.seo.not.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="83">
+        <source>url_alias.%alias%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="84">
+        <source>url_alias.%alias%.no_update.already_exists</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="85">
+        <source>url_alias.%alias%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="86">
+        <source>url_alias.%alias%.created.%translation%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="87">
+        <source>url_alias.%alias%.no_creation.already_exists</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="88">
+        <source>url_alias.no_translation.%translation%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="89">
+        <source>urlAlias</source>
+        <target></target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="90">
+        <source>translation</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="91">
+        <source>metaTitle</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="92">
+        <source>metaKeywords</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="93">
+        <source>metaDescription</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="94">
+        <source>nodeTypeField.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="95">
+        <source>nodeTypeField.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="96">
+        <source>nodeTypeField.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="97">
+        <source>label</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="98">
+        <source>type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="99">
+        <source>indexed</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="100">
+        <source>defaultValues</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="101">
+        <source>enter_values_comma_separated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="102">
+        <source>node.%name%.translated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="103">
+        <source>node_source.%node_source%.updated.%translation%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="104">
+        <source>node.%node%.linked.tag.%tag%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="105">
+        <source>tag.%name%.removed</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="106">
+        <source>node.%name%.created</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="child_node.%name%.created">
+        <source>child_node.%name%.created</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="107">
+        <source>node.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="112">
+        <source>nodeName</source>
+        <target></target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="113">
+        <source>nodeType</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="114">
+        <source>priority</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="115">
+        <source>node.isHome</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="116">
+        <source>choose.tag</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="117">
+        <source>nodeType.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="118">
+        <source>nodeType.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="119">
+        <source>nodeType.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="122">
+        <source>nodeType.displayName</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="123">
+        <source>nodeType.newsletterType</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="124">
+        <source>nodeType.hidingNodes</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes">
+        <source>nodeType.hidingNonReachableNodes</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="125">
+        <source>role.imported</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="126">
+        <source>role.file</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="127">
+        <source>setting.%name%.updated</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="128">
+        <source>setting.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="129">
+        <source>setting.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="130">
+        <source>setting.%name%.no_update.already_exists</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="131">
+        <source>setting.%name%.no_creation.already_exists</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="132">
+        <source>value</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="133">
+        <source>setting.group</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="134">
+        <source>database.schema.updated</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="135">
+        <source>database.schema.cannot_updated</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="136">
+        <source>group.imported.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="137">
+        <source>group.file</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="138">
+        <source>font.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="139">
+        <source>font.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="140">
+        <source>font.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="141">
+        <source>font.name</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="142">
+        <source>font.variant</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.hash">
+        <source>font.hash</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="143">
+        <source>font.eotFile</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="144">
+        <source>font.woffFile</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.woff2File">
+        <source>font.woff2File</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="145">
+        <source>font.otfFile</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="146">
+        <source>font.svgFile</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="149">
+        <source>setting.imported</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="150">
+        <source>settingFile</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="151">
+        <source>translation.%name%.made_default</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="152">
+        <source>translation.%name%.updated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="153">
+        <source>translation.%name%.created</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="154">
+        <source>translation.%name%.deleted</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="157">
+        <source>translation.%name%.cannot_delete_default_translation</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="158">
+        <source>locale</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="159">
+        <source>add.tag</source>
+        <target></target>
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="160">
+        <source>add.child.tag</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="161">
+        <source>tags</source>
+        <target></target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="162">
+        <source>id</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="163">
+        <source>actions</source>
+        <target></target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="164">
+        <source>delete</source>
+        <target></target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="165">
+        <source>notranslation_available.tag</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="166">
+        <source>edit.node.%name%.seo</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="167">
+        <source>edit.node.seo</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="168">
+        <source>save</source>
+        <target></target>
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="169">
+        <source>add.urlAlias</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="170">
+        <source>unlink.tag.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="171">
+        <source>are_you_sure.unlink.tag</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="172">
+        <source>cancel</source>
+        <target></target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="173">
+        <source>edit.nodeType.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="174">
+        <source>edit.tag.%name%</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="175">
+        <source>edit.tag</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="176">
+        <source>add.tag.%name%.child</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="177">
+        <source>delete.tag.%name%</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="178">
+        <source>delete.tag</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="179">
+        <source>edit.user.%name%.groups</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="180">
+        <source>group</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="181">
+        <source>unlink</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="182">
+        <source>add.group</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="183">
+        <source>add.user</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="184">
+        <source>back_to.users</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="185">
+        <source>edit.group.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="186">
+        <source>Welcome</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="187">
+        <source>edit.user.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="188">
+        <source>import.setting</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="189">
+        <source>import</source>
+        <target></target>
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="190">
+        <source>hello.%name%</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="191">
+        <source>back_to.tags</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="192">
+        <source>edit</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="193">
+        <source>edit.setting.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="194">
+        <source>back_to.settings</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="195">
+        <source>are_you_sure.delete.tag</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="196">
+        <source>search</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="197">
+        <source>goto.page</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="198">
+        <source>prev</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="199">
+        <source>next</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="200">
+        <source>delete.user.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="201">
+        <source>are_you_sure.delete.user</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="202">
+        <source>edit.group.%name%.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="203">
+        <source>role</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="204">
+        <source>unlink.role</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="205">
+        <source>add.role</source>
+        <target></target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="206">
+        <source>delete.user</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="207">
+        <source>translations</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="208">
+        <source>add.translation</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="209">
+        <source>translation.locale</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="210">
+        <source>status</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="211">
+        <source>not_available</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="212">
+        <source>set.default</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="213">
+        <source>edit.nodeSource.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="214">
+        <source>back_to.documents</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="215">
+        <source>delete.document</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="216">
+        <source>edit.nodeTypeFields.for.nodeType.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="217">
+        <source>back_to.nodeTypes</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="218">
+        <source>add.nodeTypeField</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="219">
+        <source>remove.user.%name%.from.group.%group%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="220">
+        <source>are_you_sure.remove.user.from.group</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="221">
+        <source>edi.user.%name%.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="222">
+        <source>specific.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="223">
+        <source>inherited.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="224">
+        <source>add.specific.role</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="225">
+        <source>import.role</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="226">
+        <source>edit.node.%name%.tags</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="227">
+        <source>back_to.groups</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="228">
+        <source>delete.group</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="229">
+        <source>user.edit</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="230">
+        <source>user.roles</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="231">
+        <source>user.groups</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="232">
+        <source>user.history</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="233">
+        <source>delete.document.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="234">
+        <source>are_you_sure.delete.document</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="235">
+        <source>group.edit</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="236">
+        <source>group.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="237">
+        <source>group.users</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="238">
+        <source>remove.user.%name%.role.%role%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="239">
+        <source>are_you_sure.remove.user.role</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="240">
+        <source>add.theme</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="241">
+        <source>back_to.themes</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="242">
+        <source>unlink.user.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="243">
+        <source>add.node</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="244">
+        <source>In</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="245">
+        <source>back_to.nodes</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="246">
+        <source>nodeTree</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="247">
+        <source>nodes</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="248">
+        <source>dashboard</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="249">
+        <source>history</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="250">
+        <source>comments</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="251">
+        <source>themes</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="252">
+        <source>theme</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="253">
+        <source>theme.classname</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="254">
+        <source>theme.host</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="255">
+        <source>all.hostnames</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="256">
+        <source>theme.disabled</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="257">
+        <source>theme.backend</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="258">
+        <source>roles</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="259">
+        <source>export.all.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="260">
+        <source>export</source>
+        <target></target>
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="261">
+        <source>role.required</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="262">
+        <source>welcome</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="263">
+        <source>back_to.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="264">
+        <source>delete.role</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="265">
+        <source>add</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="266">
+        <source>tag.%name%.tree</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="267">
+        <source>edit.role.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="268">
+        <source>settings</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="269">
+        <source>add.setting</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="270">
+        <source>Delete</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="271">
+        <source>create.node</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="272">
+        <source>node.type</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="273">
+        <source>node.status</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="274">
+        <source>last.modification</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="275">
+        <source>node.not.published</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="276">
+        <source>see.nodetree</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="277">
+        <source>import.group</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="278">
+        <source>purge.cache</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="279">
+        <source>are_you_sure.purge.cache</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="280">
+        <source>clear</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="281">
+        <source>fonts</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="282">
+        <source>add.font</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="283">
+        <source>font.files</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="284">
+        <source>font.cssfamily</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="285">
+        <source>download</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="286">
+        <source>unlink.role.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="287">
+        <source>are_you_sure.remove.role.from.group</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="288">
+        <source>users</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="289">
+        <source>user.username</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="290">
+        <source>user.email</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="291">
+        <source>edit.theme</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="292">
+        <source>edit.tag.%name%.settings</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="293">
+        <source>delete.font.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="294">
+        <source>are_you_sure.delete.font</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="295">
+        <source>search.node</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="296">
+        <source>edit.nodeTypeField.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="297">
+        <source>delete.caches</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="298">
+        <source>logout</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="299">
+        <source>dev_mode.activated</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.activated">
+          <source>maintenance_mode.activated</source>
+          <target></target>
+          <note>Message to notify that site is under maintenance.</note>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="300">
+        <source>help</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="301">
+        <source>datetime</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="302">
+        <source>level</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="303">
+        <source>user</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="304">
+        <source>message</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="305">
+        <source>back_to.nodeTypeFields</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="306">
+        <source>delete.nodeTypeField</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="307">
+        <source>edit.node.%name%</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="308">
+        <source>edit.node</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="309">
+        <source>add.node.%name%.child</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="310">
+        <source>add.child.node</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="311">
+        <source>delete.node.%name%</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="312">
+        <source>delete.node</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="313">
+        <source>see.page</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="preview.page">
+        <source>preview.page</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="314">
+        <source>duplicate</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="315">
+        <source>add.child</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="316">
+        <source>statuses</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="317">
+        <source>visibility</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="318">
+        <source>published</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="319">
+        <source>hiding-children</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="320">
+        <source>lock-status</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="321">
+        <source>sterile-status</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="322">
+        <source>archive-status</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="323">
+        <source>edit.document.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="324">
+        <source>delete.nodeTypeField.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="325">
+        <source>arz_you_sure.delete.nodeTypeField</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="326">
+        <source>delete.theme.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="327">
+        <source>are_you_sure.delete.theme</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="328">
+        <source>edit.group.%name%.users</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="329">
+        <source>unlink.user</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="330">
+        <source>delete.group.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="331">
+        <source>are_you_sure.delete.group</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="332">
+        <source>see.website</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="333">
+        <source>minify.tree.panel</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="334">
+        <source>interactions</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="335">
+        <source>manage.surveys</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="336">
+        <source>manage.newsletters</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="337">
+        <source>manage.subscribers</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="338">
+        <source>manage.comments</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="339">
+        <source>manage.tags</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="340">
+        <source>manage.documents</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="341">
+        <source>construction</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="342">
+        <source>manage.nodes</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="343">
+        <source>manage.nodeTypes</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="344">
+        <source>manage.translations</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="345">
+        <source>manage.themes</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="346">
+        <source>manage.fonts</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="347">
+        <source>user.system</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="348">
+        <source>manage.users</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="349">
+        <source>manage.roles</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="350">
+        <source>manage.groups</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="351">
+        <source>site.settings</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="352">
+        <source>Translate</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="353">
+        <source>are_you_sure.delete.node.and.data</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="354">
+        <source>node.content</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="355">
+        <source>node.parameters</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="356">
+        <source>seo</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="357">
+        <source>tree</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="358">
+        <source>back_to.fonts</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="359">
+        <source>import.nodeType</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="360">
+        <source>back_office</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="361">
+        <source>login</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="362">
+        <source>view.site</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="363">
+        <source>forgot.password</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="364">
+        <source>nodeTypes</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="365">
+        <source>add.nodeType</source>
+        <target></target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="366">
+        <source>nodeType.entityName</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="367">
+        <source>fields</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="368">
+        <source>manage.nodeTypeFields</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="369">
+        <source>delete.nodeType</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="370">
+        <source>edit.translation.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="371">
+        <source>back_to.translations</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="372">
+        <source>delete.translation</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="373">
+        <source>edit.node.%name%.tree</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.color">
+        <source>tag.color</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="374">
+        <source>tag.tree</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="375">
+        <source>tag.content</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="376">
+        <source>tag.settings</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="377">
+        <source>tag.nodes</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="378">
+        <source>tagged.nodes</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="379">
+        <source>groups</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="380">
+        <source>export.all.groups</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="381">
+        <source>group.required</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="382">
+        <source>delete.nodeType.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="383">
+        <source>are_you_sure.delete.nodeType.and.nodes.newsletters</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="384">
+        <source>upload.document</source>
+        <target></target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="385">
+        <source>upload</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="386">
+        <source>edit.font.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="387">
+        <source>edit.font</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="388">
+        <source>edit.document</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="389">
+        <source>unlink.document</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="390">
+        <source>delete.role.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="391">
+        <source>are_you_sure.delete.role</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="392">
+        <source>wait_for.authentification</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="393">
+        <source>documents</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="394">
+        <source>document.thumbnail</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="395">
+        <source>document.filename</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="396">
+        <source>document.createdAt</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="397">
+        <source>documents.toggle-explorer</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="398">
+        <source>documents.toggle-uploader</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="399">
+        <source>documents.toggle-embedder</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="400">
+        <source>delete.translation.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="401">
+        <source>are_you_sure.delete.translation.and.node.data</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="402">
+        <source>delete.setting.%name%</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="403">
+        <source>are_you_sure.delete.setting</source>
+        <target></target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="404">
+        <source>translate</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="405">
+        <source>translate.node</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="406">
+        <source>title</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="407">
+        <source>page</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="408">
+        <source>choose.value</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Count translations -->
+      <trans-unit xml:space="preserve" id="409">
+        <source><![CDATA[{0} no.item|{1} 1.item|]1,Inf] %count%.items]]></source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="410">
+        <source>1.item</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="411">
+        <source>%count%.items</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="412">
+        <source>{0} no.role|{1} 1.role|]1,Inf] %count%.roles</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="413">
+        <source>1.role</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="414">
+        <source>%count%.roles</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="415">
+        <source>{0} no.group|{1} 1.group|]1,Inf] %count%.groups</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="416">
+        <source>1.group</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="417">
+        <source>%count%.groups</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="418">
+        <source>{0} no.user|{1} 1.user|]1,Inf] %count%.users</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="419">
+        <source>1.user</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="420">
+        <source>%count%.users</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="421">
+        <source>{0} no.tag|{1} 1.tag|]1,Inf] %count%.tags</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="422">
+        <source>1.tag</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="423">
+        <source>%count%.tags</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="424">
+        <source>{0} no.document|{1} 1.document|]1,Inf] %count%.documents</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="425">
+        <source>1.document</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="426">
+        <source>%count%.documents</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="427">
+        <source>{0} no.node|{1} 1.node|]1,Inf] %count%.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="428">
+        <source>1.node</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="429">
+        <source>%count%.nodes</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="430">
+        <source>{0} no.nodeTypeField|{1} 1.nodeTypeField|]1,Inf] %count%.nodeTypeFields</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="431">
+        <source>1.nodeTypeField</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="432">
+        <source>%count%.nodeTypeFields</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Node type fields datatypes -->
+      <trans-unit xml:space="preserve" id="433">
+        <source>string.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="434">
+        <source>date-time.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="date.type">
+        <source>date.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="435">
+        <source>text.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="436">
+        <source>markdown.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="json.type">
+        <source>json.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css.type">
+        <source>css.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="437">
+        <source>boolean.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="438">
+        <source>integer.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="439">
+        <source>decimal.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="440">
+        <source>email.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="441">
+        <source>single-choice.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="442">
+        <source>multiple-choice.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="443">
+        <source>documents.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="444">
+        <source>children-nodes.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="country.type">
+        <source>country.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Dynamic button in nodeTree add.a.%nodeType% -->
+      <trans-unit xml:space="preserve" id="445">
+        <source>add.a.%nodeType%</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="446">
+        <source>bad.request</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="447">
+        <source>filename</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="448">
+        <source>document.platform</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="449">
+        <source>document.embedId</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%field%.is.reserved.word">
+        <source>%field%.is.reserved.word</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Setting groups -->
+
+      <trans-unit xml:space="preserve" id="settingGroup">
+        <source>settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%group%.settings">
+        <source>%group%.settings</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.updated">
+        <source>settingGroup.%name%.updated</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.created">
+        <source>settingGroup.%name%.created</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.deleted">
+        <source>settingGroup.%name%.deleted</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.no_update.already_exists">
+        <source>settingGroup.%name%.no_update.already_exists</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.%name%.no_creation.already_exists">
+        <source>settingGroup.%name%.no_creation.already_exists</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroup.in.menu">
+        <source>settingGroup.in.menu</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see.settings">
+        <source>see.settings</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.settingGroup">
+        <source>add.settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.settingGroup.%name%">
+        <source>edit.settingGroup.%name%</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.settingGroup">
+        <source>save.settingGroup</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.settingGroup">
+        <source>are_you_sure.delete.settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.settingGroup.%name%">
+        <source>delete.settingGroup.%name%</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.settingGroup">
+        <source>delete.settingGroup</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.settingGroups">
+        <source>back_to.settingGroups</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="all.settings">
+        <source>all.settings</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.groups">
+        <source>setting.groups</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="settingGroups">
+        <source>settingGroups</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- Default settings names -->
+      <trans-unit xml:space="preserve" id="display_debug_panel">
+        <source>display_debug_panel</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender">
+        <source>email_sender</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender_name">
+        <source>email_sender_name</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="soundcloud_client_id">
+        <source>soundcloud_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="google_client_id">
+        <source>google_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="twitter_client_id">
+        <source>twitter_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="facebook_client_id">
+        <source>facebook_client_id</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="seo_description">
+        <source>seo_description</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="site_name">
+        <source>site_name</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="site_copyright">
+        <source>site_copyright</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode">
+        <source>maintenance_mode</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal_analytics_id">
+        <source>universal_analytics_id</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="facebook_url">
+        <source>facebook_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="instagram_url">
+        <source>instagram_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="instagram_user_id">
+        <source>instagram_user_id</source>
+            <target></target>
+            <note>Setting name for social page account name.</note>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="twitter_url">
+        <source>twitter_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="linkedin_url">
+        <source>linkedin_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_url">
+        <source>youtube_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="googleplus_url">
+        <source>googleplus_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="twitter_account">
+        <source>twitter_account</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="recaptcha_public_key">
+        <source>recaptcha_public_key</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_private_key">
+        <source>recaptcha_private_key</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot">
+        <source>you_must_show_youre_not_robot</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again">
+        <source>recaptcha_is_invalid.try_again</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- document usage -->
+      <trans-unit xml:space="preserve" id="document.%name%.usage">
+        <source>document.%name%.usage</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="usage.fieldName">
+        <source>usage.fieldName</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.name">
+        <source>nodeType.name</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.usage">
+        <source>document.usage</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.edit">
+        <source>document.edit</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.preview">
+        <source>document.preview</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- node statuses -->
+      <trans-unit xml:space="preserve" id="all.nodes">
+        <source>all.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="draft.nodes">
+        <source>draft.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pending.nodes">
+        <source>pending.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="archived.nodes">
+        <source>archived.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deleted.nodes">
+        <source>deleted.nodes</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.draft">
+        <source>node.draft</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.pending.validation">
+        <source>node.pending.validation</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.archived">
+        <source>node.archived</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.deleted">
+        <source>node.deleted</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="draft">
+        <source>draft</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pending">
+        <source>pending</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="archived">
+        <source>archived</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deleted">
+        <source>deleted</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="undelete">
+        <source>undelete</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- are_you_sure.undelete.node.and.data -->
+      <trans-unit xml:space="preserve" id="are_you_sure.undelete.node.and.data">
+        <source>are_you_sure.undelete.node.and.data</source>
+        <target></target>
+      </trans-unit>
+      <!-- undelete.node.%name% -->
+      <trans-unit xml:space="preserve" id="undelete.node.%name%">
+        <source>undelete.node.%name%</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="parameters">
+        <source>parameters</source>
+        <target></target>
+      </trans-unit>
+
+      <!-- embed documents -->
+      <trans-unit xml:space="preserve" id="embed.document">
+        <source>embed.document</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embed">
+        <source>embed</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="tagTree">
+        <source>tagTree</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.%node%.linked.tags">
+        <source>node.%node%.linked.tags</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="list.tags.to_link">
+        <source>list.tags.to_link</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="use.new_or_existing.tags_with_hierarchy">
+        <source>use.new_or_existing.tags_with_hierarchy</source>
+        <target></target>
+      </trans-unit>
+
+
+      <!-- stacks -->
+
+      <trans-unit xml:space="preserve" id="add.stack.type">
+        <source>add.stack.type</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="stack.types">
+        <source>stack.types</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="remove">
+        <source>remove</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="stack_node.%name%.has_new_type.%type%">
+        <source>stack_node.%name%.has_new_type.%type%</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field.%name%.updated">
+        <source>field.%name%.updated</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field.%nodeTypeFieldId%.not_exists">
+        <source>field.%nodeTypeFieldId%.not_exists</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="created.at">
+        <source>created.at</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="updated.at">
+        <source>updated.at</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="position">
+        <source>position</source>
+        <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="empty.node.trash">
+        <source>empty.node.trash</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.trash.emptied">
+        <source>node.trash.emptied</source>
+        <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="empty.trash">
+        <source>empty.trash</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.empty.node.and.data.trash">
+        <source>are_you_sure.empty.node.and.data.trash</source>
+        <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="random.document">
+        <source>random.document</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.format.unknown">
+        <source>document.format.unknown</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.embed.document.found">
+        <source>no.embed.document.found</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embed.document.already_exists">
+        <source>embed.document.already_exists</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+        <source>embedId.is_not_valid</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="document.metas">
+        <source>document.metas</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.document.translation.%name%">
+        <source>delete.document.translation.%name%</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.document.translation">
+        <source>are_you_sure.delete.document.translation</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.translation.%name%.updated">
+        <source>document.translation.%name%.updated</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.translation.%name%.deleted">
+        <source>document.translation.%name%.deleted</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.translation.%name%.cannot_delete">
+        <source>document.translation.%name%.cannot_delete</source>
+        <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="folderTree">
+        <source>folderTree</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.folder">
+        <source>add.folder</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.child.folder">
+        <source>add.child.folder</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.folder">
+        <source>edit.folder</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.folder">
+        <source>delete.folder</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.folders">
+        <source>back_to.folders</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.settings">
+        <source>folder.settings</source>
+        <target></target>
+        <note>Nav bar label for editing folder id and visibility state</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.labels">
+        <source>folder.labels</source>
+        <target></target>
+        <note>Nav bar label for editing folder label in each translation.</note>
+      </trans-unit>
+
+
+
+      <trans-unit xml:space="preserve" id="delete.folder.%name%">
+          <source>delete.folder.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.folder">
+          <source>are_you_sure.delete.folder</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.folder.%name%">
+          <source>edit.folder.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folders">
+          <source>folders</source>
+          <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="default.translation">
+        <source>default.translation</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.minLength">
+        <source>nodeTypeField.minLength</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.maxLength">
+        <source>nodeTypeField.maxLength</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_limit">
+        <source>no_limit</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serialization">
+        <source>nodeTypeField.serialization</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.excludedFromSerialization">
+        <source>nodeTypeField.excludedFromSerialization</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationMaxDepth">
+        <source>nodeTypeField.serializationMaxDepth</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationExclusionExpression">
+        <source>nodeTypeField.serializationExclusionExpression</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationGroups">
+        <source>nodeTypeField.serializationGroups</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization">
+        <source>exclude_this_field_from_api_serialization</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="default_value">
+        <source>default_value</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization_if_expression_result_is_true">
+        <source>exclude_this_field_from_api_serialization_if_expression_result_is_true</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="enter_symfony_expression_language_with_object_as_var_name">
+        <source>enter_symfony_expression_language_with_object_as_var_name</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="export.all.nodes">
+        <source>export.all.nodes</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.all">
+        <source>export.all</source>
+        <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="drop.files.here.to.upload.or.click.to.open.your.explorer">
+          <source>drop.files.here.to.upload.or.click.to.open.your.explorer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.browser.does.not.support.dragndrop.file.uploads">
+          <source>your.browser.does.not.support.dragndrop.file.uploads</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days">
+          <source>please.use.the.fallback.form.below.to.upload.your.files.like.in.the.olden.days</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib">
+          <source>file.is.too.big.({{filesize}}mib).max.filesize.{{maxFilesize}}.mib</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you.cant.upload.files.of.this.type">
+          <source>you.cant.upload.files.of.this.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statusCode}}.code">
+          <source>server.responded.with.{{statusCode}}.code</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cancel.upload">
+          <source>cancel.upload</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are.you.sure.you.want.to.cancel.this.upload">
+          <source>are.you.sure.you.want.to.cancel.this.upload</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="remove.file">
+          <source>remove.file</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you.can.not.upload.any.more.files">
+          <source>you.can.not.upload.any.more.files</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="headline.2">
+          <source>headline.2</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.3">
+          <source>headline.3</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.4">
+          <source>headline.4</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.5">
+          <source>headline.5</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="headline.6">
+          <source>headline.6</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="fullscreen">
+          <source>fullscreen</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bold">
+          <source>bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="italic">
+          <source>italic</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="strikethrough">
+          <source>strikethrough</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="blockquote">
+          <source>blockquote</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="link">
+          <source>link</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="image">
+          <source>image</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unordered.list">
+          <source>unordered.list</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ordered.list">
+          <source>ordered.list</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back">
+          <source>back</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="separator">
+          <source>separator</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="non_breaking.space">
+          <source>non_breaking.space</source>
+          <target>Markdown button to add a non-breaking space character in text</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="non_breaking.hyphen">
+          <source>non_breaking.hyphen</source>
+          <target>Markdown button to add a non-breaking hyphen character in text</target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="forbidden.page">
+          <source>forbidden.page</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see_all">
+          <source>see_all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.documents">
+          <source>search.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.nodes">
+          <source>search.nodes</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="nodes.toggle-explorer">
+          <source>nodes.toggle-explorer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.name">
+          <source>folder.name</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="nodeType.color">
+          <source>nodeType.color</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.defaultTtl">
+          <source>nodeType.defaultTtl</source>
+            <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType_default_ttl_when_creating_nodes">
+          <source>nodeType_default_ttl_when_creating_nodes</source>
+            <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="nodeType.numberFields">
+          <source>nodeType.numberFields</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="back_to.top">
+          <source>back_to.top</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="no.customFormField">
+          <source>no.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.customForm">
+          <source>add.customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm">
+          <source>customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.displayName">
+          <source>customForm.displayName</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%count%.customFormFields">
+          <source>%count%.customFormFields</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.customFormFields">
+          <source>manage.customFormFields</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.answers">
+          <source>customForm.answers</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.show">
+          <source>customForm.show</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.customFormAnswer">
+          <source>are_you_sure.delete.customFormAnswer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customFormAnswer.%name%">
+          <source>delete.customFormAnswer.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.customFormAnswers">
+          <source>back_to.customFormAnswers</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormAnswer">
+          <source>customFormAnswer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.customForms">
+          <source>back_to.customForms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="submitted.date">
+          <source>submitted.date</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormAnswer.answers">
+          <source>customFormAnswer.answers</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormFieldAttribute">
+          <source>customFormFieldAttribute</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customFormField">
+          <source>delete.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.customFormField">
+          <source>add.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.customFormFields">
+          <source>back_to.customFormFields</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customFormField.%name%">
+          <source>delete.customFormField.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.customFormField">
+          <source>are_you_sure.delete.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customFormField.%name%">
+          <source>edit.customFormField.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customFormFields.for.customForm.%name%">
+          <source>edit.customFormFields.for.customForm.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customForm">
+          <source>delete.customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.customForm.%name%">
+          <source>delete.customForm.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.customForm">
+          <source>are_you_sure.delete.customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customForm.%name%">
+          <source>edit.customForm.%name%</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields">
+          <source>{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="create.a.node">
+          <source>create.a.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.node">
+          <source>add.a.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.tag">
+          <source>add.a.tag</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.urlAlias">
+          <source>add.a.urlAlias</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.child.node">
+          <source>add.a.child.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.child.tag">
+          <source>add.a.child.tag</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.nodeType">
+          <source>add.a.nodeType</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.nodeTypeField">
+          <source>add.a.nodeTypeField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.translation">
+          <source>add.a.translation</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.theme">
+          <source>add.a.theme</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.font">
+          <source>add.a.font</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.user">
+          <source>add.a.user</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.specific.role">
+          <source>add.a.specific.role</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.group">
+          <source>add.a.group</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.role">
+          <source>add.a.role</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.setting">
+          <source>add.a.setting</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.settingGroup">
+          <source>add.a.settingGroup</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.font">
+          <source>delete.font</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.customForm">
+          <source>add.a.customForm</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.color">
+          <source>customForm.color</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.customForms">
+          <source>manage.customForms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.open">
+          <source>customForm.open</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.closeDate">
+          <source>customForm.closeDate</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.customFormField">
+          <source>add.a.customFormField</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.customFormFields">
+          <source>edit.customFormFields</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.folder">
+          <source>add.a.folder</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.hidden">
+          <source>node.hidden</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="required">
+          <source>required</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="delete.documents">
+          <source>delete.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.documents">
+          <source>are_you_sure.delete.these.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.documents">
+          <source>bulk.delete.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="main_color">
+          <source>main_color</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="colour.type">
+          <source>colour.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.type">
+          <source>nodes.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embed.preview">
+          <source>embed.preview</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="answer.form">
+          <source>answer.form</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.send">
+          <source>customForm.%name%.send</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+          <source>new.answer.form.%site%</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="customFormAnswer.%id%.deleted">
+          <source>customFormAnswer.%id%.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.%name%.updated">
+          <source>customFormField.%name%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.%name%.created">
+          <source>customFormField.%name%.created</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.%name%.deleted">
+          <source>customFormField.%name%.deleted</source>
+          <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="duplicated.node.%name%">
+          <source>duplicated.node.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.node.%name%">
+          <source>impossible.duplicate.node.%name%</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="list.folders.to_link">
+          <source>list.folders.to_link</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.fold.documents">
+          <source>bulk.fold.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="documents.linked_to.folders">
+          <source>documents.linked_to.folders</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_documents.linked_to.folders">
+          <source>no_documents.linked_to.folders</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="wrong.request">
+          <source>wrong.request</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.nodes">
+          <source>delete.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.nodes">
+          <source>are_you_sure.delete.these.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.all">
+          <source>delete.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.nodes">
+          <source>bulk.delete.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="link.tags">
+          <source>link.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unlink.tags">
+          <source>unlink.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="list.tags.to_link.or_unlink">
+          <source>list.tags.to_link.or_unlink</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.deleted">
+          <source>nodes.bulk.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.not_tagged">
+          <source>nodes.bulk.not_tagged</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.tagged">
+          <source>nodes.bulk.tagged</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.not_untagged">
+          <source>nodes.bulk.not_untagged</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.untagged">
+          <source>nodes.bulk.untagged</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.actions">
+          <source>bulk.actions</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="reset.marker">
+          <source>reset.marker</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="geotag.type_an_address.then_type_enter">
+          <source>geotag.type_an_address.then_type_enter</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="geographic.coordinates.type">
+          <source>geographic.coordinates.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple.geographic.coordinates.type">
+          <source>multiple.geographic.coordinates.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="link.folders">
+          <source>link.folders</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unlink.folders">
+          <source>unlink.folders</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.download.documents">
+          <source>bulk.download.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="download.documents">
+          <source>download.documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.download.these.documents">
+          <source>are_you_sure.download.these.documents</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="purge.generated_images.cache">
+          <source>purge.generated_images.cache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.purge.generated_images.cache">
+          <source>are_you_sure.purge.generated_images.cache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.generated_images.cache">
+          <source>delete.generated_images.cache</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="more.documents">
+          <source>more.documents</source>
+          <target>Document drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.nodes">
+          <source>more.nodes</source>
+          <target>Nodes drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types">
+          <source>more.node_types</source>
+          <target>Node Types drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags">
+          <source>more.tags</source>
+          <target>Tag drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.custom_forms">
+          <source>more.custom_forms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.custom_forms">
+          <source>search.custom_forms</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-forms.toggle-explorer">
+          <source>custom-forms.toggle-explorer</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.account">
+          <source>edit.account</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="NodeType">
+          <source>NodeType</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="select.nodetype">
+          <source>select.nodetype</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ignore">
+          <source>ignore</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="true">
+          <source>true</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="false">
+          <source>false</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.name">
+          <source>node.name</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.id.parent">
+          <source>node.id.parent</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.operator">
+          <source>node.datetime.operator</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.datetime.value">
+          <source>node.datetime.value</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.limit.result">
+          <source>node.limit.result</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.tags">
+          <source>node.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.tag.exclusive">
+          <source>node.tag.exclusive</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodetypefield">
+          <source>nodetypefield</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="search.a.node">
+          <source>search.a.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.all.nodesSource">
+          <source>export.all.nodesSource</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="role.cannot.update.status">
+          <source>role.cannot.update.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.%field%.updated">
+          <source>node.%name%.%field%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="added.node.%name%">
+          <source>added.node.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-forms.type">
+          <source>custom-forms.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="Bad credentials">
+          <source>Bad credentials.</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="Too many login attemps">
+          <source>Too many login attemps, wait before trying again.</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="User account has expired.">
+          <source>User account has expired.</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="User account is locked.">
+          <source>User account is locked.</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="User credentials have expired.">
+          <source>User credentials have expired.</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="User account is disabled.">
+          <source>User account is disabled.</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="change.nodes.status">
+          <source>change.nodes.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="change.nodes.status.all">
+          <source>change.nodes.status.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.change-status.these.nodes">
+          <source>are_you_sure.change-status.these.nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.status">
+          <source>nodes.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes.bulk.status.changed">
+          <source>nodes.bulk.status.changed</source>
+          <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="staticTheme">
+          <source>staticTheme</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="staticTheme.does_not.allow.node_url_routes">
+          <source>staticTheme.does_not.allow.node_url_routes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.is_static">
+          <source>theme.is_static</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="password.must.match">
+          <source>password.must.match</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="passwords.must.match">
+          <source>passwords.must.match</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.nodeType.available.create_one_first">
+          <source>no.nodeType.available.create_one_first</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.%name%.no_creation.already_exists">
+          <source>node.%name%.no_creation.already_exists</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.dynamicNodeName">
+          <source>node.dynamicNodeName</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="nodeType.status">
+          <source>nodeType.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.not_visible">
+          <source>nodeType.not_visible</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="newsletter.nodeType">
+          <source>newsletter.nodeType</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
+          <source>nodeType.hiding_nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.searchable">
+          <source>nodeType.searchable</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="allow_this_types_nodes_title_to_be_indexed_into_search_engine">
+          <source>allow_this_types_nodes_title_to_be_indexed_into_search_engine</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.%name%.created">
+          <source>newsletter.%name%.created</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.%newsletter%.updated.%translation%">
+          <source>newsletter.%newsletter%.updated.%translation%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%">
+          <source>duplicated.newsletter.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%">
+          <source>impossible.duplicate.newsletter.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="see.newsletter">
+          <source>see.newsletter</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.newsletter">
+          <source>add.a.newsletter</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.newsletter.%name%">
+          <source>edit.newsletter.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter">
+          <source>newsletter</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="newsletter.type">
+          <source>newsletter.type</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.newsletter">
+          <source>back_to.newsletter</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="create.a.newsletter">
+          <source>create.a.newsletter</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html">
+          <source>export.html</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export.html.inline">
+          <source>export.html.inline</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="start.test.user.right">
+          <source>start.test.user.right</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="stop.test.user.right">
+          <source>stop.test.user.right</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="overwrite.document">
+          <source>overwrite.document</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.file.%name%.updated">
+          <source>document.file.%name%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.nodeSource">
+          <source>are_you_sure.delete.nodeSource</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.%translation%.cant.deleted">
+          <source>node_source.%node_source%.%translation%.cant.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node_source.%node_source%.deleted.%translation%">
+          <source>node_source.%node_source%.deleted.%translation%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.nodesource">
+          <source>delete.nodesource</source>
+          <target></target>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="latest.node-sources.updates">
+          <source>latest.node-sources.updates</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="customForm.%name%.updated">
+          <source>customForm.%name%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.created">
+          <source>customForm.%name%.created</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.deleted">
+          <source>customForm.%name%.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists">
+          <source>customForm.%name%.cannot_rename_already_exists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.already_exists">
+          <source>customForm.%name%.already_exists</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="select.all">
+          <source>select.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="deselect.all">
+          <source>deselect.all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.roles">
+          <source>edit.user.%name%.roles</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="history.for.%name%">
+          <source>history.for.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="admin_image">
+          <source>admin_image</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot.limited.one">
+          <source>chroot.limited.one</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="chroot">
+          <source>chroot</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists">
+          <source>node.noCreation.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="maps_style">
+          <source>maps_style</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="maps_default_location">
+        <source>maps_default_location</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="user.status">
+          <source>user.status</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.enabled">
+          <source>user.enabled</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.disabled">
+          <source>user.disabled</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.locked">
+          <source>user.locked</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expired">
+          <source>user.expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.expiresAt">
+          <source>user.expiresAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.expired">
+          <source>user.force.expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.credentialsExpiresAt">
+          <source>user.credentialsExpiresAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.force.credentialsExpired">
+          <source>user.force.credentialsExpired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user.%name%.security">
+          <source>edit.user.%name%.security</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.%name%.security.updated">
+          <source>user.%name%.security.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.account.has-expired">
+          <source>user.account.has-expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.crendentials.has-expired">
+          <source>user.crendentials.has-expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.last-login">
+          <source>user.last-login</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.password-requested-at">
+          <source>user.password-requested-at</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="never.requested">
+          <source>never.requested</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="year">
+          <source>year</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="month">
+          <source>month</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="day">
+          <source>day</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hour">
+          <source>hour</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="minute">
+          <source>minute</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.security">
+          <source>user.security</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="your.account.email">
+          <source>your.account.email</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database">
+          <source>%email%.email.does.not.exist.in.user.account.database</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="to.get.new.password.enter.your.account.email">
+          <source>to.get.new.password.enter.your.account.email</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="request.new.password">
+          <source>request.new.password</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.login">
+          <source>back_to.login</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.personal.password.reset.link.has.been.sent.to.your.account.email">
+          <source>a.personal.password.reset.link.has.been.sent.to.your.account.email</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.is.invalid">
+          <source>confirmation.token.is.invalid</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="confirmation.token.has.expired">
+          <source>confirmation.token.has.expired</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="choose.a.new.password">
+          <source>choose.a.new.password</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="save.new.password">
+          <source>save.new.password</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
+          <source>your.new.password.has.been.saved</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="go_back_to.login.page.to.connect">
+          <source>go_back_to.login.page.to.connect</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent">
+          <source>a.confirmation.email.has.already.be.sent</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="email.invalid">
+          <source>email.invalid</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="resultCache">
+          <source>resultCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="hydratationCache">
+          <source>hydratationCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="queryCache">
+          <source>queryCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="metadataCache">
+          <source>metadataCache</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="no.cache.available">
+          <source>no.cache.available</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="homeNode.limited.one">
+          <source>homeNode.limited.one</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="NodeNode">
+          <source>homeNode</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="theme.root.limited.one">
+          <source>theme.root.limited.one</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="themeRoot">
+          <source>themeRoot</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="about.cms">
+          <source>about.cms</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="news.version.release">
+          <source>news.version.release</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="lastest.version.installed">
+          <source>lastest.version.installed</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="current.version">
+          <source>current.version</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="last.version">
+          <source>last.version</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="changelog">
+          <source>changelog</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="download.folder.content">
+          <source>download.folder.content</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="not.valid.facebook.name">
+          <source>not.valid.facebook.name</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="routePrefix">
+          <source>routePrefix</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="current.document.is.private.you.cannot.preview.it">
+          <source>current.document.is.private.you.cannot.preview.it</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.public_url">
+          <source>document.public_url</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.filepath">
+          <source>document.filepath</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.imageAverageColor">
+          <source>document.imageAverageColor</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="download.document">
+          <source>download.document</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="static_domain_name">
+          <source>static_domain_name</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item-per-page.display.count">
+          <source>item-per-page.display.count</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="move.node.to.first.position">
+          <source>move.node.to.first.position</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="move.node.to.last.position">
+          <source>move.node.to.last.position</source>
+          <target></target>
+      </trans-unit>
+
+      <!-- Node tree contextual menu commands -->
+      <trans-unit xml:space="preserve" id="node.hide">
+          <source>node.hide</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.show">
+          <source>node.show</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.publish">
+          <source>node.publish</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.unpublish">
+          <source>node.unpublish</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.duplicate">
+          <source>node.duplicate</source>
+          <target></target>
+      </trans-unit>
+
+      <!-- Some constraints messages -->
+      <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
+          <source>string.should.only.contain.latin.characters</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word">
+          <source>string.should.not.be.a.sql.reserved.word</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="This value should not be blank.">
+          <source>This value should not be blank.</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="This value is not valid.">
+          <source>This value is not valid.</source>
+          <target></target>
+      </trans-unit>
+
+      <!-- Font variantes -->
+      <trans-unit xml:space="preserve" id="font_variant.regular">
+          <source>font_variant.regular</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.italic">
+          <source>font_variant.italic</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold">
+          <source>font_variant.bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.bold.italic">
+          <source>font_variant.bold.italic</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light">
+          <source>font_variant.light</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.light.italic">
+          <source>font_variant.light.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="update.roadiz">
+          <source>update.roadiz</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.please_wait">
+          <source>update.please_wait</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update.done.back_to_home">
+          <source>update.done.back_to_home</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.download_archive">
+          <source>update_roadiz.download_archive</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.unarchive">
+          <source>update_roadiz.unarchive</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.move_new_files">
+          <source>update_roadiz.move_new_files</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.clear_cache">
+          <source>update_roadiz.clear_cache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_schema">
+          <source>update_roadiz.update_schema</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="update_roadiz.update_complete">
+          <source>update_roadiz.update_complete</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="automatic.upgrade">
+          <source>automatic.upgrade</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="always.make.a.database.backup.before.upgrade">
+          <source>always.make.a.database.backup.before.upgrade</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_git">
+          <source>cannot_update_roadiz.using_git</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.using_symlink">
+          <source>cannot_update_roadiz.using_symlink</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_release_available">
+          <source>cannot_update_roadiz.no_release_available</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.no_archive_to_download">
+          <source>cannot_update_roadiz.no_archive_to_download</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.temp_archive_does_not_exist">
+          <source>cannot_update_roadiz.temp_archive_does_not_exist</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_open_archive">
+          <source>cannot_update_roadiz.cant_open_archive</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.cant_create_temp_dir">
+          <source>cannot_update_roadiz.cant_create_temp_dir</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_does_not_exist">
+          <source>cannot_update_roadiz.destination_folder_does_not_exist</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="cannot_update_roadiz.destination_folder_is_not_writable">
+          <source>cannot_update_roadiz.destination_folder_is_not_writable</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists">
+          <source>nodeName.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias">
+          <source>nodeName.alreadyExists.as.urlAlias</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.available">
+          <source>new.version.available</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrder">
+          <source>node.childrenOrder</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
+          <source>node.childrenOrderDirection</source>
+          <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="node.ttl">
+          <source>node.ttl</source>
+            <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="node_time_to_live_cache_on_front_controller">
+          <source>node_time_to_live_cache_on_front_controller</source>
+            <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="createdAt">
+          <source>createdAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="updatedAt">
+          <source>updatedAt</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ascendant">
+          <source>ascendant</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="descendant">
+          <source>descendant</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="email.alreadyExists">
+          <source>email.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="username.alreadyExists">
+          <source>username.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.alreadyExists">
+          <source>tagName.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.%name%.alreadyExists">
+          <source>tagName.%name%.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
+          <source>nodeTypeField.name.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.name.alreadyExists">
+          <source>nodeType.name.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="color.should.be.formatted.in.hexadecimal">
+          <source>color.should.be.formatted.in.hexadecimal</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customFormField.name.alreadyExists">
+          <source>customFormField.name.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.name.alreadyExists">
+          <source>customForm.name.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="ip">
+          <source>ip</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.variant.alreadyExists">
+          <source>font.variant.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file">
+          <source>file.is_not_a.valid.font.file</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="folder.%name%.updated">
+          <source>folder.%name%.updated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.alreadyExists">
+          <source>folder.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.%name%.deleted">
+          <source>folder.%name%.deleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no.folder.found">
+          <source>no.folder.found</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.does_not_exist">
+          <source>folder.does_not_exist</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="pinterest_url">
+          <source>pinterest_url</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="use_cdn">
+          <source>use_cdn</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale">
+          <source>force_locale</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSourcesUrlsCache">
+          <source>nodeSourcesUrlsCache</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.locale.alreadyExists">
+          <source>translation.locale.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translation.override_locale.alreadyExists">
+          <source>translation.override_locale.alreadyExists</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="overrideLocale">
+          <source>overrideLocale</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="keep_me_logged_in">
+          <source>keep_me_logged_in</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unused_documents">
+          <source>unused_documents</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.offspring.published">
+          <source>node.offspring.published</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
+          <source>are_you_sure.publish.node.offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
+          <source>publish.node.%name%.offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
+          <source>publish_node_offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish-all">
+          <source>publish-all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="groupName">
+          <source>groupName</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.does_not_exist">
+          <source>embedId.does_not_exist</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_needs_a_key">
+          <source>YoutubeEmbedFinder needs a Google server key.</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user_details.%name%">
+          <source>edit.user_details.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.edit_details">
+          <source>user.edit_details</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_valid_class_found">
+          <source>no_valid_class_found</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.custom.form.%name%">
+          <source>duplicated.custom.form.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.custom.form.%name%">
+          <source>impossible.duplicate.custom.form.%name%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.duplicate">
+          <source>customForm.duplicate</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype">
+          <source>transtype</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.node">
+          <source>transtype.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype_will_copy_data_from_fields_existing_in_both_types_not_others">
+          <source>transtype_will_copy_data_from_fields_existing_in_both_types_not_others</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.a.node">
+          <source>transtype.a.node</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%node%.transtyped_to.%type%">
+          <source>%node%.transtyped_to.%type%</source>
+          <target></target>
+      </trans-unit>
+      <!-- Tag multiple children creation -->
+      <trans-unit xml:space="preserve" id="add_all">
+          <source>add_all</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.multiple.tags">
+          <source>add.multiple.tags</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="write.every.tags.names.comma.separated">
+          <source>write.every.tags.names.comma.separated</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.names">
+          <source>tags.names</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.tags">
+          <source>add.tags</source>
+          <target></target>
+      </trans-unit>
+
+      <!-- Raw documents -->
+      <trans-unit xml:space="preserve" id="download.raw.document">
+          <source>download.raw.document</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.raw_document">
+          <source>document.raw_document</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="export_format.rzn">
+          <source>export_format.rzn</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.excel.%language%">
+          <source>export_format.excel.%language%</source>
+          <target></target>
+      </trans-unit>
+
+      <!-- Bulk tags -->
+      <trans-unit xml:space="preserve" id="delete.tags">
+          <source>delete.tags</source>
+          <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="are_you_sure.delete.these.tags">
+          <source>are_you_sure.delete.these.tags</source>
+          <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="bulk.delete.tags">
+          <source>bulk.delete.tags</source>
+          <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="tags.bulk.deleted">
+          <source>tags.bulk.deleted</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="tag.childrenOrder">
+          <source>tag.childrenOrder</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
+          <source>tag.childrenOrderDirection</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%">
+          <source>node.%name%.status_changed_to.%status%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%">
+          <source>node.%name%.visibility_changed_to.%visible%</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
+          <source>stack_type.%type%.has_been_removed.%name%</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
+          <source>form_has_errors.check_you_fields</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="no_more_translation_available">
+          <source>no_more_translation_available</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translate_offspring">
+          <source>translate_offspring</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.undeleted">
+          <source>node.%name%.undeleted</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal">
+          <source>universal</source>
+          <target></target>
+          <note>Universal node-type fields are common over translations.</note>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="value_is_not_a_valid_filename">
+          <source>value_is_not_a_valid_filename</source>
+          <target></target>
+          <note>In document edit page when you rename your file without file extension.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="filename.alreadyExists">
+          <source>filename.alreadyExists</source>
+          <target></target>
+          <note>In document edit page when you rename your file but filename already exists in folder.</note>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="classname">
+          <source>classname</source>
+          <target></target>
+          <note>In node-type edit page, label for the current node-type class name..</note>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="node-type.parameters">
+          <source>node-type.parameters</source>
+          <target></target>
+          <note>In node-type section, label for the parameters section.</note>
+      </trans-unit>
+      <!-- Custom form nav bar -->
+      <trans-unit xml:space="preserve" id="custom-form.parameters">
+          <source>custom-form.parameters</source>
+          <target></target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.fields">
+          <source>custom-form.fields</source>
+          <target></target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.answers">
+          <source>custom-form.answers</source>
+          <target></target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="markdown.preview">
+          <source>markdown.preview</source>
+          <target></target>
+          <note>For markdown.preview button label</note>
+      </trans-unit>
+
+
+      <trans-unit xml:space="preserve" id="document.relative_url">
+        <source>document.relative_url</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.absolute_url">
+        <source>document.absolute_url</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.unprocessed_url">
+        <source>document.unprocessed_url</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.source_url">
+        <source>document.source_url</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.width">
+        <source>document.width</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.height">
+        <source>document.height</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.filesize">
+        <source>document.filesize</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.duration">
+        <source>document.duration</source>
+        <target></target>
+        <note>Label for timed documents duration (in seconds)</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.media_not_found_or_private">
+        <source>document.media_not_found_or_private</source>
+        <target></target>
+        <note>Error message when external media request fails with NotFound response.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.is_only_external">
+        <source>document.is_only_external</source>
+        <target></target>
+        <note>Warning message displayed when document does not have any file locally.</note>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="reachable">
+        <source>reachable</source>
+        <target></target>
+        <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.type">
+        <source>yaml.type</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="manage.redirections">
+        <source>manage.redirections</source>
+        <target></target>
+        <note>Redirection section button label</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.redirection">
+        <source>delete.redirection</source>
+        <target></target>
+        <note>Delete redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.redirection">
+        <source>are_you_sure.delete.redirection</source>
+        <target></target>
+        <note>Delete redirection page confirmation message</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.redirection">
+        <source>add.a.redirection</source>
+        <target></target>
+        <note>Add redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.redirections">
+        <source>back_to.redirections</source>
+        <target></target>
+        <note>Back button label for redirections</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.redirection">
+        <source>edit.redirection</source>
+        <target></target>
+        <note>Edit redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.query">
+        <source>redirection.query</source>
+        <target></target>
+        <note>Redirection field which stands for the query: the URL to listen for a redirection</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.redirect_uri">
+        <source>redirection.redirect_uri</source>
+        <target></target>
+        <note>Redirection field which stands for the redirect URI: the destination URI</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.type">
+        <source>redirection.type</source>
+        <target></target>
+        <note>Redirection field which stands for HTTP code: 301 or 302</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_permanently">
+        <source>redirection.moved_permanently</source>
+        <target></target>
+        <note>Redirection type description for 301 Moved Permanently</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_temporarily">
+        <source>redirection.moved_temporarily</source>
+        <target></target>
+        <note>Redirection type description for 302 Moved Temporarily</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="login_image">
+        <source>login_image</source>
+        <target></target>
+        <note>Global parameter to customize login screen background image</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishedAt">
+        <source>publishedAt</source>
+        <target></target>
+        <note>Field label for node-source publication date and time.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishable">
+        <source>publishable</source>
+        <target></target>
+        <note>Field label for node-type publishable status.</note>
+      </trans-unit>
+
+      <!-- Node form help messages -->
+      <trans-unit xml:space="preserve" id="this_node_type_will_be_available_for_creating_root_nodes">
+        <source>this_node_type_will_be_available_for_creating_root_nodes</source>
+        <target></target>
+        <note>Help message to explain node-type "visible" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="enables_published_at_field_for_time_based_publication">
+        <source>enables_published_at_field_for_time_based_publication</source>
+        <target></target>
+        <note>Help message to explain node-type "publishedAt" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="mark_this_typed_nodes_as_reachable_with_an_url">
+        <source>mark_this_typed_nodes_as_reachable_with_an_url</source>
+        <target></target>
+        <note>Help message to explain node-type "reachable" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="this_node_type_will_hide_all_children_nodes">
+        <source>this_node_type_will_hide_all_children_nodes</source>
+        <target></target>
+        <note>Help message to explain node-type "hiding_nodes" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="dynamic_node_name_will_follow_any_title_change_on_default_translation">
+        <source>dynamic_node_name_will_follow_any_title_change_on_default_translation</source>
+        <target></target>
+        <note>Help message to explain node dynamic-node-name field.</note>
+      </trans-unit>
+
+      <!-- Font form help messages -->
+      <trans-unit xml:space="preserve" id="font_name_should_be_the_same_for_all_variants">
+        <source>font_name_should_be_the_same_for_all_variants</source>
+        <target></target>
+        <note>Help message to explain font name field should be the same over all variants.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css_font_family_hash_is_automatically_generated_from_font_name">
+        <source>css_font_family_hash_is_automatically_generated_from_font_name</source>
+        <target></target>
+        <note>Help message to explain font css family field will be automatically generated from font name, it should be the same for all variants.</note>
+      </trans-unit>
+
+      <!-- Node type field form help messages -->
+      <trans-unit xml:space="preserve" id="technical_name_for_database_and_templating">
+        <source>technical_name_for_database_and_templating</source>
+        <target></target>
+        <note>Help message to explain node-type-field name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="human_readable_field_name">
+        <source>human_readable_field_name</source>
+        <target></target>
+        <note>Help message to explain node-type-field label.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="use_the_same_group_names_over_fields_to_gather_them_in_tabs">
+        <source>use_the_same_group_names_over_fields_to_gather_them_in_tabs</source>
+        <target></target>
+        <note>Help message to explain node-type-field group name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice">
+        <source>disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice</source>
+        <target></target>
+        <note>Help message to explain node-type-field visible switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field_should_be_indexed_if_you_plan_to_query_or_order_by_it">
+        <source>field_should_be_indexed_if_you_plan_to_query_or_order_by_it</source>
+        <target></target>
+        <note>Help message to explain node-type-field indexed switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal_fields_will_be_only_editable_from_default_translation">
+        <source>universal_fields_will_be_only_editable_from_default_translation</source>
+        <target></target>
+        <note>Help message to explain node-type-field universal switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="for_children_node_and_node_references_enter_node_type_names_comma_separated">
+        <source>for_children_node_and_node_references_enter_node_type_names_comma_separated</source>
+        <target></target>
+        <note>Help message to explain node-type-field default values.</note>
+      </trans-unit>
+
+      <!-- Explorer and Widget translation -->
+      <trans-unit xml:space="preserve" id="document">
+        <source>document</source>
+        <target></target>
+        <note>Document label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item">
+        <source>item</source>
+        <target></target>
+        <note>Item label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="items">
+        <source>items</source>
+        <target></target>
+        <note>Items label in explorer panel.</note>
+      </trans-unit>
+
+          <!-- New Join node-type-field type -->
+        <trans-unit xml:space="preserve" id="join.toggle-explorer">
+            <source>join.toggle-explorer</source>
+            <target></target>
+            <note>Button label for join type explorer</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="many-to-many.type">
+            <source>many-to-many.type</source>
+            <target></target>
+            <note>Node-type field type for Doctrine Many-to-many relationship</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="many-to-one.type">
+            <source>many-to-one.type</source>
+            <target></target>
+            <note>Node-type field type for Doctrine Many-to-one relationship</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
+            <source>default_values_do_not_match_field_type</source>
+            <target></target>
+            <note>Validator message: when default value is not correct for choosen type</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
+            <source>default_values_should_not_be_empty_for_this_type</source>
+            <target></target>
+            <note>Validator message: when default value is empty and it should not</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
+            <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
+            <target></target>
+            <note>Validator message: when default value is not a valid YAML text</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_does_not_exist">
+            <source>classname_%classname%_does_not_exist</source>
+            <target></target>
+            <note>Validator message: when provided classname does not exist.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
+            <source>classname_%classname%_must_extend_abstract_entity_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
+            <source>classname_%classname%_does_not_declare_%method%_method</source>
+            <target></target>
+            <note>Validator message: when provided classname does not declare provided method.</note>
+        </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="more.entities">
+            <source>more.entities</source>
+            <target></target>
+            <note>Explorer more button label for entities.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
+            <source>drawer.sortable-not-enable</source>
+            <target></target>
+            <note>Message info when the sortable drawer option is disable.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="explorer.create_tag">
+            <source>explorer.create_tag</source>
+            <target></target>
+            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="min">
+            <source>min</source>
+            <target></target>
+            <note>Drawer message: when a minimum length is provided.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="document.adjust">
+            <source>document.adjust</source>
+            <target></target>
+            <note>Document navbar link text for document adjust page.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="blanchetteEditor">
+            <source>blanchetteEditor</source>
+            <target></target>
+            <note>Blanchette Editorpage title</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.free">
+            <source>blanchetteEditor.free</source>
+            <target></target>
+            <note>Blanchette Editor message button label: free aspect ratio</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.move">
+            <source>blanchetteEditor.move</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
+            <source>blanchetteEditor.crop</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
+            <source>blanchetteEditor.zoomIn</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
+            <source>blanchetteEditor.zoomOut</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
+            <source>blanchetteEditor.rotateLeft</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
+            <source>blanchetteEditor.rotateRight</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
+            <source>blanchetteEditor.flipHorizontal</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
+            <source>blanchetteEditor.flipVertical</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.applyChange">
+            <source>blanchetteEditor.applyChange</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.undo">
+            <source>blanchetteEditor.undo</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.aspectRatio">
+            <source>blanchetteEditor.aspectRatio</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.saveAndOverwrite">
+            <source>blanchetteEditor.saveAndOverwrite</source>
+            <target></target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="blanchetteEditor.other">
+            <source>blanchetteEditor.other</source>
+            <target></target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.portrait">
+            <source>blanchetteEditor.portrait</source>
+            <target></target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="blanchetteEditor.landscape">
+            <source>blanchetteEditor.landscape</source>
+            <target></target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
+            <source>make_this_field_mandatory_for_users</source>
+            <target></target>
+            <note>Form field description for Required switch</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="expanded">
+            <source>expanded</source>
+            <target></target>
+            <note>Form field label for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="use_checkboxes_or_radio_buttons_instead_of_select_box">
+            <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
+            <target></target>
+            <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="placeholder">
+            <source>placeholder</source>
+            <target></target>
+            <note>Label for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="label_for_field_with_empty_data">
+            <source>label_for_field_with_empty_data</source>
+            <target></target>
+            <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="session.expire.title">
+            <source>session.expire.title</source>
+            <target></target>
+            <note>Title for login check warning "modal".</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="session.expire.content">
+            <source>session.expire.content</source>
+            <target></target>
+            <note>Description for login check warning "modal".</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="single-provider.type">
+            <source>single-provider.type</source>
+            <target></target>
+            <note>Node-type field type for Provider manual many-to-one relationship.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="multiple-provider.type">
+            <source>multiple-provider.type</source>
+            <target></target>
+            <note>Node-type field type for Provider manual many-to-many relationship.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="pictureUrl">
+            <source>pictureUrl</source>
+            <target></target>
+            <note>User detail form field label for user portrait picture.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="user.backoffice.language">
+            <source>user.backoffice.language</source>
+            <target></target>
+            <note>User detail form field label for user backoffice language.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="use.website.default_language">
+            <source>use.website.default_language</source>
+            <target></target>
+            <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target></target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target></target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target></target>
+            <note>Preview mode label on warning sign.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="current.document.file.does.not.exist">
+            <source>current.document.file.does.not.exist</source>
+            <target></target>
+            <note>When a document does not have any file attached.</note>
+        </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="google_tag_manager_id">
+            <source>google_tag_manager_id</source>
+            <target></target>
+            <note>Google Tag Manager setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="leaflet_map_tile_url">
+            <source>leaflet_map_tile_url</source>
+            <target></target>
+            <note>Leaflet Map tile URL setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_access_token">
+            <source>twitter_access_token</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_access_token_secret">
+            <source>twitter_access_token_secret</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="instagram_access_token">
+            <source>instagram_access_token</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_consumer_key">
+            <source>twitter_consumer_key</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_consumer_secret">
+            <source>twitter_consumer_secret</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="document.mimeType">
+            <source>document.mimeType</source>
+            <target></target>
+            <note>Document form</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.embed">
+            <source>document.embed</source>
+            <target></target>
+            <note>Document form</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.no_embed_platform">
+            <source>document.no_embed_platform</source>
+            <target></target>
+            <note>Document form</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="versions">
+            <source>versions</source>
+            <target></target>
+            <note>Version management</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.working_copy">
+            <source>versions.working_copy</source>
+            <target></target>
+            <note>Version management : latest version aka working copy</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.viewing_a_previous_version">
+            <source>versions.viewing_a_previous_version</source>
+            <target></target>
+            <note>Version management : Disclaimer that user is viewing a previous version</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.revert_to_this_version">
+            <source>versions.revert_to_this_version</source>
+            <target></target>
+            <note>Version management : Button label to revert to current viewing version</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="max_versions_showed">
+            <source>max_versions_showed</source>
+            <target></target>
+            <note>Version management : setting label to choose how many version to display in action-menu</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.back_to_working_copy">
+            <source>versions.back_to_working_copy</source>
+            <target></target>
+            <note>Version management : Button label to go back to working copy</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="encrypted">
+            <source>encrypted</source>
+            <target></target>
+            <note>Settings : defines if setting value will be encrypted in database.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="original.document">
+            <source>original.document</source>
+            <target></target>
+            <note>Document : Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="see.original.document">
+            <source>see.original.document</source>
+            <target></target>
+            <note>Document : Button Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="document.thumbnails">
+            <source>document.thumbnails</source>
+            <target></target>
+            <note>Document : Input Label to display thumbnail documents when dealing with original.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="excludeFromSearch">
+            <source>excludeFromSearch</source>
+            <target></target>
+            <note>Node type field : Input Label.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="export.documentation">
+            <source>export.documentation</source>
+            <target></target>
+            <note>Button label, for exporting node-type Markdown documentation</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="export.typescript_declaration">
+            <source>export.typescript_declaration</source>
+            <target></target>
+            <note>Button label, for exporting node-types into a TypeScript declaration file.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="hide_roadiz_version">
+            <source>hide_roadiz_version</source>
+            <target></target>
+            <note>Setting</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="exact_search">
+            <source>exact_search</source>
+            <target></target>
+            <note>Node search page, search exact query</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="login_with_openid">
+            <source>login_with_openid</source>
+            <target></target>
+            <note>Default login button label for OpenID</note>
+        </trans-unit>
+
+        <trans-unit id="filter">
+            <source>filter</source>
+            <target></target>
+            <note>Button label for a generic filtering action.</note>
+        </trans-unit>
+
+        <trans-unit id="%namespace%.%item%.was_created">
+            <source>%namespace%.%item%.was_created</source>
+            <target></target>
+            <note>Default controller addAction result message.</note>
+        </trans-unit>
+        <trans-unit id="%namespace%.%item%.was_updated">
+            <source>%namespace%.%item%.was_updated</source>
+            <target></target>
+            <note>Default controller editAction result message.</note>
+        </trans-unit>
+        <trans-unit id="%namespace%.%item%.was_deleted">
+            <source>%namespace%.%item%.was_deleted</source>
+            <target></target>
+            <note>Default controller deleteAction result message.</note>
+        </trans-unit>
+
+        <trans-unit id="document.document_display_gallery">
+            <source>document.document_display_gallery</source>
+            <target></target>
+            <note></note>
+        </trans-unit>
+        <trans-unit id="documents.document_display_list">
+            <source>documents.document_display_list</source>
+            <target></target>
+            <note></note>
+        </trans-unit>
+    </body>
+  </file>
+</xliff>
