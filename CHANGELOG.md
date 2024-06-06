@@ -1,3 +1,10 @@
+## [v1.7.38](https://github.com/roadiz/roadiz/compare/v1.7.37...v1.7.38) (2024-06-06)
+
+
+### Bug Fixes
+
+* **Solr:** Do not prevent saving content when Solr is not available. ([00ed57e](https://github.com/roadiz/roadiz/commit/00ed57ef06b5b22e16f7abaf83de5e5233399074))
+
 ## [v1.7.37](https://github.com/roadiz/roadiz/compare/v1.7.36...v1.7.37) (2023-11-11)
 
 
