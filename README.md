@@ -1,10 +1,10 @@
-# Roadiz CMS
+# Roadiz CMS v1.x
 
-[![Build Status](https://travis-ci.org/roadiz/roadiz.svg?branch=master)](https://travis-ci.org/roadiz/roadiz)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/roadiz/roadiz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/roadiz/roadiz/?branch=master)
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/roadiz-cms/localized.png)](https://crowdin.com/project/roadiz-cms) 
+**This is Roadiz CMS Legacy version 1.x.** This repository is no longer maintained and only receives security updates.
+
+See [Roadiz CMS v2.x development monorepo](https://github.com/roadiz/core-bundle-dev-app) for the latest version.
+
 ![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)
-[![Join the chat at https://gitter.im/roadiz/roadiz](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/roadiz/roadiz?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Roadiz is a modern CMS based on a polymorphic content-schema system which can handle many types of services.
 Its back-office has been developed with a high sense of design and user experience.
