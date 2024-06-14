@@ -1,0 +1,235 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file original="" source-language="en-US" datatype="plaintext">
+        <body>
+            <trans-unit xml:space="preserve" id="force_locale.description">
+                <source>Force displaying translation locale in every node’ paths. This should be ON if you redirect users based on their language on homepage.</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="email_sender.description">
+                <source>Default sender email, used as origin for every system email sent. This email **must be allowed by your SMTP server.**</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="leaflet_map_tile_url.description">
+                <source>Default maps tiles layout when using *Leaflet*.</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="login_image.description">
+                <source>Replace random *Splashbase* login images with your own.</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="maintenance_mode.description">
+                <source>Switch maintenance mode. Only login page will be available for public requests.</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="maps_default_location.description">
+                <source>Default maps marker location.</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="maps_style.description">
+                <source>Default maps tiles layout when using *Google Maps*.</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="max_versions_showed.description">
+                <source>Maximum versions count showed in actions menu.</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="hide_roadiz_version.help">
+                <source>hide_roadiz_version.help</source>
+                <target></target>
+                <note>Setting</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="force_locale_with_urlaliases">
+                <source>force_locale_with_urlaliases</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="force_locale_with_urlaliases.help">
+                <source>force_locale_with_urlaliases.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="use_native_json">
+                <source>use_native_json</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="use_native_json.help">
+                <source>Use MySQL 5.7+ JSON field type.</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_id">
+                <source>oauth_client_id</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_id.help">
+                <source>oauth_client_id.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_secret">
+                <source>oauth_client_secret</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_secret.help">
+                <source>oauth_client_secret.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_hd">
+                <source>openid_hd</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_hd.help">
+                <source>openid_hd.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_button_label">
+                <source>openid_button_label</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_button_label.help">
+                <source>openid_button_label.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_discovery">
+                <source>openid_discovery</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_discovery.help">
+                <source>openid_discovery.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_default_roles">
+                <source>openid_default_roles</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_default_roles.help">
+                <source>openid_default_roles.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="openid_scopes">
+                <source>openid_scopes</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_scopes.help">
+                <source>openid_scopes.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="custom_preview_scheme">
+                <source>custom_preview_scheme</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="custom_preview_scheme.help">
+                <source>custom_preview_scheme.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="custom_public_scheme">
+                <source>custom_public_scheme</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="custom_public_scheme.help">
+                <source>custom_public_scheme.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="use_typed_node_names">
+                <source>use_typed_node_names</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="use_typed_node_names.help">
+                <source>use_typed_node_names.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="openid_username_claim">
+                <source>openid_username_claim</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_username_claim.help">
+                <source>openid_username_claim.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <!-- Setting groups names -->
+            <trans-unit xml:space="preserve" id="APIs">
+                <source>APIs</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Development">
+                <source>Development</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Emailings">
+                <source>Emailings</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="OpenId">
+                <source>OpenId</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Site informations">
+                <source>Site informations</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Site information">
+                <source>Site information</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Social networks">
+                <source>Social networks</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="dashboard_iframe">
+                <source>dashboard_iframe</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="dashboard_iframe.help">
+                <source>dashboard_iframe.help</source>
+                <target></target>
+                <note>Setting help name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="unsplash_client_id">
+                <source>unsplash_client_id</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="unsplash_client_id.help">
+                <source>unsplash_client_id.help</source>
+                <target></target>
+                <note>Setting help name</note>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
