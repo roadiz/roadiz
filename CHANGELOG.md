@@ -1,3 +1,10 @@
+## [v1.7.39](https://github.com/roadiz/roadiz/compare/v1.7.38...v1.7.39) (2024-07-10)
+
+
+### Bug Fixes
+
+* Fixed Roadiz with no solr configured or no async messenger handling ([acf92d4](https://github.com/roadiz/roadiz/commit/acf92d46c51b60b1b01d38a0dc69a3c4fb7e74bb))
+
 ## [v1.7.38](https://github.com/roadiz/roadiz/compare/v1.7.37...v1.7.38) (2024-06-06)
 
 
