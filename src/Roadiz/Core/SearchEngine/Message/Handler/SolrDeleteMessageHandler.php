@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine\Message\Handler;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use RZ\Roadiz\Core\SearchEngine\Indexer\IndexerFactory;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
-use RZ\Roadiz\Core\SearchEngine\Message\SolrReindexMessage;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Core\SearchEngine\Indexer\IndexerFactory;
+use RZ\Roadiz\Core\SearchEngine\Message\AbstractSolrMessage;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 final class SolrDeleteMessageHandler implements MessageHandlerInterface
@@ -25,14 +28,21 @@ final class SolrDeleteMessageHandler implements MessageHandlerInterface
         $this->indexerFactory = $indexerFactory;
     }
 
-    public function __invoke(SolrReindexMessage $message)
+    public function __invoke(AbstractSolrMessage $message)
     {
+        if (null === $message->getIdentifier()) {
+            return;
+        }
         try {
             $this->indexerFactory->getIndexerFor($message->getClassname())->delete($message->getIdentifier());
+        } catch (SolrServerNotConfiguredException $exception) {
+            // do nothing
         } catch (SolrServerNotAvailableException $exception) {
             $this->logger->info($exception);
         } catch (\LogicException $exception) {
             $this->logger->error($exception);
+        } catch (ContainerExceptionInterface $e) {
+            $this->logger->error($e);
         }
     }
 }

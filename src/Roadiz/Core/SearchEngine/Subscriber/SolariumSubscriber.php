@@ -79,7 +79,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumNodeWorkflowComplete(Event $event): void
     {
         $node = $event->getSubject();
-        if ($node instanceof Node) {
+        if ($node instanceof Node && null !== $node->getId()) {
             $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Node::class, $node->getId())));
         }
     }
@@ -93,7 +93,10 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumSingleUpdate(NodesSourcesUpdatedEvent $event)
     {
-        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(NodesSources::class, $event->getNodeSource()->getId())));
+        $id = $event->getNodeSource()->getId();
+        if (null !== $id) {
+            $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(NodesSources::class, $id)));
+        }
     }
 
     /**
@@ -103,7 +106,10 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumSingleDelete(NodesSourcesDeletedEvent $event)
     {
-        $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(NodesSources::class, $event->getNodeSource()->getId())));
+        $id = $event->getNodeSource()->getId();
+        if (null !== $id) {
+            $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(NodesSources::class, $id)));
+        }
     }
 
     /**
@@ -113,7 +119,10 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumNodeDelete(NodeDeletedEvent $event)
     {
-        $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(Node::class, $event->getNode()->getId())));
+        $id = $event->getNode()->getId();
+        if (null !== $id) {
+            $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(Node::class, $id)));
+        }
     }
 
     /**
@@ -125,7 +134,10 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumNodeUpdate(FilterNodeEvent $event)
     {
-        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Node::class, $event->getNode()->getId())));
+        $id = $event->getNode()->getId();
+        if (null !== $id) {
+            $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Node::class, $id)));
+        }
     }
 
 
@@ -137,7 +149,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumDocumentDelete(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
-        if ($document instanceof Document) {
+        if ($document instanceof Document && null !== $document->getId()) {
             $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(Document::class, $document->getId())));
         }
     }
@@ -152,7 +164,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumDocumentUpdate(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
-        if ($document instanceof Document) {
+        if ($document instanceof Document && null !== $document->getId()) {
             $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Document::class, $document->getId())));
         }
     }
@@ -167,7 +179,10 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumTagUpdate(TagUpdatedEvent $event)
     {
-        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Tag::class, $event->getTag()->getId())));
+        $id = $event->getTag()->getId();
+        if (null !== $id) {
+            $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Tag::class, $id)));
+        }
     }
 
     /**
@@ -180,6 +195,9 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumFolderUpdate(FolderUpdatedEvent $event)
     {
-        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Folder::class, $event->getFolder()->getId())));
+        $id = $event->getFolder()->getId();
+        if (null !== $id) {
+            $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Folder::class, $id)));
+        }
     }
 }
