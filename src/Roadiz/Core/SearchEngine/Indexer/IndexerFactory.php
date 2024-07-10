@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\SearchEngine\Indexer;
 
 use LogicException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Node;
@@ -26,6 +28,8 @@ class IndexerFactory
     /**
      * @param class-string $classname
      * @return Indexer
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getIndexerFor(string $classname): Indexer
     {
