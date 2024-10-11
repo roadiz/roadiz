@@ -1,3 +1,10 @@
+## [v1.7.40](https://github.com/roadiz/roadiz/compare/v1.7.39...v1.7.40) (2024-10-11)
+
+
+### Bug Fixes
+
+* Do not throw exception on bad page and itemPerPage argument, just use defaults fix roadiz/core-bundle-dev-app[#20](https://github.com/roadiz/roadiz/issues/20) ([f0bb105](https://github.com/roadiz/roadiz/commit/f0bb1056c6c573851b547ffa127c83b3b1b9b708))
+
 ## [v1.7.39](https://github.com/roadiz/roadiz/compare/v1.7.38...v1.7.39) (2024-07-10)
 
 
