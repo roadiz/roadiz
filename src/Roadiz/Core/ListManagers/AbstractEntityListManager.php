@@ -89,10 +89,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
      */
     public function setPage(int $page)
     {
-        if ($page < 1) {
-            throw new \RuntimeException("Page cannot be lesser than 1.", 1);
-        }
-        $this->currentPage = (int) $page;
+        $this->currentPage = $page > 0 ? $page : 1;
 
         return $this;
     }
@@ -196,11 +193,7 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
      */
     public function setItemPerPage(int $itemPerPage)
     {
-        if ($itemPerPage < 1) {
-            throw new \RuntimeException("Item count per page cannot be lesser than 1.", 1);
-        }
-
-        $this->itemPerPage = (int) $itemPerPage;
+        $this->itemPerPage = $itemPerPage > 0 ? $itemPerPage : 1;
 
         return $this;
     }
