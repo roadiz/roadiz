@@ -57,6 +57,7 @@ class CachableResponseSubscriber implements EventSubscriberInterface
         $response->setPublic();
         $response->setSharedMaxAge(60 * $this->minutes);
         $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->headers->addCacheControlDirective('stale-while-revalidate', 30);
 
         if ($this->allowClientCache) {
             $response->setMaxAge(60 * $this->minutes);
