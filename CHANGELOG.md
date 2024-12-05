@@ -1,3 +1,10 @@
+## [v1.7.41](https://github.com/roadiz/roadiz/compare/v1.7.40...v1.7.41) (2024-12-05)
+
+
+### Features
+
+* Added default `stale-while-revalidate` cache control directive when public response ([e2ad42f](https://github.com/roadiz/roadiz/commit/e2ad42f1f1d2317e764b471f76cb04cddc2024e1))
+
 ## [v1.7.40](https://github.com/roadiz/roadiz/compare/v1.7.39...v1.7.40) (2024-10-11)
 
 
