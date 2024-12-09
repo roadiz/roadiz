@@ -2,79 +2,87 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="" source-language="en" datatype="plaintext" target-language="de">
     <body>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-            
-            
-
-            
-            
-            
-            
-            
-            
-            
-        </body>
+      <trans-unit xml:space="preserve" id="manage.attributes">
+                <source>manage.attributes</source>
+                <target state="translated">verwalten.attribute</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes">
+                <source>attributes</source>
+                <target state="translated">attribute</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.code">
+                <source>attributes.code</source>
+                <target state="translated">attribute.code</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute">
+                <source>add.a.attribute</source>
+                <target state="translated">hinzufügen.attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.code">
+                <source>attributes.form.code</source>
+                <target state="translated">attribute.von.quelle</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.attributeTranslations">
+                <source>attributes.form.attributeTranslations</source>
+                <target state="translated">attribute.von.attributÜbersetztung</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.options">
+                <source>attributes.form.options</source>
+                <target state="translated">attribute.von.einstellungen</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.attribute.%name%">
+                <source>edit.attribute.%name%</source>
+                <target state="translated">bearbeiten.attribut.%name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.attributes">
+                <source>back_to.attributes</source>
+                <target state="translated">zurück_zu.attribute</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_values.form.attribute">
+                <source>attribute_values.form.attribute</source>
+                <target state="translated">attribut_werte.von.attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new_attribute">
+                <source>new_attribute</source>
+                <target state="translated">neues_attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.no_value">
+                <source>attributes.no_value</source>
+                <target state="translated">attribute.ohne_wert</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.created">
+                <source>attribute.%name%.created</source>
+                <target state="translated">attribut.%name%.erstellt</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.updated">
+                <source>attribute.%name%.updated</source>
+                <target state="translated">attribut.%name%.aktualisiert</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.deleted">
+                <source>attribute.%name%.deleted</source>
+                <target state="translated">attribut.%name%.entfernt</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.value">
+                <source>attributes.value</source>
+                <target state="translated">attribute.wert</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.group">
+                <source>attributes.group</source>
+                <target state="translated">attribute.gruppe</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
+                <source>are_you_sure.delete.attribute</source>
+                <target state="translated">bist_du_sicher.löschen.attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute.%name%">
+                <source>delete.attribute.%name%</source>
+                <target state="translated">löschen.attribut.%name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_code.must_contain_alpha_underscore">
+                <source>attribute_code.must_contain_alpha_underscore</source>
+                <target state="translated">attribut_code.muss_buchstaben_oder_unterstrich_enthalten</target>
+                <note>Validation failed message on Attribute code that must only contain alpha and underscore characters.</note>
+            </trans-unit>
+    </body>
   </file>
 </xliff>
