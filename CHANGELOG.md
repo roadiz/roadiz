@@ -1,3 +1,10 @@
+## [v1.7.42](https://github.com/roadiz/roadiz/compare/v1.7.41...v1.7.42) (2025-01-16)
+
+
+### Features
+
+* Added NodeExplorerListEvent event to alter NodeExplorer list-manager filtering and sorting ([65d030d](https://github.com/roadiz/roadiz/commit/65d030d8293f94be31f34d496b27a85be19ab58a))
+
 ## [v1.7.41](https://github.com/roadiz/roadiz/compare/v1.7.40...v1.7.41) (2024-12-05)
 
 
