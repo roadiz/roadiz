@@ -2,6 +2,22 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="" source-language="en" datatype="plaintext" target-language="tr">
     <body>
+      <trans-unit xml:space="preserve" id="manage.attributes">
+                <source>manage.attributes</source>
+                <target state="translated">yönetim.öznitelikler</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes">
+                <source>attributes</source>
+                <target state="translated">Öznitelikler</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.code">
+                <source>attributes.code</source>
+                <target state="translated">öznitelikler.kod</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute">
+                <source>add.a.attribute</source>
+                <target state="translated">ekle.bir.öznitelik</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="attributes.form.type.country">
                 <source>attributes.form.type.country</source>
                 <target state="translated">ülke türü özellikler</target>
