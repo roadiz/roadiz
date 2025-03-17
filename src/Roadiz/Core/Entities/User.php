@@ -41,7 +41,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * User Entity.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\UserRepository")
- * @ORM\Table(name="users", indexes={
+ * @ORM\Table(name="`users`", indexes={
  *     @ORM\Index(columns={"enabled"}),
  *     @ORM\Index(columns={"expired"}),
  *     @ORM\Index(columns={"expires_at"}),
@@ -139,7 +139,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     private $rolesNames = null;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", inversedBy="users")
-     * @ORM\JoinTable(name="users_groups",
+     * @ORM\JoinTable(name="`users_groups`",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
      * )
