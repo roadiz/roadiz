@@ -1,0 +1,34 @@
+#!/bin/sh
+set -e
+
+# Print env infos
+echo "APP_ENV=${APP_ENV}";
+echo "APP_RUNTIME_ENV=${APP_RUNTIME_ENV}";
+echo "APP_DEBUG=${APP_DEBUG}";
+
+#
+# Override default entrypoint to add some maintenance and migration commands (PROD)
+# DO NOT CALL THIS SCRIPT FOR WORKERS AND CRON containers (see docker-compose.yml)
+#
+
+# Print local env vars to .env.xxx.php file for performances and crontab jobs
+#/app/bin/roadiz themes:assets:install -n Rozier
+
+# To improve performance (i.e. avoid decrypting secrets at runtime),
+# you can decrypt your secrets during deployment to the "local" vault:
+#APP_RUNTIME_ENV=prod /app/bin/console secrets:decrypt-to-local --force
+
+#
+# Wait for database to be ready for next commands and migrations
+#
+/wait-for-it.sh -t 0 -s ${MYSQL_HOST}:${MYSQL_PORT}
+
+# Clear caches after migrations
+/app/bin/roadiz cache:clear -n
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- php-fpm "$@"
+fi
+
+exec "$@"

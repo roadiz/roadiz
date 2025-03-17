@@ -1,0 +1,53 @@
+name: roadiz022
+services:
+    db:
+        build:
+            target: mysql
+            args:
+                UID: ${UID:-1000}
+        volumes:
+            - "db:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-roadiz}
+            MYSQL_USER: ${MYSQL_USER:-roadiz}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD:-roadiz}
+
+    pma:
+        image: phpmyadmin:5.2.1
+        environment:
+            PMA_HOST: db
+            UPLOAD_LIMIT: 64M
+            PMA_USER: ${MYSQL_USER:-roadiz}
+            PMA_PASSWORD: ${MYSQL_PASSWORD:-roadiz}
+        depends_on:
+            - db
+
+    app: &app_template
+        build:
+            target: php-dev
+            args:
+                UID: ${UID:-1000}
+        depends_on:
+            - db
+        volumes:
+            - ./:/app
+        environment:
+            UID: ${UID:-1000}
+
+    nginx:
+        build:
+            target: nginx-dev
+            args:
+                UID: ${UID:-1000}
+        depends_on:
+            - app
+        volumes:
+            - ./:/app:ro
+
+    mailer:
+        hostname: mailer
+        image: axllent/mailpit
+
+volumes:
+    db:

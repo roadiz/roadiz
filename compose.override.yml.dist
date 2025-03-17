@@ -1,0 +1,16 @@
+services:
+    db:
+        ports:
+            - 33061:3306
+
+    pma:
+        ports:
+            - "8183:80"
+
+    nginx:
+        ports:
+            - "8083:80"
+
+    mailer:
+        ports:
+            - "8025:8025"
