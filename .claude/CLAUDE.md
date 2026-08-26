@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Roadiz CMS **Legacy v1.x** — a PHP CMS built on Symfony 4.4/5.x components + Doctrine ORM. This branch is maintenance-only (security fixes). Active development moved to the v2.x monorepo (`roadiz/core-bundle-dev-app`). PHP `^7.4 || ^8.0`.
+Roadiz CMS **Legacy v1.x** — a PHP CMS built on Symfony 4.4/5.x components + Doctrine ORM. Active development moved to the v2.x monorepo (`roadiz/core-bundle-dev-app`). PHP `^7.4 || ^8.0`.
 
 This is the *sources/development* repo, not a project skeleton — real sites are built from `roadiz/standard-edition`.
 
