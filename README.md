@@ -1,6 +1,6 @@
 # Roadiz CMS v1.x
 
-**This is Roadiz CMS Legacy version 1.x.** This repository is no longer maintained and only receives security updates.
+**This is Roadiz CMS Legacy version 1.x.** This repository is no longer maintained.
 
 See [Roadiz CMS v2.x development monorepo](https://github.com/roadiz/core-bundle-dev-app) for the latest version.
 
