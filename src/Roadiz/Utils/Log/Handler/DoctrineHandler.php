@@ -126,8 +126,7 @@ final class DoctrineHandler extends AbstractProcessingHandler
             /*
              * Use available securityAuthorizationChecker to provide a valid user
              */
-            if (null !== $this->getTokenStorage() &&
-                null !== $token = $this->getTokenStorage()->getToken()) {
+            if (null !== $token = $this->getTokenStorage()->getToken()) {
                 $user = $token->getUser();
                 if (null !== $user && $user instanceof UserInterface) {
                     if ($user instanceof User) {
@@ -149,15 +148,14 @@ final class DoctrineHandler extends AbstractProcessingHandler
             /*
              * Add client IP to log if it’s an HTTP request
              */
-            if (null !== $this->requestStack->getMasterRequest()) {
-                $log->setClientIp($this->requestStack->getMasterRequest()->getClientIp());
+            if (null !== $this->requestStack->getMainRequest()) {
+                $log->setClientIp($this->requestStack->getMainRequest()->getClientIp());
             }
 
             /*
              * Add a related node-source entity
              */
             if (isset($record['context']['source']) &&
-                null !== $record['context']['source'] &&
                 $record['context']['source'] instanceof NodesSources) {
                 $log->setNodeSource($record['context']['source']);
             }

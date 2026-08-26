@@ -122,7 +122,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container['initialized_session'] = function (Container $c) {
             /** @var RequestStack $requestStack */
             $requestStack = $c['requestStack'];
-            $request = $requestStack->getMasterRequest();
+            $request = $requestStack->getMainRequest();
             if (null !== $request && $request->hasSession()) {
                 return $request->getSession();
             }

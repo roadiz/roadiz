@@ -120,3 +120,4 @@ bower_components
 .bower-tmp
 /phpunit.xml
 /compose.override.yml
+.phpactor.json

@@ -122,7 +122,7 @@ final class RoadizManagerRegistry implements ManagerRegistry
     /**
      * @inheritDoc
      */
-    public function getManagerForClass($class)
+    public function getManagerForClass($class): \Doctrine\Persistence\ObjectManager
     {
         return $this->getManager();
     }

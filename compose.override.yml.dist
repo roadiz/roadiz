@@ -1,15 +1,15 @@
 services:
-    db:
-        ports:
-            - "${PUBLIC_DB_PORT}:3306/tcp"
-
-    pma:
-        ports:
-            - ${PUBLIC_PMA_PORT}:80/tcp
+    #db:
+    #    ports:
+    #        - "${PUBLIC_DB_PORT}:3306/tcp"
 
     app:
         ports:
             - ${PUBLIC_APP_PORT}:80/tcp
+
+    pma:
+        ports:
+            - ${PUBLIC_PMA_PORT}:80/tcp
 
     mailer:
         ports:
@@ -22,4 +22,3 @@ services:
     solr:
         ports:
             - "${PUBLIC_SOLR_PORT}:8983/tcp"
-

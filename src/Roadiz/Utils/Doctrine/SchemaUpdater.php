@@ -40,7 +40,6 @@ final class SchemaUpdater
             new OPCacheClearer(),
         ];
 
-        /** @var ClearerInterface $clearer */
         foreach ($clearers as $clearer) {
             $clearer->clear();
         }

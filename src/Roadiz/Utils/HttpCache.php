@@ -48,11 +48,9 @@ abstract class HttpCache extends BaseHttpCache
      */
     protected function forward(Request $request, $catch = false, Response $entry = null): Response
     {
-        if ($this->kernel instanceof Kernel) {
-            $this->kernel->boot();
-            $this->kernel->getContainer()->offsetSet('cache', $this);
-            $this->kernel->getContainer()->offsetSet($this->getSurrogate()->getName(), $this->getSurrogate());
-        }
+        $this->kernel->boot();
+        $this->kernel->getContainer()->offsetSet('cache', $this);
+        $this->kernel->getContainer()->offsetSet($this->getSurrogate()->getName(), $this->getSurrogate());
 
         return parent::forward($request, $catch, $entry);
     }

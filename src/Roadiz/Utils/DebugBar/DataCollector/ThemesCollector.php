@@ -29,7 +29,7 @@ final class ThemesCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
         $data = [
             'list' => []
         ];

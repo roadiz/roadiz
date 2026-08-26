@@ -42,7 +42,7 @@ class TablePrefixSubscriber implements EventSubscriber
         /*
          * Prefix tables
          */
-        if (!empty($this->tablesPrefix) && $this->tablesPrefix !== '') {
+        if (!empty($this->tablesPrefix)) {
             // the $metadata is all the mapping info for this class
             /** @var ClassMetadataInfo $metadata */
             $metadata = $eventArgs->getClassMetadata();

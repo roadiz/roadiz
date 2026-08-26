@@ -58,7 +58,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
     {
         $pimple['emailManager'] = $pimple->factory(function (Container $c) {
             return new EmailManager(
-                $c['requestStack']->getMasterRequest(),
+                $c['requestStack']->getMainRequest(),
                 $c['translator'],
                 $c['twig.environment'],
                 $c['mailer'],
@@ -69,7 +69,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
 
         $pimple['contactFormManager'] = $pimple->factory(function (Container $c) {
             return new ContactFormManager(
-                $c['requestStack']->getMasterRequest(),
+                $c['requestStack']->getMainRequest(),
                 $c['formFactory'],
                 $c['translator'],
                 $c['twig.environment'],

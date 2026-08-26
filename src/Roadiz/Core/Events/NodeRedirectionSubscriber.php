@@ -50,7 +50,6 @@ class NodeRedirectionSubscriber implements EventSubscriberInterface
     {
         if ($this->kernel->isProdMode() &&
             !$this->previewResolver->isPreview() &&
-            null !== $event->getNode() &&
             $event->getNode()->isPublished() &&
             $event->getNode()->getNodeType()->isReachable() &&
             count($event->getPaths()) > 0) {

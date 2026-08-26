@@ -13,8 +13,6 @@ final class NullLoader implements LoaderInterface
      *
      * @param mixed       $resource The resource
      * @param string|null $type The resource type or null if unknown
-     *
-     * @throws \Exception If something went wrong
      */
     public function load($resource, $type = null)
     {

@@ -50,9 +50,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
      */
     public function parseResources(): void
     {
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->start('routeCollection');
-        }
+        $this->stopwatch->start('routeCollection');
 
         $this->getResources();
         if (!$this->locked) {
@@ -74,9 +72,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
             $this->addThemesCollections();
             $this->locked = true;
         }
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->stop('routeCollection');
-        }
+        $this->stopwatch->stop('routeCollection');
     }
 
     protected function addDomainAwareCollection(): void

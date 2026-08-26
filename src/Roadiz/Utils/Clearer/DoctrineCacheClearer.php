@@ -38,8 +38,8 @@ class DoctrineCacheClearer extends Clearer
      */
     public function databaseAvailable(): bool
     {
-        return null !== $this->managerRegistry &&
-            ($this->managerRegistry->getConnection()->isConnected() || $this->managerRegistry->getConnection()->connect());
+        return $this->managerRegistry->getConnection()->isConnected() ||
+            $this->managerRegistry->getConnection()->connect();
     }
 
     /**

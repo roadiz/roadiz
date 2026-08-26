@@ -48,9 +48,7 @@ final class RedirectionMatcher extends UrlMatcher
      */
     public function match($pathinfo)
     {
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->start('findRedirection');
-        }
+        $this->stopwatch->start('findRedirection');
 
         $decodedUrl = rawurldecode($pathinfo);
 
@@ -59,18 +57,14 @@ final class RedirectionMatcher extends UrlMatcher
          */
         if (null !== $redirection = $this->matchRedirection($decodedUrl)) {
             $this->logger->debug('Matched redirection.', ['query' => $redirection->getQuery()]);
-            if (null !== $this->stopwatch) {
-                $this->stopwatch->stop('findRedirection');
-            }
+            $this->stopwatch->stop('findRedirection');
             return [
                 '_controller' => RedirectionController::class . '::redirectAction',
                 'redirection' => $redirection,
                 '_route' => null,
             ];
         }
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->stop('findRedirection');
-        }
+        $this->stopwatch->stop('findRedirection');
 
         throw new ResourceNotFoundException(sprintf('%s did not match any Doctrine Redirection', $pathinfo));
     }

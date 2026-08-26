@@ -7,8 +7,6 @@ services:
             #context: ./docker/mariadb
             args:
                 USER_UID: ${USER_UID}
-        networks:
-            default:
         volumes:
             - "./.data/db_test:/var/lib/mysql"
             - "./docker/mysql/performances.cnf:/etc/mysql/conf.d/performances.cnf"
@@ -32,8 +30,6 @@ services:
             #context: ./docker/mariadb
             args:
                 USER_UID: ${USER_UID}
-        networks:
-            default:
         volumes:
             - "./.data/db:/var/lib/mysql"
             - "./docker/mysql/performances.cnf:/etc/mysql/conf.d/performances.cnf"
@@ -50,27 +46,11 @@ services:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        networks:
-            frontproxynet:
-                aliases:
-                    - ${APP_NAMESPACE}_pma
-            default:
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.${APP_NAMESPACE}_pma.loadbalancer.server.scheme=http"
-            - "traefik.http.services.${APP_NAMESPACE}_pma.loadbalancer.server.port=80"
-            - "traefik.http.services.${APP_NAMESPACE}_pma.loadbalancer.passhostheader=true"
-            # Listen HTTP
-            - "traefik.http.routers.${APP_NAMESPACE}_pma.entrypoints=http"
-            - "traefik.http.routers.${APP_NAMESPACE}_pma.rule=Host(${HOSTNAME_PMA})"
-            - "traefik.http.routers.${APP_NAMESPACE}_pma.service=${APP_NAMESPACE}_pma"
 
     app:
         # Need to pass all vars to docker env for Crontab and supervisor scripts
         env_file: "./.env"
         build:
-            #context: ./docker/php72-nginx-alpine
-            #context: ./docker/php73-nginx-alpine
             #context: ./docker/php74-nginx-alpine
             #context: ./docker/php80-nginx-alpine
             context: ./docker/php81-nginx-alpine
@@ -85,43 +65,14 @@ services:
             - solr:solr
         volumes:
             - ./:/var/www/html
-        networks:
-            frontproxynet:
-                aliases:
-                    - ${APP_NAMESPACE}_app
-            default:
         environment:
             APP_CACHE: ${APP_CACHE}
             TRUSTED_PROXIES: ${TRUSTED_PROXIES}
             USER_UID: ${USER_UID}
             DEFAULT_GATEWAY: ${DEFAULT_GATEWAY}
 
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.${APP_NAMESPACE}.loadbalancer.server.scheme=http"
-            - "traefik.http.services.${APP_NAMESPACE}.loadbalancer.server.port=80"
-            - "traefik.http.services.${APP_NAMESPACE}.loadbalancer.passhostheader=true"
-            # Listen HTTP
-            - "traefik.http.routers.${APP_NAMESPACE}.entrypoints=http"
-            - "traefik.http.routers.${APP_NAMESPACE}.rule=Host(${HOSTNAME})"
-            - "traefik.http.routers.${APP_NAMESPACE}.service=${APP_NAMESPACE}"
-
     mailer:
         image: mailhog/mailhog
-        networks:
-            frontproxynet:
-                aliases:
-                    - ${APP_NAMESPACE}_mailer
-            default:
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.${APP_NAMESPACE}_mailer.loadbalancer.server.scheme=http"
-            - "traefik.http.services.${APP_NAMESPACE}_mailer.loadbalancer.server.port=8025"
-            - "traefik.http.services.${APP_NAMESPACE}_mailer.loadbalancer.passhostheader=true"
-            # Listen HTTP
-            - "traefik.http.routers.${APP_NAMESPACE}_mailer.entrypoints=http"
-            - "traefik.http.routers.${APP_NAMESPACE}_mailer.rule=Host(${HOSTNAME_MAILER})"
-            - "traefik.http.routers.${APP_NAMESPACE}_mailer.service=${APP_NAMESPACE}_mailer"
 
     varnish:
         build:
@@ -131,22 +82,6 @@ services:
             - app
         links:
             - app:app
-        networks:
-            frontproxynet:
-                aliases:
-                    - ${APP_NAMESPACE}_varnish
-            default:
-                aliases:
-                    - varnish
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.${APP_NAMESPACE}_varnish.loadbalancer.server.scheme=http"
-            - "traefik.http.services.${APP_NAMESPACE}_varnish.loadbalancer.server.port=80"
-            - "traefik.http.services.${APP_NAMESPACE}_varnish.loadbalancer.passhostheader=true"
-            # Listen HTTP
-            - "traefik.http.routers.${APP_NAMESPACE}_varnish.entrypoints=http"
-            - "traefik.http.routers.${APP_NAMESPACE}_varnish.rule=Host(${HOSTNAME_VARNISH})"
-            - "traefik.http.routers.${APP_NAMESPACE}_varnish.service=${APP_NAMESPACE}_varnish"
 
     solr:
         build:
@@ -162,28 +97,12 @@ services:
         command:
             - solr-precreate
             - ${SOLR_CORE_NAME}
-        networks:
-            frontproxynet:
-                aliases:
-                    - ${APP_NAMESPACE}_solr
-            default:
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.services.${APP_NAMESPACE}_solr.loadbalancer.server.scheme=http"
-            - "traefik.http.services.${APP_NAMESPACE}_solr.loadbalancer.server.port=8983"
-            - "traefik.http.services.${APP_NAMESPACE}_solr.loadbalancer.passhostheader=true"
-            # Listen HTTP
-            - "traefik.http.routers.${APP_NAMESPACE}_solr.entrypoints=http"
-            - "traefik.http.routers.${APP_NAMESPACE}_solr.rule=Host(${HOSTNAME_SOLR})"
-            - "traefik.http.routers.${APP_NAMESPACE}_solr.service=${APP_NAMESPACE}_solr"
 
 networks:
-    frontproxynet:
-        external: true
     # If you need to use port forwarding, fixing default gateway can be useful
     # to keep same host IP address between service restarts
     default:
         ipam:
             driver: default
             config:
-                -   subnet: ${DEFAULT_GATEWAY}/16
+                -   subnet: ${DEFAULT_GATEWAY}/24

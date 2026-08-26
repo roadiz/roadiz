@@ -28,7 +28,7 @@ final class AccessMapCollector extends DataCollector implements Renderable
      */
     public function collect()
     {
-        list($role, $channel) = $this->accessMap->getPatterns($this->requestStack->getMasterRequest());
+        list($role, $channel) = $this->accessMap->getPatterns($this->requestStack->getMainRequest());
         return [
             'map' => [
                 'roles' => $role,
