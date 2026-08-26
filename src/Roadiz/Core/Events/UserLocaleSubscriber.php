@@ -86,7 +86,7 @@ class UserLocaleSubscriber implements EventSubscriberInterface
         $tokenStorage = $this->container['securityTokenStorage'];
 
         $user = $event->getUser();
-        $request = $requestStack->getMasterRequest();
+        $request = $requestStack->getMainRequest();
 
         if (null !== $request &&
             $request->hasPreviousSession() &&

@@ -43,12 +43,10 @@ class DocumentSearchHandler extends AbstractSearchHandler
             ]);
 
 
-            if (null !== $this->logger) {
-                $this->logger->debug('[Solr] Request document search…', [
-                    'query' => $queryTxt,
-                    'params' => $query->getParams(),
-                ]);
-            }
+            $this->logger->debug('[Solr] Request document search…', [
+                'query' => $queryTxt,
+                'params' => $query->getParams(),
+            ]);
 
             $solrRequest = $this->client->execute($query);
             return $solrRequest->getData();

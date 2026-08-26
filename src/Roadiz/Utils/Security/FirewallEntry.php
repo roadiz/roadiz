@@ -115,7 +115,7 @@ class FirewallEntry
          */
         /** @var AccessMap $accessMap */
         $accessMap = $this->container['accessMap'];
-        if (null !== $this->firewallBasePattern && "" !== $this->firewallBasePattern) {
+        if ("" !== $this->firewallBasePattern) {
             $accessMap->add($this->requestMatcher, $this->firewallBaseRole);
         }
 

@@ -48,7 +48,7 @@ class LoginAttemptManager
          * from same IP address in the last 20 minutes
          */
         if ($this->getLoginAttemptRepository()->isIpAddressBlocked(
-            $this->requestStack->getMasterRequest()->getClientIp(),
+            $this->requestStack->getMainRequest()->getClientIp(),
             $this->getIpAttemptGraceTime(),
             $this->getIpAttemptCount()
         )) {
@@ -78,7 +78,7 @@ class LoginAttemptManager
             throw new \RuntimeException('No manager found for class ' . LoginAttempt::class);
         }
         $loginAttempt = $this->getLoginAttemptRepository()->findOrCreateOneByIpAddressAndUsername(
-            $this->requestStack->getMasterRequest()->getClientIp(),
+            $this->requestStack->getMainRequest()->getClientIp(),
             $username
         );
 
@@ -130,7 +130,7 @@ class LoginAttemptManager
     public function onSuccessLoginAttempt(string $username)
     {
         $this->getLoginAttemptRepository()->resetLoginAttempts(
-            $this->requestStack->getMasterRequest()->getClientIp(),
+            $this->requestStack->getMainRequest()->getClientIp(),
             $username
         );
         return $this;

@@ -108,7 +108,6 @@ class Theme extends AbstractEntity
      */
     public function getInformations(): array
     {
-        /** @var string|AppController $class */
         $class = $this->getClassName();
 
         if (class_exists($class)) {

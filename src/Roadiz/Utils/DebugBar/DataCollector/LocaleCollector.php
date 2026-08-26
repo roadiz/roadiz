@@ -26,9 +26,9 @@ final class LocaleCollector extends DataCollector implements Renderable
     public function collect()
     {
         return [
-            'locale' => $this->requestStack->getMasterRequest()->getLocale() .
+            'locale' => $this->requestStack->getMainRequest()->getLocale() .
                 ' (' .
-                Locale::getDisplayName($this->requestStack->getMasterRequest()->getLocale(), 'en') .
+                Locale::getDisplayName($this->requestStack->getMainRequest()->getLocale(), 'en') .
                 ')',
         ];
     }

@@ -142,7 +142,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
             $firstToken = $tokens[0];
             $locale = mb_strtolower(strip_tags((string) $firstToken));
             // First token is for language
-            if ($locale !== null && $locale != '') {
+            if ($locale != '') {
                 $translation = $repository->findOneByLocaleOrOverrideLocale($locale);
                 if (null !== $translation) {
                     return $translation;
@@ -169,7 +169,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
              */
             if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
                 $identifier = mb_strtolower(strip_tags($tokens[(int) (count($tokens) - 1)]));
-                if ($identifier !== null && $identifier != '') {
+                if ($identifier != '') {
                     $array = $this->managerRegistry
                         ->getRepository(Node::class)
                         ->findNodeTypeNameAndSourceIdByIdentifier(

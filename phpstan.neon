@@ -1,4 +1,5 @@
 parameters:
+    treatPhpDocTypesAsCertain: false
     excludePaths:
         - */node_modules/*
         - */bower_components/*
@@ -19,6 +20,8 @@ parameters:
         - identifier: catch.neverThrown
         - identifier: nullCoalesce.variable
         - identifier: nullCoalesce.expr
+        # Traits consumed outside analysed src/ (roadiz/rozier controllers, tests/)
+        - identifier: trait.unused
         - '#Class GeneratedNodeSources\\NS([a-zA-Z]+) not found#'
         - '#Call to method ([a-zA-Z]+)\(\) on an unknown class GeneratedNodeSources\\NS([a-zA-Z]+)#'
         - '#Call to an undefined method ([^:]+)\:\:get(?:External|Internal)Link(?:Sources)?\(\)#'

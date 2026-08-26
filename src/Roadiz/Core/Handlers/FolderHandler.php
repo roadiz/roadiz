@@ -85,7 +85,7 @@ class FolderHandler extends AbstractHandler
             } else {
                 break;
             }
-        } while ($parent !== null);
+        } while (true);
 
         return array_reverse($parentsArray);
     }

@@ -13,7 +13,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 final class HttpRequestMessageHandler implements MessageHandlerInterface
 {
     private LoggerInterface $logger;
-    private ?Client $client;
+    private Client $client;
 
     /**
      * @param Client|null $client

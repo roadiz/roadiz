@@ -131,7 +131,6 @@ class EmailManager
         if (empty($this->assignation['headerImageSrc']) && null !== $this->settingsBag) {
             $adminImage = $this->settingsBag->getDocument('admin_image');
             if (null !== $adminImage &&
-                $adminImage instanceof Document &&
                 null !== $this->documentUrlGenerator) {
                 $this->documentUrlGenerator->setDocument($adminImage);
                 $this->assignation['headerImageSrc'] = $this->documentUrlGenerator->getUrl(true);

@@ -368,14 +368,12 @@ class CustomForm extends AbstractDateTimed
             $this->customFormAnswers = new ArrayCollection();
             $fields = $this->getFields();
 
-            if ($fields !== null) {
-                $this->fields = new ArrayCollection();
-                /** @var CustomFormField $field */
-                foreach ($fields as $field) {
-                    $cloneField = clone $field;
-                    $this->fields->add($cloneField);
-                    $cloneField->setCustomForm($this);
-                }
+            $this->fields = new ArrayCollection();
+            /** @var CustomFormField $field */
+            foreach ($fields as $field) {
+                $cloneField = clone $field;
+                $this->fields->add($cloneField);
+                $cloneField->setCustomForm($this);
             }
             $this->nodes = new ArrayCollection();
             $this->setCreatedAt(new \DateTime());

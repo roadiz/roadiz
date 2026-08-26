@@ -630,7 +630,7 @@ abstract class AppController extends Controller
 
         if (!$previewResolver->isPreview() &&
             !$kernel->isDebug() &&
-            $requestStack->getMasterRequest() === $request &&
+            $requestStack->getMainRequest() === $request &&
             $request->isMethodCacheable() &&
             $minutes > 0 &&
             !$settings->get('maintenance_mode', false)) {

@@ -197,7 +197,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
         $pimple['kernel'] = $this;
         /** @var Stopwatch $stopWatch */
-        $stopWatch = $pimple['stopwatch'];
+        $stopWatch = $pimple->offsetGet('stopwatch');
         $stopWatch->openSection();
         $stopWatch->start('kernel.registerServices');
 

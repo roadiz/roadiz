@@ -57,7 +57,7 @@ class NodesCreationCommand extends Command
         $existingNode = $this->entityManager
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
-            ->findOneByNodeName($nodeName);
+            ->findOneBy(['nodeName' => $nodeName]);
 
         if (null === $existingNode) {
             $type = $this->entityManager

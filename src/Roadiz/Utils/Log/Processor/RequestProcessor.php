@@ -16,7 +16,7 @@ class RequestProcessor
 
     public function __invoke(array $record): array
     {
-        if (null !== $request = $this->requestStack->getMasterRequest()) {
+        if (null !== $request = $this->requestStack->getMainRequest()) {
             $record['context']['request'] = [
                 'url'         => $request->getRequestUri(),
                 'ip'          => $request->getClientIp(),

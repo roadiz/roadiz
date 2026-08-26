@@ -64,10 +64,10 @@ class ExceptionViewer
     }
 
     /**
-     * @param \Exception $exception
+     * @param \Throwable $exception
      * @return int
      */
-    public function getHttpStatusCode(\Exception $exception): int
+    public function getHttpStatusCode(\Throwable $exception): int
     {
         if ($exception instanceof HttpExceptionInterface) {
             return $exception->getStatusCode();
@@ -75,8 +75,7 @@ class ExceptionViewer
             return Response::HTTP_NOT_FOUND;
         } elseif ($exception instanceof MaintenanceModeException) {
             return Response::HTTP_SERVICE_UNAVAILABLE;
-        } elseif ($exception instanceof AccessDeniedException ||
-            $exception instanceof AccessDeniedHttpException) {
+        } elseif ($exception instanceof AccessDeniedException) {
             return Response::HTTP_FORBIDDEN;
         }
 
@@ -84,10 +83,10 @@ class ExceptionViewer
     }
 
     /**
-     * @param \Exception $e
+     * @param \Throwable $e
      * @return string
      */
-    public function getHumanExceptionTitle(\Exception $e): string
+    public function getHumanExceptionTitle(\Throwable $e): string
     {
         if ($e instanceof MaintenanceModeException) {
             return "Website is under maintenance.";
@@ -124,10 +123,10 @@ class ExceptionViewer
     }
 
     /**
-     * @param \Exception $e
+     * @param \Throwable $e
      * @return string
      */
-    public function getJsonError(\Exception $e): string
+    public function getJsonError(\Throwable $e): string
     {
         if ($e instanceof NoConfigurationFoundException) {
             return "no_configuration_file";
@@ -161,12 +160,12 @@ class ExceptionViewer
 
 
     /**
-     * @param \Exception $e
+     * @param \Throwable $e
      * @param Request $request
      * @param bool $debug
      * @return JsonResponse|Response
      */
-    public function getResponse(\Exception $e, Request $request, $debug = false): Response
+    public function getResponse(\Throwable $e, Request $request, $debug = false): Response
     {
         /*
          * Log error before displaying a fallback page.

@@ -9,18 +9,30 @@ use Symfony\Bridge\Twig\Extension\DumpExtension as BaseDumpExtension;
 use Symfony\Component\VarDumper\Cloner\ClonerInterface;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
 use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-final class DumpExtension extends BaseDumpExtension
+final class DumpExtension extends AbstractExtension
 {
-    /**
-     * @var LoggerInterface
-     */
     private LoggerInterface $messageCollector;
+    private BaseDumpExtension $baseDumpExtension;
 
     public function __construct(LoggerInterface $messageCollector, ClonerInterface $cloner, HtmlDumper $dumper = null)
     {
-        parent::__construct($cloner, $dumper);
         $this->messageCollector = $messageCollector;
+        $this->baseDumpExtension = new BaseDumpExtension($cloner, $dumper);
+    }
+
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('dump', [$this, 'dump'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
+        ];
+    }
+
+    public function getTokenParsers(): array
+    {
+        return $this->baseDumpExtension->getTokenParsers();
     }
 
     public function dump(Environment $env, $context)
@@ -33,6 +45,6 @@ final class DumpExtension extends BaseDumpExtension
             $this->messageCollector->debug(Debug::export(\func_get_arg($i), 2));
         }
 
-        return parent::dump(...\func_get_args());
+        return $this->baseDumpExtension->dump(...\func_get_args());
     }
 }

@@ -149,12 +149,12 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
     /**
      * Create an emergency response to be sent instead of error logs.
      *
-     * @param \Exception $e
+     * @param \Throwable $e
      * @param Request $request
      *
      * @return Response
      */
-    protected function getEmergencyResponse(\Exception $e, Request $request)
+    protected function getEmergencyResponse(\Throwable $e, Request $request)
     {
         /*
          * Log error before displaying a fallback page.
@@ -211,12 +211,12 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
 
     /**
      * @param Theme          $theme
-     * @param \Exception     $exception
+     * @param \Throwable     $exception
      * @param ExceptionEvent $event
      *
      * @return Response
      */
-    protected function createThemeNotFoundResponse(Theme $theme, \Exception $exception, ExceptionEvent $event)
+    protected function createThemeNotFoundResponse(Theme $theme, \Throwable $exception, ExceptionEvent $event)
     {
         /*
          * Create a new controller for serving

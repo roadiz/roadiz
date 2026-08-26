@@ -139,6 +139,7 @@ class ThemeGenerator
         /*
          * Rename every occurrences of BaseTheme in your theme.
          */
+        /** @var ArrayCollection<int, Process> $processes */
         $processes = new ArrayCollection();
         $processes->add(new Process(
             [
@@ -172,7 +173,6 @@ class ThemeGenerator
             ['LC_ALL' => 'C']
         ));
         $this->logger->info('Rename every occurrences of BaseTheme in your theme.');
-        /** @var Process $process */
         foreach ($processes as $process) {
             $process->run();
         }

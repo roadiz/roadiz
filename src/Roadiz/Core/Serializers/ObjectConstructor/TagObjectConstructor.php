@@ -32,8 +32,7 @@ class TagObjectConstructor extends AbstractTypedObjectConstructor
             ->findOneByTagName($data['tagName']);
 
         if (null !== $tag &&
-            $context->hasAttribute(static::EXCEPTION_ON_EXISTING_TAG) &&
-            true === $context->hasAttribute(static::EXCEPTION_ON_EXISTING_TAG)
+            $context->hasAttribute(static::EXCEPTION_ON_EXISTING_TAG)
         ) {
             throw new EntityAlreadyExistsException('Tag already exists in database.');
         }

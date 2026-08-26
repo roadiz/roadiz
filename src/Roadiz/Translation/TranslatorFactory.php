@@ -236,7 +236,7 @@ final class TranslatorFactory implements TranslatorFactoryInterface
      */
     protected function getCurrentLocale(): ?string
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
         if (null === $request) {
             return null;
         }

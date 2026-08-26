@@ -176,7 +176,7 @@ class AttributesExtension extends AbstractExtension
     public function getNodeSourceGroupedAttributeValues(?NodesSources $nodesSources, bool $hideNotTranslated = false): array
     {
         $groups = [
-            INF => [
+            '__no_group__' => [
                 'group' => null,
                 'attributeValues' => []
             ]
@@ -194,7 +194,7 @@ class AttributesExtension extends AbstractExtension
                 }
                 $groups[$group->getCanonicalName()]['attributeValues'][] = $attributeValueTranslation;
             } else {
-                $groups[INF]['attributeValues'][] = $attributeValueTranslation;
+                $groups['__no_group__']['attributeValues'][] = $attributeValueTranslation;
             }
         }
 
