@@ -51,8 +51,6 @@ services:
         # Need to pass all vars to docker env for Crontab and supervisor scripts
         env_file: "./.env"
         build:
-            #context: ./docker/php72-nginx-alpine
-            #context: ./docker/php73-nginx-alpine
             #context: ./docker/php74-nginx-alpine
             #context: ./docker/php80-nginx-alpine
             context: ./docker/php81-nginx-alpine

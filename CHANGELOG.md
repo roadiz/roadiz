@@ -2,11 +2,15 @@
 
 All notable changes to project will be documented in this file.
 
-## [unreleased]
+## [1.7.43](https://github.com/roadiz/roadiz/compare/v1.7.42...1.7.43) - 2026-08-26
 
 ### Bug Fixes
 
 - phpstan update and fixes - ([4f320e8](https://github.com/roadiz/roadiz/commit/4f320e8fd39e547a3fb600ede9dc18ceb1f35b19)) - Ambroise Maupate
+
+### Documentation
+
+- remove security updates notice - ([3b7ed60](https://github.com/roadiz/roadiz/commit/3b7ed6015453ea720a138e7cff00dfbe9eacb5ea)) - Ambroise Maupate
 
 ## [1.7.42](https://github.com/roadiz/roadiz/compare/v1.7.41...v1.7.42) - 2025-01-16
 
